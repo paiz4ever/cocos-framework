@@ -2,7 +2,7 @@
 
 WORKSPACE=./configs
 CONF_ROOT=./configs
-ASSET_ROOT=./assets
+CORE_ROOT=./extensions/core/assets
 LUBAN_DLL=$WORKSPACE/luban/Luban.dll
 
 dotnet $LUBAN_DLL \
@@ -10,7 +10,7 @@ dotnet $LUBAN_DLL \
 -c typescript-json \
 -d json \
 --conf $CONF_ROOT/luban.conf \
--x outputCodeDir=$ASSET_ROOT/app-builtin/generated \
--x outputDataDir=$ASSET_ROOT/app-config/generated
+-x outputCodeDir=$CORE_ROOT/builtin/managers/config/schema \
+-x outputDataDir=$CORE_ROOT/internal/cfgs
 
 read -p "Press any key to continue..."

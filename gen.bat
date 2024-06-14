@@ -1,6 +1,6 @@
 set WORKSPACE=./configs
 set CONF_ROOT=./configs
-set ASSET_ROOT=./assets
+set CORE_ROOT=./extensions/core/assets
 set LUBAN_DLL=%WORKSPACE%\luban\Luban.dll
 
 dotnet %LUBAN_DLL% ^
@@ -8,7 +8,7 @@ dotnet %LUBAN_DLL% ^
     -c typescript-json ^
     -d json ^
     --conf %CONF_ROOT%\luban.conf ^
-    -x outputCodeDir=%ASSET_ROOT%\app-builtin\generated ^
-    -x outputDataDir=%ASSET_ROOT%\app-config\generated
+    -x outputCodeDir=%CORE_ROOT%\builtin\generated\managers\config\schema ^
+    -x outputDataDir=%CORE_ROOT%\internal\cfgs
 
 pause

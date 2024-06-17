@@ -9,6 +9,6 @@ dotnet %LUBAN_DLL% ^
     -d json ^
     --conf %CONF_ROOT%\luban.conf ^
     -x outputCodeDir=%CORE_ROOT%\builtin\generated\managers\config\schema ^
-    -x outputDataDir=%CORE_ROOT%\internal\cfgs
+    -x outputDataDir=%CORE_ROOT%\internal\tables
 
 pause

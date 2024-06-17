@@ -1,8 +1,10 @@
+declare const wx: any;
+declare const tt: any;
+declare const ks: any;
+
 interface IPlatform {
   /** 初始化 */
   init: () => Promise<void>;
-  /** 请求 */
-  rpc: (data: IRpcData) => Promise<any>;
   /** 生命周期-前台 监听 */
   onShow: (cb: Function) => void;
   /** 生命周期-前台 取消监听 */
@@ -13,6 +15,8 @@ interface IPlatform {
   offHide: (cb: Function) => void;
   /** 登陆 */
   login: () => Promise<void>;
+  /** 获取用户信息 */
+  getUserInfo: () => Promise<IUserInfo>;
   /** 上报 */
   report: (evtName: string, evtData?: Object) => void;
   /** 获取环境 */
@@ -53,12 +57,25 @@ interface IPlatform {
   ttHideGridGamePanel: () => void;
 }
 
-interface IRpcData {
-  url: string;
-  method: "POST" | "GET";
-  body?: any;
-}
 type TEnv = "production" | "development";
+interface IInjectOptions {
+  ByteDance?: {
+    loginRpc?: (data: {
+      appID: string;
+      code: string;
+      anonymousCode: string;
+    }) => Promise<{ openID: string }>;
+  };
+  WeChat?: {
+    loginRpc?: (data: { code: string }) => Promise<{ openID: string }>;
+  };
+  KuaiShou?: {
+    loginRpc?: (data: { code: string }) => Promise<{ openID: string }>;
+  };
+}
+interface IUserInfo {
+  name: string;
+}
 interface ISystemInfo {
   /** 包名 */
   pkg?: string;

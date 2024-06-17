@@ -1,7 +1,7 @@
 import { Asset, AssetManager, JsonAsset, assetManager } from "cc";
-import Singleton from "../../../base/abstract/Singleton";
+import Singleton from "../../structs/abstract/Singleton";
 
-export class LoaderManager extends Singleton {
+class LoadManager extends Singleton {
   loadBundle(options?: {
     name?: string;
     version?: string;
@@ -40,3 +40,6 @@ export class LoaderManager extends Singleton {
     });
   }
 }
+
+const LoadMgr = LoadManager.getInstance();
+export default LoadMgr;

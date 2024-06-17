@@ -2,11 +2,23 @@
   "extends": "../../temp/tsconfig.cocos.json",
   "compilerOptions": {
     "strict": false,
+    // "typeRoots": [
+    //   "../../temp/declarations",
+    //   "./assets/types",
+    //   "../../assets/types"
+    // ],
     "types": [
+      "../../assets/types/config.d.ts",
+      "../../assets/types/storage.d.ts",
       "../../temp/declarations/cc.custom-macro",
-      "../../temp/declarations/jsb",
       "../../temp/declarations/cc",
+      "../../temp/declarations/jsb",
       "../../temp/declarations/cc.env"
-    ]
-  }
+    ],
+    "lib": [
+      "dom",
+      "ES2022"
+    ],
+    "allowSyntheticDefaultImports": true,
+  },
 }

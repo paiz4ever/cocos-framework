@@ -11,6 +11,6 @@ dotnet $LUBAN_DLL \
 -d json \
 --conf $CONF_ROOT/luban.conf \
 -x outputCodeDir=$CORE_ROOT/builtin/managers/config/schema \
--x outputDataDir=$CORE_ROOT/internal/cfgs
+-x outputDataDir=$CORE_ROOT/internal/tables
 
 read -p "Press any key to continue..."

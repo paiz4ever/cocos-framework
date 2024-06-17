@@ -1,6 +1,6 @@
 import { JsonAsset } from "cc";
 import Singleton from "../../../base/abstract/Singleton";
-import { LoaderManager } from "../loader/LoaderManager";
+import { LoaderManager } from "../load/LoadManager";
 import * as schema from "./schema/schema";
 
 export class ConfigManager extends Singleton {

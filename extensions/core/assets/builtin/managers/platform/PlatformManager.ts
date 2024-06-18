@@ -25,6 +25,7 @@ class PlatformManager extends Singleton {
   init(options: IInjectOptions) {
     // @ts-ignore
     this.pt.inject(options);
+    return this.pt.init();
   }
 }
 

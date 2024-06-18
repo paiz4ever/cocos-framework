@@ -1,6 +1,5 @@
-import { log, randomRangeInt } from "cc";
+import { log } from "cc";
 import BasicAdapter from "./Basic";
-import dayjs from "dayjs";
 import ConfigMgr from "../../config/ConfigManager";
 import StorageMgr from "../../storage/StorageManager";
 
@@ -43,8 +42,9 @@ export default class ByteDanceAdapter
   login(): Promise<void> {
     return new Promise((resolve, reject) => {
       const loginFunc = () => {
-        if (!this.options?.loginRpc)
+        if (!this.options?.loginRpc) {
           return reject("ByteDance: loginRpc is required");
+        }
         tt.login({
           success: ({ code, anonymousCode }) => {
             this.options
@@ -166,7 +166,7 @@ export default class ByteDanceAdapter
     });
   }
 
-  startRecord(): void {
+  startRecord() {
     tt.getSystemInfo({
       success: (res) => {
         const screenWidth = res.screenWidth;
@@ -204,7 +204,7 @@ export default class ByteDanceAdapter
         title: shareOptions.title,
         channel: "video",
         extra: {
-          videoPath: this.videoPath, //录屏后得到的文件地址
+          videoPath: this.videoPath,
           withVideoId: true,
         },
         success: () => {
@@ -267,62 +267,41 @@ export default class ByteDanceAdapter
     });
   }
 
-  // ttSubscribe(type: string, data: any): Promise<void> {
-  //   return new Promise((resolve, reject) => {
-  //     let { uuid } = StorageMgr.get("userAuth", {});
-  //     if (!uuid) return reject();
-  //     let { appID } = ConfigMgr.cnf.app;
-  //     let { subscribeTpls } = this.config;
-  //     if (!subscribeTpls || !subscribeTpls.length) return reject();
-  //     let tmplIds = subscribeTpls.find((v) => v.type === type)?.ids || [];
-  //     if (!tmplIds.length) return reject();
-  //     let timestamp: number;
-  //     switch (type) {
-  //       case "sign":
-  //         timestamp = dayjs()
-  //           .add(1, "day")
-  //           .startOf("D")
-  //           .add(12, "h")
-  //           .add(randomRangeInt(10, 100), "s")
-  //           .valueOf();
-  //         break;
-  //       default:
-  //         return reject();
-  //     }
-  //     tt.requestSubscribeMessage({
-  //       tmplIds: tmplIds,
-  //       success: (res) => {
-  //         let accepTpls = tmplIds.filter((id) => res[id] === "accept");
-  //         if (accepTpls.length) {
-  //           HttpMgr.post({
-  //             url: "/api/dy/v1/sub/send/",
-  //             body: {
-  //               app_id: appID,
-  //               open_id: uuid,
-  //               send_data: accepTpls.map((id) => ({
-  //                 type,
-  //                 tpl_id: id,
-  //                 send_ts: timestamp,
-  //                 data,
-  //               })),
-  //             },
-  //           })
-  //             .then(() => {
-  //               tt.showToast({
-  //                 title: "订阅成功",
-  //                 icon: "success",
-  //               });
-  //               resolve(void 0);
-  //             })
-  //             .catch(reject);
-  //         } else {
-  //           reject();
-  //         }
-  //       },
-  //       fail: reject,
-  //     });
-  //   });
-  // }
+  ttSubscribe(type: string, data: any): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.options?.subscribeRpc) {
+        return reject("ByteDance: subscribeRpc is required");
+      }
+      let { uuid } = StorageMgr.get("userAuth", {});
+      if (!uuid) return reject();
+      let { subscribeList } = this.config;
+      if (!subscribeList || !subscribeList.length) return reject();
+      let tplIDs = subscribeList.find((v) => v.type === type)?.tplIDs || [];
+      if (!tplIDs.length) return reject();
+      tt.requestSubscribeMessage({
+        tmplIds: tplIDs,
+        success: (res) => {
+          let acceptIDs = tplIDs.filter((id) => res[id] === "accept");
+          if (!acceptIDs.length) return reject();
+          this.options
+            .subscribeRpc({
+              appID: ConfigMgr.cnf.app.appID,
+              openID: uuid,
+              dataList: acceptIDs.map((id) => ({ type, tplID: id, data })),
+            })
+            .then(() => {
+              tt.showToast({
+                title: "订阅成功",
+                icon: "success",
+              });
+              resolve(void 0);
+            })
+            .catch(reject);
+        },
+        fail: reject,
+      });
+    });
+  }
 
   ttShowGridGamePanel(): void {
     try {
@@ -394,14 +373,15 @@ export default class ByteDanceAdapter
   }
 
   private initGridGamePanel() {
+    let info = this.options.getGridGamePanelInfo() || {};
     try {
       const { windowWidth, windowHeight } = tt.getSystemInfoSync();
       this.gridGamePanel = tt.createGridGamePanel({
-        gridCount: "one",
-        size: "medium",
+        gridCount: info.gridCount || "one",
+        size: info.size || "medium",
         position: {
-          top: windowHeight - 210 - 112,
-          left: windowWidth - 70,
+          top: windowHeight - (info.bottomOffset || 0),
+          left: windowWidth - (info.rightOffset || 0),
         },
       });
     } catch (_) {}

@@ -22,7 +22,7 @@ interface IPlatformConfig {
   /** 抖音 */
   ByteDance?: {
     rewardAdUnitID: string;
-    subscribeTpls: { type: string; ids: string[] }[];
+    subscribeList: { type: string; tplIDs: string[] }[];
   };
   /** 快手 */
   KuaiShou?: {

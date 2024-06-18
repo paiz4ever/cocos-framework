@@ -65,6 +65,17 @@ interface IInjectOptions {
       code: string;
       anonymousCode: string;
     }) => Promise<{ openID: string }>;
+    subscribeRpc?: (data: {
+      appID: string;
+      openID: string;
+      dataList: { type: string; tplID: string; data: any }[];
+    }) => Promise<void>;
+    getGridGamePanelInfo?: () => {
+      bottomOffset?: number;
+      rightOffset?: number;
+      size?: "small" | "medium" | "large";
+      gridCount?: "one" | "four" | "nine";
+    };
   };
   WeChat?: {
     loginRpc?: (data: { code: string }) => Promise<{ openID: string }>;

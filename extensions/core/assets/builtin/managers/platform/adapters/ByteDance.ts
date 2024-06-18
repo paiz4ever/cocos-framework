@@ -1,7 +1,11 @@
-import { log } from "cc";
+/**
+ * 字节适配器
+ */
 import BasicAdapter from "./Basic";
 import ConfigMgr from "../../config/ConfigManager";
 import StorageMgr from "../../storage/StorageManager";
+import LogMgr from "../../log/LogManager";
+import EventMgr from "../../event/EventManager";
 
 export default class ByteDanceAdapter
   extends BasicAdapter<"ByteDance">
@@ -126,12 +130,14 @@ export default class ByteDanceAdapter
       this.rewardAd
         .show()
         .then(() => {
+          EventMgr.emit("RewardAdShowAfter");
           this.rewardAdResolve = resolve;
           this.rewardAdReject = reject;
         })
         .catch(() => {
           return this.rewardAd.load().then(() => {
             return this.rewardAd.show().then(() => {
+              EventMgr.emit("RewardAdShowAfter");
               this.rewardAdResolve = resolve;
               this.rewardAdReject = reject;
             });
@@ -244,9 +250,7 @@ export default class ByteDanceAdapter
         success: ({ status }) => {
           resolve(status.exist);
         },
-        fail: (err) => {
-          reject(err);
-        },
+        fail: reject,
       });
     });
   }
@@ -315,27 +319,6 @@ export default class ByteDanceAdapter
     } catch (_) {}
   }
 
-  private checkUpdate() {
-    const updateManager = tt.getUpdateManager();
-    updateManager.onUpdateReady(() => {
-      tt.showModal({
-        title: "更新提示",
-        content: "新版本已经准备好，是否重启小游戏？",
-        success: (res) => {
-          if (res.confirm) {
-            updateManager.applyUpdate();
-          }
-        },
-      });
-    });
-    updateManager.onUpdateFailed(() => {
-      tt.showToast({
-        title: "新版本下载失败，请稍后再试",
-        icon: "fail",
-      });
-    });
-  }
-
   private initRewardAd() {
     this.rewardAd = tt.createRewardedVideoAd({
       adUnitId: this.config.rewardAdUnitID,
@@ -355,20 +338,20 @@ export default class ByteDanceAdapter
   private initRecorder() {
     this.recorder = tt.getGameRecorderManager();
     this.recorder.onStop((res) => {
-      log("录屏结束");
+      LogMgr.print("录屏结束");
       this.videoPath = res.videoPath;
     });
     this.recorder.onPause(() => {
-      log("录屏暂停");
+      LogMgr.print("录屏暂停");
     });
     this.recorder.onResume(() => {
-      log("录屏恢复");
+      LogMgr.print("录屏恢复");
     });
     this.recorder.onStart((res) => {
-      log("录屏开始");
+      LogMgr.print("录屏开始");
     });
     this.recorder.onError((error) => {
-      log("录屏出错" + error.errMsg);
+      LogMgr.print("录屏出错", error);
     });
   }
 
@@ -385,5 +368,26 @@ export default class ByteDanceAdapter
         },
       });
     } catch (_) {}
+  }
+
+  private checkUpdate() {
+    const updateManager = tt.getUpdateManager();
+    updateManager.onUpdateReady(() => {
+      tt.showModal({
+        title: "更新提示",
+        content: "新版本已经准备好，是否重启小游戏？",
+        success: (res) => {
+          if (res.confirm) {
+            updateManager.applyUpdate();
+          }
+        },
+      });
+    });
+    updateManager.onUpdateFailed(() => {
+      tt.showToast({
+        title: "新版本下载失败，请稍后再试",
+        icon: "fail",
+      });
+    });
   }
 }

@@ -1,7 +1,10 @@
 /**
- * 对Http请求的封装，兼容各平台
+ * Http管理器
  */
 import { getMiniGameGlobalVariable } from "../../../utils/platform";
+import ConfigMgr from "../config/ConfigManager";
+import LogMgr from "../log/LogManager";
+import PlatformMgr from "../platform/PlatformManager";
 
 export class HttpMgr {
   static post<T = any>(options: IHttpOptions): Promise<T> {
@@ -16,10 +19,18 @@ export class HttpMgr {
     method: "POST" | "GET",
     options: IHttpOptions
   ): Promise<any> {
-    let { url, data } = options;
+    let { url, data, isFullUrl } = options;
+    if (!isFullUrl) {
+      let domain = ConfigMgr.cnf.app.domain;
+      url = `https://${
+        PlatformMgr.getEnv() === "production" ? domain["prod"] : domain["dev"]
+      }${url}`;
+    }
+    LogMgr.print(`[${method}]-> \nurl: ${url}\nbody: `, data || {});
+    let httpPromise: Promise<any>;
     let env = getMiniGameGlobalVariable();
     if (env) {
-      return new Promise((resolve, reject) => {
+      httpPromise = new Promise((resolve, reject) => {
         env.request({
           url,
           data,
@@ -31,26 +42,35 @@ export class HttpMgr {
           fail: reject,
         });
       });
-    }
-    let fetchFunc = typeof fetch !== "undefined" ? fetch : this.fetchWithXHR;
-    if (method === "GET") {
-      if (data) {
-        url +=
-          "?" +
-          Object.keys(data)
-            .map((k) => `${k}=${data[k]}`)
-            .join("&");
+    } else {
+      let fetchFunc = typeof fetch !== "undefined" ? fetch : this.fetchWithXHR;
+      if (method === "GET") {
+        if (data) {
+          url +=
+            "?" +
+            Object.keys(data)
+              .map((k) => `${k}=${data[k]}`)
+              .join("&");
+        }
+        httpPromise = fetchFunc(url, {
+          method,
+        }).then((resp) => resp.json());
+      } else if (method === "POST") {
+        httpPromise = fetchFunc(url, {
+          method,
+          body: JSON.stringify(data || {}),
+          headers: { "Content-Type": "application/json" },
+        }).then((resp) => resp.json());
       }
-      return fetchFunc(url, {
-        method,
-      }).then((resp) => resp.json());
-    } else if (method === "POST") {
-      return fetchFunc(url, {
-        method,
-        body: JSON.stringify(data || {}),
-        headers: { "Content-Type": "application/json" },
-      }).then((resp) => resp.json());
     }
+    return httpPromise
+      .then((resp) => {
+        LogMgr.print(`[${method}]<- \nurl: ${url}\nresponse: `, resp);
+      })
+      .catch((err) => {
+        LogMgr.print(`[${method}]<- \nurl: ${url}\nerror: `, err);
+        return Promise.reject(err);
+      });
   }
 
   private static fetchWithXHR(url, options: any): Promise<Response> {

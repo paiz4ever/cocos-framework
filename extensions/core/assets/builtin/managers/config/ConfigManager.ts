@@ -1,3 +1,6 @@
+/**
+ * 配置管理器
+ */
 import { JsonAsset, warn } from "cc";
 import Singleton from "../../structs/abstract/Singleton";
 import * as schema from "./schema/schema";
@@ -14,7 +17,7 @@ class ConfigManager extends Singleton {
   }
 
   get cnf(): TConfig {
-    return this._cnf;
+    return this._cnf || ({} as any);
   }
 
   async init() {

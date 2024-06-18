@@ -1,3 +1,6 @@
+/**
+ * 平台管理器
+ */
 import { isByteDance, isKuaishou, isWeChat } from "../../../utils/platform";
 import Singleton from "../../structs/abstract/Singleton";
 import BasicAdapter from "./adapters/Basic";
@@ -20,12 +23,6 @@ class PlatformManager extends Singleton {
       }
     }
     return this._pt;
-  }
-
-  init(options: IInjectOptions) {
-    // @ts-ignore
-    this.pt.inject(options);
-    return this.pt.init();
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * 单例基类
+ * 单例
  */
 export default abstract class Singleton {
   private static _instance: any;

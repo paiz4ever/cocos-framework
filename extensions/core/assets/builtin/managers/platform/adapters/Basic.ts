@@ -1,36 +1,27 @@
 /**
- * 平台基类
+ * 基础适配器
  */
 import { BUILD } from "cc/env";
 import Singleton from "../../../structs/abstract/Singleton";
-import { isByteDance, isKuaishou, isWeChat } from "../../../../utils/platform";
+import { getPlatformName } from "../../../../utils/platform";
 import ConfigMgr from "../../config/ConfigManager";
 
 export default class BasicAdapter<T extends keyof IPlatformConfig>
   extends Singleton
   implements IPlatform
 {
-  private platformName: T = isWeChat()
-    ? "WeChat"
-    : isByteDance()
-    ? "ByteDance"
-    : isKuaishou()
-    ? "KuaiShou"
-    : (undefined as any);
+  private platformName = getPlatformName() as T;
   private injectOptions: IInjectOptions;
   protected get config(): IPlatformConfig[T] {
     if (!this.platformName) return undefined;
-    return ConfigMgr.cnf.platform[this.platformName];
+    return ConfigMgr.cnf.platform?.[this.platformName];
   }
-  protected get options() {
-    return this.injectOptions[this.platformName];
+  protected get options(): IInjectOptions[T] {
+    return this.injectOptions?.[this.platformName] || {};
   }
 
-  inject(options: IInjectOptions) {
+  init(options?: IInjectOptions) {
     this.injectOptions = options;
-  }
-
-  init() {
     // 执行初始化流程
     // ...
     return Promise.resolve(void 0);

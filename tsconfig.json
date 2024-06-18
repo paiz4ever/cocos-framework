@@ -9,5 +9,10 @@
       "ES2022"
     ],
     "allowSyntheticDefaultImports": true,
+    "paths": {
+      "core/*": [
+        "./extensions/core/assets/*"
+      ]
+    }
   }
 }

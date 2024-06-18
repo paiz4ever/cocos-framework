@@ -1,11 +1,10 @@
-type TInternalStorage = {
+type TBuiltinStorage = {
   /** 调试模式开启 */
   onDebug: boolean;
   /** 调试设置 */
   debugSettings: {
     offGlobalAd: boolean;
     openKsDev: boolean;
-    rpcUrl: string;
   };
   /** 安装时间 */
   installTime: number;

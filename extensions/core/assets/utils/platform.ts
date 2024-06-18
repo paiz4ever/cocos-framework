@@ -22,3 +22,21 @@ export function getMiniGameGlobalVariable() {
   if (!MINIGAME) return undefined;
   return isWeChat() ? wx : isByteDance() ? tt : isKuaishou() ? ks : undefined;
 }
+
+/** 平台类型 */
+export enum EPlatform {
+  WeChat = "WeChat",
+  ByteDance = "ByteDance",
+  KuaiShou = "KuaiShou",
+}
+
+/** 获取平台名 */
+export function getPlatformName() {
+  return isWeChat()
+    ? EPlatform.WeChat
+    : isByteDance()
+    ? EPlatform.ByteDance
+    : isKuaishou()
+    ? EPlatform.KuaiShou
+    : undefined;
+}

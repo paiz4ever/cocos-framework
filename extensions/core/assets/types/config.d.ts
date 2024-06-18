@@ -1,13 +1,18 @@
 type TBuiltinConfig = {
   /** app配置 */
   app: IAppConfig;
+  /** framework配置 */
+  framework?: IAppConfig;
   /** 平台配置 */
-  platform: IPlatformConfig;
+  platform?: IPlatformConfig;
 };
 
 interface IAppConfig {
   /** 请求域名 */
-  domain: string;
+  domain: {
+    prod: string;
+    dev: string;
+  };
   /** 应用唯一标识 一般为appid */
   appID: string;
   /** 名字 */
@@ -18,11 +23,13 @@ interface IAppConfig {
   pkg?: string;
 }
 
+interface IFrameworkConfig {}
+
 interface IPlatformConfig {
   /** 抖音 */
   ByteDance?: {
     rewardAdUnitID: string;
-    subscribeList: { type: string; tplIDs: string[] }[];
+    subscribeList?: { type: string; tplIDs: string[] }[];
   };
   /** 快手 */
   KuaiShou?: {

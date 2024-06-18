@@ -1,8 +1,11 @@
+/**
+ * 缓存管理器
+ */
 import { sys } from "cc";
 import EventEmitter from "../../structs/abstract/EventEmitter";
 
 // @ts-ignore
-type TStorage = TInternalStorage & TGameStorage;
+type TStorage = TBuiltinStorage & TGameStorage;
 
 class StorageManager extends EventEmitter<TStorage> {
   private storageKey = "cocos-storage";

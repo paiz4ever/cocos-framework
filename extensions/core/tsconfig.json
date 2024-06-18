@@ -10,6 +10,7 @@
     "types": [
       "../../assets/types/config.d.ts",
       "../../assets/types/storage.d.ts",
+      "../../assets/types/event.d.ts",
       "../../temp/declarations/cc.custom-macro",
       "../../temp/declarations/cc",
       "../../temp/declarations/jsb",

@@ -4,7 +4,7 @@ declare const ks: any;
 
 interface IPlatform {
   /** 初始化 */
-  init: () => Promise<void>;
+  init: (options?: IInjectOptions) => Promise<void>;
   /** 生命周期-前台 监听 */
   onShow: (cb: Function) => void;
   /** 生命周期-前台 取消监听 */
@@ -78,10 +78,16 @@ interface IInjectOptions {
     };
   };
   WeChat?: {
-    loginRpc?: (data: { code: string }) => Promise<{ openID: string }>;
+    loginRpc?: (data: {
+      appID: string;
+      code: string;
+    }) => Promise<{ openID: string }>;
   };
   KuaiShou?: {
-    loginRpc?: (data: { code: string }) => Promise<{ openID: string }>;
+    loginRpc?: (data: {
+      appID: string;
+      code: string;
+    }) => Promise<{ openID: string }>;
   };
 }
 interface IUserInfo {

@@ -1,3 +1,6 @@
+/**
+ * 事件发射器
+ */
 import { EventTarget } from "cc";
 import Singleton from "./Singleton";
 

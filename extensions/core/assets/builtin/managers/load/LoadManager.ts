@@ -1,3 +1,6 @@
+/**
+ * 资源加载管理器
+ */
 import { Asset, AssetManager, JsonAsset, assetManager } from "cc";
 import Singleton from "../../structs/abstract/Singleton";
 

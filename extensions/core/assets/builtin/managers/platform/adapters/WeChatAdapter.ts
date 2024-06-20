@@ -5,7 +5,7 @@ import ConfigMgr from "../../config/ConfigManager";
 import EventMgr from "../../event/EventManager";
 import LogMgr from "../../log/LogManager";
 import StorageMgr from "../../storage/StorageManager";
-import BasicAdapter from "./Basic";
+import BasicAdapter from "./BasicAdapter";
 
 export default class WeChatAdapter
   extends BasicAdapter<"WeChat">

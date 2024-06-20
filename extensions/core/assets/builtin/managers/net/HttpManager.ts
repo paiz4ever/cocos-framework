@@ -1,12 +1,12 @@
 /**
  * Http管理器
  */
-import { getMiniGameGlobalVariable } from "../../../utils/platform";
+import { getMiniGameGlobalVariable } from "../../utils/platform";
 import ConfigMgr from "../config/ConfigManager";
 import LogMgr from "../log/LogManager";
 import PlatformMgr from "../platform/PlatformManager";
 
-export class HttpMgr {
+export default class HttpMgr {
   static post<T = any>(options: IHttpOptions): Promise<T> {
     return this.rpc("POST", options);
   }

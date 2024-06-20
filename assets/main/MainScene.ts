@@ -1,5 +1,5 @@
 import { _decorator, Component, Node } from "cc";
-import ConfigMgr from "core/builtin/managers/config/ConfigManager";
+import { ConfigMgr } from "core/builtin/managers";
 import Root from "core/root/Root";
 const { ccclass, property } = _decorator;
 

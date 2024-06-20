@@ -3,7 +3,7 @@
  */
 import { BUILD } from "cc/env";
 import Singleton from "../../../structs/abstract/Singleton";
-import { getPlatformName } from "../../../../utils/platform";
+import { getPlatformName } from "../../../utils/platform";
 import ConfigMgr from "../../config/ConfigManager";
 
 export default class BasicAdapter<T extends keyof IPlatformConfig>

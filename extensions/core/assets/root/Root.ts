@@ -7,7 +7,6 @@ import {
   ProgressBar,
   resources,
 } from "cc";
-import { HTML5, PREVIEW } from "cc/env";
 import AudioMgr from "../builtin/managers/audio/AudioManager";
 import PlatformMgr from "../builtin/managers/platform/PlatformManager";
 const { ccclass, property } = _decorator;

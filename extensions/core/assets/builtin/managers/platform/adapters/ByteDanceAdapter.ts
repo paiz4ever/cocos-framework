@@ -1,7 +1,7 @@
 /**
  * 字节适配器
  */
-import BasicAdapter from "./Basic";
+import BasicAdapter from "./BasicAdapter";
 import ConfigMgr from "../../config/ConfigManager";
 import StorageMgr from "../../storage/StorageManager";
 import LogMgr from "../../log/LogManager";

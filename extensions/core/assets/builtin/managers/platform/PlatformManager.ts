@@ -1,12 +1,12 @@
 /**
  * 平台管理器
  */
-import { isByteDance, isKuaishou, isWeChat } from "../../../utils/platform";
+import { isByteDance, isKuaishou, isWeChat } from "../../utils/platform";
 import Singleton from "../../structs/abstract/Singleton";
-import BasicAdapter from "./adapters/Basic";
-import ByteDanceAdapter from "./adapters/ByteDance";
-import KuaiShouAdapter from "./adapters/KuaiShou";
-import WeChatAdapter from "./adapters/WeChat";
+import BasicAdapter from "./adapters/BasicAdapter";
+import ByteDanceAdapter from "./adapters/ByteDanceAdapter";
+import KuaiShouAdapter from "./adapters/KuaiShouAdapter";
+import WeChatAdapter from "./adapters/WeChatAdapter";
 
 class PlatformManager extends Singleton {
   private _pt: IPlatform;

@@ -3,7 +3,10 @@ import { MINIGAME } from "cc/env";
 
 /** 是否是微信小游戏 */
 export function isWeChat() {
-  return sys.platform === sys.Platform.WECHAT_GAME;
+  return (
+    sys.platform === sys.Platform.WECHAT_GAME &&
+    typeof KSGameGlobal === "undefined"
+  );
 }
 
 /** 是否是字节跳动小游戏 */

@@ -14,10 +14,10 @@ class PlatformManager extends Singleton {
     if (!this._pt) {
       if (isByteDance()) {
         this._pt = ByteDanceAdapter.getInstance();
-      } else if (isWeChat()) {
-        this._pt = WeChatAdapter.getInstance();
       } else if (isKuaishou()) {
         this._pt = KuaiShouAdapter.getInstance();
+      } else if (isWeChat()) {
+        this._pt = WeChatAdapter.getInstance();
       } else {
         this._pt = BasicAdapter.getInstance();
       }

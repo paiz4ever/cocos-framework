@@ -58,7 +58,7 @@ class LogManager extends Singleton {
         str += arg + " ";
       }
     } catch (e) {
-      str = `${prefix}【内部错误】${e.message}`;
+      str = `${prefix}【Internal Error】${e.message}`;
     }
     this.logs.push(str);
     EventMgr.emit("Log", str);

@@ -9,6 +9,7 @@ import {
 } from "cc";
 import AudioMgr from "../builtin/managers/audio/AudioManager";
 import PlatformMgr from "../builtin/managers/platform/PlatformManager";
+import { ConfigMgr } from "../builtin/managers";
 const { ccclass, property } = _decorator;
 
 export default abstract class Root extends Component {
@@ -21,10 +22,16 @@ export default abstract class Root extends Component {
   @property(Node)
   barDot?: Node;
 
+  /** 应用配置 */
+  protected abstract appConfig: IAppConfig;
   /** 初始化开始前 */
-  protected abstract onInitBefore(): Promise<void>;
+  protected onInitBefore() {
+    return Promise.resolve(void 0);
+  }
   /** 初始化结束 */
-  protected abstract onInitComplete(): Promise<void>;
+  protected onInitComplete() {
+    return Promise.resolve(void 0);
+  }
 
   private _progress = 0;
   get progress() {
@@ -61,7 +68,10 @@ export default abstract class Root extends Component {
     game.frameRate = 999;
     this.progress = 0;
     this.resCount = 0;
-    this.onInitBefore()
+    ConfigMgr.init(this.appConfig)
+      .then(() => {
+        return this.onInitBefore();
+      })
       .then(() => {
         AudioMgr.init();
         return Promise.all([

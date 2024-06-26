@@ -6,15 +6,15 @@ import Singleton from "../../../structs/abstract/Singleton";
 import { getPlatformName } from "../../../utils/platform";
 import ConfigMgr from "../../config/ConfigManager";
 
-export default class BasicAdapter<T extends keyof IPlatformConfig>
+export default class BasicAdapter<T extends keyof IAppConfig["platform"]>
   extends Singleton
   implements IPlatform
 {
   private platformName = getPlatformName() as T;
   private injectOptions: IInjectOptions;
-  protected get config(): IPlatformConfig[T] {
+  protected get config(): IAppConfig["platform"][T] {
     if (!this.platformName) return undefined;
-    return ConfigMgr.cnf.platform?.[this.platformName];
+    return ConfigMgr.cnf.app?.platform?.[this.platformName];
   }
   protected get options(): IInjectOptions[T] {
     return this.injectOptions?.[this.platformName] || {};

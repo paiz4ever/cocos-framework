@@ -2,7 +2,7 @@
  * 平台可见性控制器
  */
 import { _decorator, Component, Enum, Node } from "cc";
-import { EPlatform, getPlatformName } from "db://core/builtin/utils/platform";
+import { EPlatform, getPlatformName } from "../../utils/platform";
 const { ccclass, property } = _decorator;
 
 @ccclass("PlatformVisibilityController")

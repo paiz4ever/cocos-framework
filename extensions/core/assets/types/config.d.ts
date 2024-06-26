@@ -1,10 +1,6 @@
 type TBuiltinConfig = {
   /** app配置 */
   app: IAppConfig;
-  /** framework配置 */
-  framework?: IAppConfig;
-  /** 平台配置 */
-  platform?: IPlatformConfig;
 };
 
 interface IAppConfig {
@@ -21,22 +17,20 @@ interface IAppConfig {
   abbr?: string;
   /** 包名 */
   pkg?: string;
-}
-
-interface IFrameworkConfig {}
-
-interface IPlatformConfig {
-  /** 抖音 */
-  ByteDance?: {
-    rewardAdUnitID: string;
-    subscribeList?: { type: string; tplIDs: string[] }[];
-  };
-  /** 快手 */
-  KuaiShou?: {
-    rewardAdUnitID: string;
-  };
-  /** 微信 */
-  WeChat?: {
-    rewardAdUnitID: string;
+  /** 平台配置 */
+  platform?: {
+    /** 抖音 */
+    ByteDance?: {
+      rewardAdUnitID: string;
+      subscribeList?: { type: string; tplIDs: string[] }[];
+    };
+    /** 快手 */
+    KuaiShou?: {
+      rewardAdUnitID: string;
+    };
+    /** 微信 */
+    WeChat?: {
+      rewardAdUnitID: string;
+    };
   };
 }

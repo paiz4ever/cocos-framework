@@ -20,7 +20,7 @@ class ConfigManager extends Singleton {
     return this._cnf || ({} as any);
   }
 
-  async init() {
+  async init(appConfig: IAppConfig) {
     let tableAssets = await LoadMgr.loadDir({
       bundle: "tables",
       type: JsonAsset,
@@ -28,6 +28,7 @@ class ConfigManager extends Singleton {
     this._tables = new schema.Tables((fileName: string) => {
       return tableAssets.find((asset) => asset.name === fileName)?.json;
     });
+    this.set("app", appConfig);
   }
 
   set<T extends keyof TConfig>(key: T, value: TConfig[T]) {

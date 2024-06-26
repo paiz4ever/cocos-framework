@@ -1,3 +1,6 @@
+/**
+ * 链表
+ */
 class ListNode<T> {
   value: T;
   next: ListNode<T> | null;

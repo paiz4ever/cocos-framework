@@ -191,7 +191,7 @@ export default class WeChatAdapter
     wx.operateGameRecorderVideo({
       title: shareOptions.title,
     });
-    return Promise.resolve();
+    return Promise.resolve(void 0);
   }
 
   checkShareRecord(): boolean {

@@ -1,3 +1,7 @@
+import { find } from "cc";
+import { ConfigMgr } from "core/builtin/managers";
+import Singleton from "core/builtin/structs/abstract/Singleton";
+
 export function guidable(viewName: string) {
   return function (target: any) {
     let oldOnEnable = target.prototype.onEnable;
@@ -5,28 +9,74 @@ export function guidable(viewName: string) {
     target.prototype.onEnable = function () {
       oldOnEnable && oldOnEnable.call(this);
       // @ts-ignore
-      GuideSys.registerView(viewName);
+      GuideMgr.registerView(viewName);
     };
     target.prototype.onDisable = function () {
       oldOnDisable && oldOnDisable.call(this);
       // @ts-ignore
-      GuideSys.unregisterView(viewName);
+      GuideMgr.unregisterView(viewName);
     };
   };
 }
-class GuideSystem {
-  private static _instance: GuideSystem;
-  static getInstance() {
-    if (!this._instance) {
-      this._instance = new GuideSystem();
-    }
-    return this._instance;
+function active() {
+  const canvas = find("Canvas");
+  if (!canvas) return;
+  let builtinGuideLayer = canvas.getChildByName("BuiltinGuideLayer");
+  if (!builtinGuideLayer) { 
+    
   }
+}
+class GuideManager extends Singleton {
   private views: Map<string, number> = new Map();
+  private suppressed = false;
+  /** 当前步骤数 */
+  step = 0;
+  /** 最大步骤数 */
+  maxStep = 0;
+  /** 是否可以进入引导 */
+  get canGuide() {
+    return !this.suppressed && this.step < this.maxStep;
+  }
+
+  /** 进入下一步引导 */
+  next() {
+    if (!this.canGuide) return;
+    let guideItem = ConfigMgr.tables.TbGuide.get(this.step);
+    if (!guideItem) return;
+    let node = find(guideItem.targetPath);
+    if (!node) return;
+    active();
+  }
+
+  /** 跳过一次引导 */
+  skip() {
+    this.step++;
+  }
+
+  /** 重置引导 */
+  reset() {
+    this.step = 0;
+  }
+
+  /** 抑制引导 */
+  suppress() {
+    this.suppressed = true;
+    this.skip();
+  }
+
+  /** 允许引导 */
+  permit() {
+    this.suppressed = false;
+    this.next();
+  }
+
   private registerView(viewName: string) {
     let viewCount = this.views.get(viewName) || 0;
     this.views.set(viewName, viewCount + 1);
+    if (!this.canGuide) return;
+    this.next();
   }
+
   private unregisterView(viewName: string) {
     let viewCount = this.views.get(viewName) || 0;
     if (viewCount <= 1) {
@@ -35,34 +85,6 @@ class GuideSystem {
       this.views.set(viewName, viewCount - 1);
     }
   }
-
-  /** 初始化 */
-  init() {}
-
-  /** 当前步骤数 */
-  get step() {
-    return 0;
-  }
-
-  /** 最大步骤数 */
-  get maxStep() {
-    return 0;
-  }
-
-  /** 进入下一步引导 */
-  next() {}
-
-  /** 跳过一次引导 */
-  skip() {}
-
-  /** 重置引导 */
-  reset() {}
-
-  /** 抑制引导 */
-  suppress() {}
-
-  /** 允许引导 */
-  permit() {}
 }
 
-export const GuideSys = GuideSystem.getInstance();
+export const GuideMgr = GuideManager.getInstance();

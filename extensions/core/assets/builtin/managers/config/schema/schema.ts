@@ -8,54 +8,20 @@
 //------------------------------------------------------------------------------
 
 
-export namespace item { 
-export enum EQuality {
-    /**
-     * 最差品质
-     */
-    WHITE = 1,
-    /**
-     * 蓝色的
-     */
-    BLUE = 2,
-    /**
-     * 紫色的
-     */
-    PURPLE = 3,
-    /**
-     * 最高品质
-     */
-    RED = 4,
-}
-
-} 
 
 
 
 
 
-export class Item {
+export class GuideItem {
 
     constructor(_json_: any) {
         if (_json_.id === undefined) { throw new Error() }
         this.id = _json_.id
-        if (_json_.name === undefined) { throw new Error() }
-        this.name = _json_.name
+        if (_json_.target_path === undefined) { throw new Error() }
+        this.targetPath = _json_.target_path
         if (_json_.desc === undefined) { throw new Error() }
         this.desc = _json_.desc
-        if (_json_.price === undefined) { throw new Error() }
-        this.price = _json_.price
-        if (_json_.upgrade_to_item_id === undefined) { throw new Error() }
-        this.upgradeToItemId = _json_.upgrade_to_item_id
-        if(_json_.expire_time != undefined) { this.expireTime = _json_.expire_time } else { this.expireTime = undefined }
-        if (_json_.batch_useable === undefined) { throw new Error() }
-        this.batchUseable = _json_.batch_useable
-        if (_json_.exchange_stream === undefined) { throw new Error() }
-        this.exchangeStream = new item.ItemExchange(_json_.exchange_stream)
-        if (_json_.exchange_list === undefined) { throw new Error() }
-        { this.exchangeList = []; for(let _ele0 of _json_.exchange_list) { let _e0; _e0 = new item.ItemExchange(_ele0); this.exchangeList.push(_e0);}}
-        if (_json_.exchange_column === undefined) { throw new Error() }
-        this.exchangeColumn = new item.ItemExchange(_json_.exchange_column)
     }
 
     /**
@@ -63,107 +29,45 @@ export class Item {
      */
     readonly id: number
     /**
-     * 名字
+     * 路径
      */
-    readonly name: string
+    readonly targetPath: string
     /**
      * 描述
      */
     readonly desc: string
-    /**
-     * 价格
-     */
-    readonly price: number
-    /**
-     * 引用当前表
-     */
-    readonly upgradeToItemId: number
-    upgradeToItemId_ref: Item | undefined
-    /**
-     * 过期时间
-     */
-    readonly expireTime: number|undefined
-    /**
-     * 能否批量使用
-     */
-    readonly batchUseable: boolean
-    /**
-     * 道具兑换配置
-     */
-    readonly exchangeStream: item.ItemExchange
-    readonly exchangeList: item.ItemExchange[]
-    /**
-     * 道具兑换配置
-     */
-    readonly exchangeColumn: item.ItemExchange
 
     resolve(tables:Tables)
     {
         
         
         
-        
-        this.upgradeToItemId_ref = tables.TbItem.get(this.upgradeToItemId)
-        
-        
-        this.exchangeStream?.resolve(tables);
-        for (let _e of this.exchangeList) { _e?.resolve(tables); }
-        this.exchangeColumn?.resolve(tables);
     }
 }
 
 
 
 
-export namespace item {
-export class ItemExchange {
 
+export namespace guide {
+export class TbGuide{
+    private _dataMap: Map<number, GuideItem>
+    private _dataList: GuideItem[]
     constructor(_json_: any) {
-        if (_json_.id === undefined) { throw new Error() }
-        this.id = _json_.id
-        if (_json_.num === undefined) { throw new Error() }
-        this.num = _json_.num
-    }
-
-    /**
-     * 道具id
-     */
-    readonly id: number
-    /**
-     * 道具数量
-     */
-    readonly num: number
-
-    resolve(tables:Tables)
-    {
-        
-        
-    }
-}
-
-}
-
-
-
-export namespace item {
-export class TbItem{
-    private _dataMap: Map<number, Item>
-    private _dataList: Item[]
-    constructor(_json_: any) {
-        this._dataMap = new Map<number, Item>()
+        this._dataMap = new Map<number, GuideItem>()
         this._dataList = []
         for(var _json2_ of _json_) {
-            let _v: Item
-            _v = new Item(_json2_)
+            let _v: GuideItem
+            _v = new GuideItem(_json2_)
             this._dataList.push(_v)
             this._dataMap.set(_v.id, _v)
         }
     }
 
-    getDataMap(): Map<number, Item> { return this._dataMap; }
-    getDataList(): Item[] { return this._dataList; }
+    getDataMap(): Map<number, GuideItem> { return this._dataMap; }
+    getDataList(): GuideItem[] { return this._dataList; }
 
-    get(key: number): Item | undefined { return this._dataMap.get(key); }
+    get(key: number): GuideItem | undefined { return this._dataMap.get(key); }
 
     resolve(tables:Tables)
     {
@@ -181,13 +85,13 @@ export class TbItem{
 type JsonLoader = (file: string) => any
 
 export class Tables {
-    private _TbItem: item.TbItem
-    get TbItem(): item.TbItem  { return this._TbItem;}
+    private _TbGuide: guide.TbGuide
+    get TbGuide(): guide.TbGuide  { return this._TbGuide;}
 
     constructor(loader: JsonLoader) {
-        this._TbItem = new item.TbItem(loader('item_tbitem'))
+        this._TbGuide = new guide.TbGuide(loader('guide_tbguide'))
 
-        this._TbItem.resolve(this)
+        this._TbGuide.resolve(this)
     }
 }
 

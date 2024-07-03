@@ -1,6 +1,7 @@
-import { find } from "cc";
+import { Node, director, find } from "cc";
 import { ConfigMgr } from "core/builtin/managers";
 import Singleton from "core/builtin/structs/abstract/Singleton";
+import { alignFullScreen } from "core/builtin/utils/ui-layout";
 
 export function guidable(viewName: string) {
   return function (target: any) {
@@ -22,8 +23,11 @@ function active() {
   const canvas = find("Canvas");
   if (!canvas) return;
   let builtinGuideLayer = canvas.getChildByName("BuiltinGuideLayer");
-  if (!builtinGuideLayer) { 
-    
+  if (!builtinGuideLayer) {
+    builtinGuideLayer = new Node("BuiltinGuideLayer");
+    alignFullScreen(builtinGuideLayer);
+    director.getScene()?.addChild(builtinGuideLayer);
+    director.addPersistRootNode(builtinGuideLayer);
   }
 }
 class GuideManager extends Singleton {

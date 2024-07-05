@@ -22,7 +22,7 @@ export function playRankPromotion(options: {
   }
   return new Promise((resolve) => {
     // 放置播放过程中玩家手动滚动视口
-    sv.touchScrollLock = true;
+    sv.autoTouchLock = true;
     // 禁用Layout避免重绘布局
     const layoutC = sv.content!.getComponent(Layout);
     layoutC && (layoutC.enabled = false);

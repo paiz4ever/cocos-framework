@@ -2,10 +2,11 @@ import { ScrollView, UITransform, v2, warn } from "cc";
 
 /** ScrollView预处理 */
 function pretreat(sv: ScrollView) {
-  if (sv.touchScrollLock) {
+  if (sv.autoTouchLock) {
     // @ts-ignore
     sv?._unregisterEvent();
     sv.node.once(ScrollView.EventType.SCROLL_ENDED, () => {
+      if (sv.touchLock) return;
       // @ts-ignore
       sv?._registerEvent();
     });
@@ -38,6 +39,23 @@ ScrollView.prototype.scrollToItem = function (
     attenuated
   );
 };
+
+Object.defineProperty(ScrollView.prototype, "touchLock", {
+  get() {
+    return this._touchLock || false;
+  },
+  set(value) {
+    if (value === this._touchLock) return;
+    this._touchLock = value;
+    if (value) {
+      // @ts-ignore
+      this?._unregisterEvent();
+    } else {
+      // @ts-ignore
+      this?._registerEvent();
+    }
+  },
+});
 
 const ScrollApis = [
   "scrollToBottom",

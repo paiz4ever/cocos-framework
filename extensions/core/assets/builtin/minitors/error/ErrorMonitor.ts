@@ -8,11 +8,12 @@ export default class ErrorMonitor {
           console.warn("catch error", location, message, stack);
         });
       } else {
-        window.addEventListener("error", (ev) => {
-          console.warn("catch error", ev);
+        window.addEventListener("error", (evt) => {
+          console.warn("catch error", evt);
         });
-        window.addEventListener("unhandledrejection", (ev) => {
-          console.log("catch reject", ev);
+        window.addEventListener("unhandledrejection", function (evt) {
+          console.log("catch rejection:", evt);
+          evt.preventDefault();
         });
       }
     } catch (e) {

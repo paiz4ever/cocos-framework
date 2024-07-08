@@ -27,6 +27,7 @@ export class RankPromotion extends Component {
       sv: this.scrollView,
       fromIndex: this.fromIndex,
       toIndex: this.toIndex,
+      scale: 1.5,
     });
   }
 }

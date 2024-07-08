@@ -51,7 +51,7 @@ export default class KuaiShouAdapter
           success: ({ code }) => {
             this.options
               .loginRpc({
-                appID: ConfigMgr.cnf.app.appID,
+                appID: this.config.appID,
                 code,
               })
               .then(({ openID }) => {
@@ -109,7 +109,6 @@ export default class KuaiShouAdapter
 
   getSystemInfo(): ISystemInfo {
     let sysInfo = ks.getSystemInfoSync();
-    let { appID } = ConfigMgr.cnf.app;
     return {
       pkg: ConfigMgr.cnf.app.pkg,
       os: sysInfo.platform,
@@ -118,7 +117,7 @@ export default class KuaiShouAdapter
       model: sysInfo.model,
       host: sysInfo.host.env,
       hostVersion: sysInfo.host.gameVersion,
-      appID: appID,
+      appID: this.config.appID,
       appVersion: sysInfo.version,
     };
   }

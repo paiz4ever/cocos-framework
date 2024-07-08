@@ -10,6 +10,7 @@ import {
 import AudioMgr from "../builtin/managers/audio/AudioManager";
 import PlatformMgr from "../builtin/managers/platform/PlatformManager";
 import { ConfigMgr } from "../builtin/managers";
+import { ErrorMonitor } from "../builtin/minitors";
 const { ccclass, property } = _decorator;
 
 export default abstract class Root extends Component {
@@ -68,14 +69,18 @@ export default abstract class Root extends Component {
     game.frameRate = 999;
     this.progress = 0;
     this.resCount = 0;
+    // 初始化错误监听
+    ErrorMonitor.init();
+    // 配置初始化
     ConfigMgr.init(this.appConfig)
       .then(() => {
         return this.onInitBefore();
       })
       .then(() => {
+        // 初始化音频
         AudioMgr.init();
         return Promise.all([
-          /** 初始化平台并登录 */
+          // 初始化平台并登录
           PlatformMgr.init().then(PlatformMgr.login),
         ]);
       })

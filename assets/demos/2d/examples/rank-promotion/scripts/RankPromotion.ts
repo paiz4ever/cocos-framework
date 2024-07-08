@@ -7,7 +7,6 @@ import {
   Sprite,
 } from "cc";
 import { playRankPromotion } from "../../../packages/rank-promotion";
-
 const { ccclass, property } = _decorator;
 
 @ccclass("RankPromotion")

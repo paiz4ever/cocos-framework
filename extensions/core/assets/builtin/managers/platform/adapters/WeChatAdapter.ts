@@ -52,7 +52,7 @@ export default class WeChatAdapter
           success: ({ code }) => {
             this.options
               .loginRpc({
-                appID: ConfigMgr.cnf.app.appID,
+                appID: this.config.appID,
                 code,
               })
               .then(({ openID }) => {
@@ -125,7 +125,6 @@ export default class WeChatAdapter
   getSystemInfo(): ISystemInfo {
     let sysInfo = wx.getSystemInfoSync();
     let accountInfo = wx.getAccountInfoSync();
-    let { appID } = ConfigMgr.cnf.app;
     return {
       pkg: ConfigMgr.cnf.app.pkg,
       os: sysInfo.platform,
@@ -134,7 +133,7 @@ export default class WeChatAdapter
       model: sysInfo.model,
       host: "WeChat",
       hostVersion: sysInfo.version,
-      appID: appID,
+      appID: this.config.appID,
       appVersion: accountInfo?.miniProgram?.version || "0.0.0",
     };
   }

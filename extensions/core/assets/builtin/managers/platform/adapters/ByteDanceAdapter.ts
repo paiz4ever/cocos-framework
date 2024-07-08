@@ -53,7 +53,7 @@ export default class ByteDanceAdapter
           success: ({ code, anonymousCode }) => {
             this.options
               .loginRpc({
-                appID: ConfigMgr.cnf.app.appID,
+                appID: this.config.appID,
                 code,
                 anonymousCode,
               })
@@ -120,7 +120,7 @@ export default class ByteDanceAdapter
       model: sysInfo.model,
       host: sysInfo.appName,
       hostVersion: sysInfo.version,
-      appID: ConfigMgr.cnf.app.appID,
+      appID: this.config.appID,
       appVersion: envInfo.microapp.mpVersion,
     };
   }
@@ -278,7 +278,7 @@ export default class ByteDanceAdapter
       }
       let { uuid } = StorageMgr.get("userAuth", {});
       if (!uuid) return reject();
-      let { subscribeList } = this.config;
+      let { subscribeList, appID } = this.config;
       if (!subscribeList || !subscribeList.length) return reject();
       let tplIDs = subscribeList.find((v) => v.type === type)?.tplIDs || [];
       if (!tplIDs.length) return reject();
@@ -289,7 +289,7 @@ export default class ByteDanceAdapter
           if (!acceptIDs.length) return reject();
           this.options
             .subscribeRpc({
-              appID: ConfigMgr.cnf.app.appID,
+              appID,
               openID: uuid,
               dataList: acceptIDs.map((id) => ({ type, tplID: id, data })),
             })

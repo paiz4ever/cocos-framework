@@ -9,8 +9,6 @@ interface IAppConfig {
     prod: string;
     dev: string;
   };
-  /** 应用唯一标识 一般为appid */
-  appID: string;
   /** 名字 */
   name: string;
   /** 名字缩写 */
@@ -21,15 +19,21 @@ interface IAppConfig {
   platform?: {
     /** 抖音 */
     ByteDance?: {
+      /** 应用ID */
+      appID: string;
       rewardAdUnitID: string;
       subscribeList?: { type: string; tplIDs: string[] }[];
     };
     /** 快手 */
     KuaiShou?: {
+      /** 应用ID */
+      appID: string;
       rewardAdUnitID: string;
     };
     /** 微信 */
     WeChat?: {
+      /** 应用ID */
+      appID: string;
       rewardAdUnitID: string;
     };
   };

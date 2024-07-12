@@ -1,3 +1,10 @@
+/**
+ * 思路：
+ * 引导触发（使用位运算 因为条件可以重叠）
+ * 1. 延时触发（指定定时结束后触发）
+ * 2. 事件触发（emit）
+ */
+
 import { Node, director, find } from "cc";
 import { ConfigMgr } from "core/builtin/managers";
 import Singleton from "core/builtin/structs/abstract/Singleton";
@@ -19,17 +26,6 @@ export function guidable(viewName: string) {
     };
   };
 }
-function active() {
-  const canvas = find("Canvas");
-  if (!canvas) return;
-  let builtinGuideLayer = canvas.getChildByName("BuiltinGuideLayer");
-  if (!builtinGuideLayer) {
-    builtinGuideLayer = new Node("BuiltinGuideLayer");
-    alignFullScreen(builtinGuideLayer);
-    director.getScene()?.addChild(builtinGuideLayer);
-    director.addPersistRootNode(builtinGuideLayer);
-  }
-}
 class GuideManager extends Singleton {
   private views: Map<string, number> = new Map();
   private suppressed = false;
@@ -48,24 +44,26 @@ class GuideManager extends Singleton {
     let guideItem = ConfigMgr.tables.TbGuide.get(this.step);
     if (!guideItem) return;
     let node = find(guideItem.targetPath);
-    if (!node) return;
-    active();
+    if (!node || !node.active || !node.isValid) return;
+    this.active();
   }
 
   /** 跳过一次引导 */
   skip() {
     this.step++;
+    this.deactive();
   }
 
   /** 重置引导 */
   reset() {
     this.step = 0;
+    this.next();
   }
 
   /** 抑制引导 */
   suppress() {
     this.suppressed = true;
-    this.skip();
+    this.deactive();
   }
 
   /** 允许引导 */
@@ -89,6 +87,20 @@ class GuideManager extends Singleton {
       this.views.set(viewName, viewCount - 1);
     }
   }
+
+  private active() {
+    const canvas = find("Canvas");
+    if (!canvas) return;
+    let builtinGuideLayer = canvas.getChildByName("BuiltinGuideLayer");
+    if (!builtinGuideLayer) {
+      builtinGuideLayer = new Node("BuiltinGuideLayer");
+      alignFullScreen(builtinGuideLayer);
+      director.getScene()?.addChild(builtinGuideLayer);
+      director.addPersistRootNode(builtinGuideLayer);
+    }
+  }
+
+  private deactive() {}
 }
 
 export const GuideMgr = GuideManager.getInstance();

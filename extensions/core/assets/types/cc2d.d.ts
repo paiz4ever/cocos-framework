@@ -1,4 +1,10 @@
 declare module "cc" {
+  interface Node {
+    setComponent<T extends Component>(
+      component: new () => T,
+      handler?: (c: T) => void
+    ): T;
+  }
   interface ScrollView {
     /**
      * 禁用触摸滚动（优先级高于autoTouchLock）

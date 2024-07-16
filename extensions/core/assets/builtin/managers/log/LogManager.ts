@@ -1,7 +1,6 @@
 /**
  * 日志管理器
  */
-import { log } from "cc";
 import Singleton from "../../structs/abstract/Singleton";
 import EventMgr from "../event/EventManager";
 import PlatformMgr from "../platform/PlatformManager";
@@ -41,7 +40,7 @@ class LogManager extends Singleton {
   print(...args: any) {
     let env = PlatformMgr.getEnv();
     if (env === "development") {
-      log(...args);
+      console.log(...args);
     }
     if (!this.isLogCache) {
       this.missCount++;

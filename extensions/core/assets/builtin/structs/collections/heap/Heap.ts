@@ -3,10 +3,37 @@
  */
 export default class Heap<T> {
   private heap: T[] = [];
-  private comparator: (a: T, b: T) => number;
 
-  constructor(comparator: (a: T, b: T) => number) {
-    this.comparator = comparator;
+  constructor(private comparator: (a: T, b: T) => number) {}
+
+  insert(value: T): void {
+    this.heap.push(value);
+    this.heapifyUp(this.heap.length - 1);
+  }
+
+  extract(): T | null {
+    if (this.heap.length === 0) {
+      return null;
+    }
+    if (this.heap.length === 1) {
+      return this.heap.pop()!;
+    }
+    const root = this.heap[0];
+    this.heap[0] = this.heap.pop()!;
+    this.heapifyDown(0);
+    return root;
+  }
+
+  peek(): T | null {
+    return this.heap.length > 0 ? this.heap[0] : null;
+  }
+
+  size(): number {
+    return this.heap.length;
+  }
+
+  isEmpty(): boolean {
+    return this.heap.length === 0;
   }
 
   private parent(index: number): number {
@@ -66,35 +93,5 @@ export default class Heap<T> {
       this.swap(currentIndex, smallestChildIndex);
       currentIndex = smallestChildIndex;
     }
-  }
-
-  insert(value: T): void {
-    this.heap.push(value);
-    this.heapifyUp(this.heap.length - 1);
-  }
-
-  extract(): T | null {
-    if (this.heap.length === 0) {
-      return null;
-    }
-    if (this.heap.length === 1) {
-      return this.heap.pop()!;
-    }
-    const root = this.heap[0];
-    this.heap[0] = this.heap.pop()!;
-    this.heapifyDown(0);
-    return root;
-  }
-
-  peek(): T | null {
-    return this.heap.length > 0 ? this.heap[0] : null;
-  }
-
-  size(): number {
-    return this.heap.length;
-  }
-
-  isEmpty(): boolean {
-    return this.heap.length === 0;
   }
 }

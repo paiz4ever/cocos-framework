@@ -21,7 +21,6 @@ class TimeManager extends Singleton {
     while (!this.heap.isEmpty() && this.heap.peek()!.time <= this.currentTime) {
       const task = this.heap.extract();
       task?.callback();
-
       if (task && task.interval > 0 && task.repeat > 0) {
         task.time += task.interval;
         task.repeat -= 1;

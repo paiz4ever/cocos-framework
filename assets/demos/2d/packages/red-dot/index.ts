@@ -4,6 +4,7 @@
  * 1、采用树形结构统一管理红点，仅需关心叶子节点（主动节点）的红点状态即可，它的父节点（被动节点）由系统维护
  * 2、路径使用"|"隔开
  * 3、可以搭配红点组件使用RedDotComponent，也可RedDotSystem.on(path)来监听红点状态
+ * 4、建议使用枚举来统一管理所有的红点路径
  *
  * 二、用例：
  *    | - A1 - A11
@@ -12,10 +13,10 @@
  * 分别通过RedDotSys.add("A|A1|A11")、RedDotSys.add("A|A2")、RedDotSys.add("A|A3")添加红点，此时A的红点数自动变为3，它是被动节点系统自动处理的
  *
  * 三、注意：
- * 1、当手动添加被动节点RedDotSys.add("A")时，它是被允许的，但是当它存在的其他关系被添加时它会被自动纠正成被动节点
- * 2、无法重复添加同一个节点，会被跳过
- * 3、无法删除被动节点
- * 4、如果使用RedDotSystem.on(path)监听，记得使用RedDotSys.off或者RedDotSys.offTarget处理注销监听(用法同EventTarget)
+ * 1、无法重复添加同一个节点，会被跳过
+ * 2、无法删除被动节点（当存在子节点时）
+ * 3、如果使用RedDotSystem.on(path)监听，记得使用RedDotSys.off或者RedDotSys.offTarget处理注销监听(用法同EventTarget)
+ * 4、当手动添加被动节点RedDotSys.add("A")时，它是被允许的，此时它被当作主动节点。但是当它的子节点（真正的主动节点）被添加时它会被自动纠正成被动节点
  */
 import SingleEventEmitter from "core/builtin/structs/abstract/SingleEventEmitter";
 
@@ -79,7 +80,7 @@ class RedDotSystem extends SingleEventEmitter<{ [key: string]: [number] }> {
     }
     if (target.children.size) {
       console.warn(
-        `The node(${path}) should not be deleted separately, otherwise the system becomes chaotic.`
+        `The parent node(${path}) should not be deleted separately, otherwise the system becomes chaotic.`
       );
       return false;
     }
@@ -88,7 +89,6 @@ class RedDotSystem extends SingleEventEmitter<{ [key: string]: [number] }> {
   }
 
   private notify(node: RedDotNode) {
-    console.log(node.path, node.redNum);
     this.emit(node.path, node.redNum);
   }
 

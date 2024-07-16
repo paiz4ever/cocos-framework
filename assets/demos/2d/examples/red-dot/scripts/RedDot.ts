@@ -14,6 +14,7 @@ export class RedDot extends Component {
     this.node.children.slice(1).forEach((n) => {
       n.on(Input.EventType.MOUSE_UP, (e: EventMouse) => {
         if (e.getButton() === EventMouse.BUTTON_RIGHT) {
+          // 这里为了方便节点名同红点路径一致
           RedDotSys.add(n.name);
         } else {
           RedDotSys.del(n.name);

@@ -1,4 +1,4 @@
-import { _decorator, CCString, Component, Label, Node } from "cc";
+import { _decorator, CCString, Component, Label, Node, UIOpacity } from "cc";
 import RedDotSys from "./index";
 const { ccclass, property } = _decorator;
 
@@ -6,10 +6,19 @@ const { ccclass, property } = _decorator;
 export class RedDotComponent extends Component {
   @property({ type: CCString, tooltip: "红点的完整路径" })
   redPath: string = "";
-  @property({ type: Node, tooltip: "红点节点" })
-  declare redDot: Node;
   @property({ type: Label, tooltip: "红点数字" })
   declare redNum?: Label;
+
+  private declare opacityC: UIOpacity;
+  private declare opacity: number;
+
+  protected onLoad(): void {
+    this.opacityC = this.getComponent(UIOpacity)!;
+    if (!this.opacityC) {
+      this.opacityC = this.node.addComponent(UIOpacity);
+    }
+    this.opacity = this.opacityC.opacity;
+  }
 
   protected onEnable(): void {
     RedDotSys.on(this.redPath, this.refresh, this);
@@ -21,7 +30,7 @@ export class RedDotComponent extends Component {
   }
 
   refresh(num: number) {
-    this.redDot.active = num > 0;
+    this.opacityC.opacity = num > 0 ? this.opacity : 0;
     this.redNum && (this.redNum.string = String(num));
   }
 }

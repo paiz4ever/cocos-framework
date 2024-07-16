@@ -5,6 +5,8 @@ import { Layout, Node, ScrollView, UITransform, Vec3, tween, v2, v3 } from "cc";
  * @param options.sv ScrollView
  * @param options.fromIndex 起点index
  * @param options.toIndex 终点index
+ * @param options.delay 延迟时间（s） 默认：0.5
+ * @param options.scale 缩放 默认：1.1
  * @notice 注意缩放后节点可能会被遮罩裁切，手动调节view大小
  */
 export function playRankPromotion(options: {

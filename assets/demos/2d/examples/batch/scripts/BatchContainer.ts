@@ -1,3 +1,10 @@
+/**
+ * FAQ
+ * 1. 为什么不直接给容器添加UIOpacity组件？
+ * 因为子节点不是prefab将被跳过合批，如果容器添加了UIOpacity会导致这些被跳过的子节点无法渲染
+ *
+ */
+
 import {
   _decorator,
   Component,
@@ -23,11 +30,37 @@ const { ccclass, property } = _decorator;
 
 @ccclass("BatchContainer")
 export class BatchContainer extends Component {
+  /**
+   * 格式化节点
+   * @notice 仅保留UIRenderer和UITransform
+   */
+  private static format(node: Node) {
+    node.destroyAllChildren();
+    node.components.forEach((c) => {
+      if (!(c instanceof UITransform || c instanceof UIRenderer)) {
+        c.destroy();
+      }
+    });
+  }
+  /**
+   * 同步节点
+   * // TODO
+   */
+  private static sync(source: Node, target: Node) {
+    target.worldPosition = source.worldPosition;
+    target.worldScale = source.worldScale;
+    target.worldRotation = source.worldRotation;
+    source.on(Node.EventType.TRANSFORM_CHANGED, () => {
+      target.worldPosition = source.worldPosition;
+    });
+  }
+
   private declare dividedNode: Node;
 
   protected onLoad(): void {
+    return;
     console.log("onLoad 0: ", director.root!.device.numDrawCalls);
-    this.createDividedNode();
+    this.divide();
     console.log("onLoad 1: ", director.root!.device.numDrawCalls);
     this.classify();
   }
@@ -46,12 +79,12 @@ export class BatchContainer extends Component {
   private classify() {
     const groups: Map<string, Node[]> = new Map();
     const orders: Map<string, number> = new Map();
-    function recur(node: Node, order: number) {
+    function search(node: Node, order: number) {
       node.children.forEach((n) => {
         if (!n.activeInHierarchy) return;
         const prefab = (<any>n)._prefab as Prefab._utils.PrefabInfo;
         if (!prefab) return;
-        recur(n, order + 1);
+        search(n, order + 1);
         if (!n.getComponent(UIRenderer)) return;
         const group = groups.get(prefab.fileId) || [];
         group.push(n);
@@ -59,42 +92,29 @@ export class BatchContainer extends Component {
         orders.set(prefab.fileId, order);
       });
     }
-    recur(this.node, 0);
+    search(this.node, 0);
     groups.forEach((group, key) => {
       const groupContainer = new Node(key);
       this.dividedNode.addChild(groupContainer);
       groupContainer.setSiblingIndex(orders.get(key)!);
       group.forEach((n) => {
         const node = instantiate(n);
-        node.destroyAllChildren();
-        node.components.forEach((c) => {
-          if (!(c instanceof UITransform || c instanceof UIRenderer)) {
-            c.destroy();
-          }
-        });
+        BatchContainer.format(node);
         groupContainer.addChild(node);
-        n.on(Node.EventType.TRANSFORM_CHANGED, () => {
-          node.worldPosition = n.worldPosition;
-        });
-        node.worldPosition = n.worldPosition;
-        node.worldScale = n.worldScale;
-        node.worldRotation = n.worldRotation;
+        BatchContainer.sync(n, node);
         n.setComponent(UIOpacity, (c) => (c.opacity = 0));
       });
     });
   }
 
-  private createDividedNode() {
+  /** 分裂 */
+  private divide() {
     const node = instantiate(this.node);
     node.name = `$Divided${this.node.name}`;
-    node.getComponent(BatchContainer)?.destroy();
-    node.destroyAllChildren();
+    BatchContainer.format(node);
     this.node.parent?.addChild(node);
+    BatchContainer.sync(this.node, node);
     node.setSiblingIndex(this.node.getSiblingIndex());
     this.dividedNode = node;
-    // TODO
-    this.node.on(Node.EventType.TRANSFORM_CHANGED, () => {
-      node.worldPosition = this.node.worldPosition;
-    });
   }
 }

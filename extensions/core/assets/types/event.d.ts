@@ -2,11 +2,11 @@ type TBuiltinEvent = {
   /** 打印 */
   Log: [string];
   /** 激励视频展示前 */
-  RewardAdShowBefore: [];
+  BeforeShowRewardAd: [];
   /** 激励视频展示后 */
-  RewardAdShowAfter: [];
+  AfterShowRewardAd: [];
   /** 激励视频完成 */
   RewardAdCompleted: [];
-  /** 激励视频关闭 */
-  RewardAdClose: [];
+  /** 关闭激励视频 */
+  CloseRewardAd: [];
 };

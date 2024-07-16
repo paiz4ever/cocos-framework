@@ -2,9 +2,8 @@
  * 事件发射器
  */
 import { EventTarget } from "cc";
-import Singleton from "./Singleton";
 
-export default abstract class EventEmitter<T> extends Singleton {
+export default abstract class EventEmitter<T> {
   private et = new EventTarget();
 
   /** 发送事件 */

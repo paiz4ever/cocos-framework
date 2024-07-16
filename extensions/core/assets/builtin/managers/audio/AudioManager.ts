@@ -17,14 +17,14 @@ class AudioManager extends Singleton {
     this._talkAudioSource = audioNode.addComponent(AudioSource);
     this._audioSource.loop = true;
     this._talkAudioSource.loop = false;
-    EventMgr.on("RewardAdShowBefore", () => {
+    EventMgr.on("BeforeShowRewardAd", () => {
       if (this._audioSource.playing) {
         this.dirty = true;
         this.pauseBgm();
       }
       this._talkAudioSource.stop();
     });
-    EventMgr.on("RewardAdClose", () => {
+    EventMgr.on("CloseRewardAd", () => {
       if (this.dirty) {
         this.dirty = false;
         this.resumeBgm();

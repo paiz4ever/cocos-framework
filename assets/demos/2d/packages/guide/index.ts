@@ -26,7 +26,7 @@ export function guidable(viewName: string) {
     };
   };
 }
-class GuideManager extends Singleton {
+class GuideSystem extends Singleton {
   private views: Map<string, number> = new Map();
   private suppressed = false;
   /** 当前步骤数 */
@@ -103,4 +103,5 @@ class GuideManager extends Singleton {
   private deactive() {}
 }
 
-export const GuideMgr = GuideManager.getInstance();
+const GuideSys = GuideSystem.getInstance();
+export default GuideSys;

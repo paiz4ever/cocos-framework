@@ -4,10 +4,10 @@ const { ccclass, property } = _decorator;
 
 @ccclass("RedDotComponent")
 export class RedDotComponent extends Component {
-  @property({ type: CCString, tooltip: "红点的完整路径" })
-  redPath: string = "";
+  @property({ tooltip: "红点的完整路径" })
+  redDotPath: string = "";
   @property({ type: Label, tooltip: "红点数字" })
-  declare redNum?: Label;
+  declare redDotLabel?: Label;
 
   private declare opacityC: UIOpacity;
   private declare opacity: number;
@@ -21,8 +21,8 @@ export class RedDotComponent extends Component {
   }
 
   protected onEnable(): void {
-    RedDotSys.on(this.redPath, this.refresh, this);
-    this.refresh(RedDotSys.find(this.redPath)?.redNum ?? 0);
+    RedDotSys.on(this.redDotPath, this.refresh, this);
+    this.refresh(RedDotSys.find(this.redDotPath)?.redNum ?? 0);
   }
 
   protected onDisable(): void {
@@ -31,6 +31,6 @@ export class RedDotComponent extends Component {
 
   refresh(num: number) {
     this.opacityC.opacity = num > 0 ? this.opacity : 0;
-    this.redNum && (this.redNum.string = String(num));
+    this.redDotLabel && (this.redDotLabel.string = String(num));
   }
 }

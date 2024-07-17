@@ -1,9 +1,33 @@
 declare module "cc" {
   interface Node {
+    /**
+     * 设置组件（没有则自动添加）
+     * @param component 组件类
+     * @param handler 组件处理函数
+     */
     setComponent<T extends Component>(
       component: new () => T,
       handler?: (c: T) => void
     ): T;
+  }
+  interface Component {
+    /**
+     * 设置组件（没有则自动添加）
+     * @param component 组件类
+     * @param handler 组件处理函数
+     */
+    setComponent<T extends Component>(
+      component: new () => T,
+      handler?: (c: T) => void
+    ): T;
+  }
+  namespace math {
+    interface Vec3 {
+      v2(): Vec2;
+    }
+    interface Vec2 {
+      v3(): Vec3;
+    }
   }
   interface ScrollView {
     /**
@@ -30,7 +54,27 @@ declare module "cc" {
     /**
      * 获取两个节点之间约束的边缘距离
      * @param transform 另一个节点的UITransform
+     * @return 边缘距离xy
      */
     getOuterDistance(transform: UITransform): Vec2;
+  }
+  namespace Intersection2D {
+    /**
+     * 点是否在圆内
+     * @param point 点坐标
+     * @param cp 圆心坐标
+     * @param cr 圆半径
+     */
+    function pointInCircle(
+      point: Readonly<math.Vec2>,
+      cp: Readonly<math.Vec2>,
+      cr: number
+    ): boolean;
+    /**
+     * 点是否在矩形内
+     * @param point 点坐标
+     * @param rect 矩形
+     */
+    function pointInRect(point: Readonly<math.Vec2>, rect: math.Rect): boolean;
   }
 }

@@ -3,6 +3,10 @@
  * 引导触发（使用位运算 因为条件可以重叠）
  * 1. 延时触发（指定定时结束后触发）
  * 2. 事件触发（emit）
+ *
+ * 中途退出
+ *
+ * 使用render texture来处理遮罩高亮
  */
 
 import { Node, director, find } from "cc";

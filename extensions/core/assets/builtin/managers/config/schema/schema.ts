@@ -22,10 +22,12 @@ export class GuideItem {
         this.targetPath = _json_.target_path
         if (_json_.desc === undefined) { throw new Error() }
         this.desc = _json_.desc
+        if (_json_.redirect === undefined) { throw new Error() }
+        this.redirect = _json_.redirect
     }
 
     /**
-     * 这是id
+     * id
      */
     readonly id: number
     /**
@@ -36,9 +38,14 @@ export class GuideItem {
      * 描述
      */
     readonly desc: string
+    /**
+     * 中断重定向
+     */
+    readonly redirect: number
 
     resolve(tables:Tables)
     {
+        
         
         
         

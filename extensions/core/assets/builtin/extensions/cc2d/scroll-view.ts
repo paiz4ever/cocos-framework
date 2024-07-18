@@ -20,15 +20,15 @@ if (!EDITOR) {
     timeInSecond?: number,
     attenuated?: boolean
   ) {
-    const ts = this as ScrollView;
-    const node = ts.content?.children[index];
+    const self = this as ScrollView;
+    const node = self.content?.children[index];
     if (!node) {
       warn(`index ${index} is invalid`);
       return;
     }
     const nodeUITransform = node.getComponent(UITransform)!;
-    const viewUITransform = ts.content!.parent!.getComponent(UITransform)!;
-    ts.scrollToOffset(
+    const viewUITransform = self.content!.parent!.getComponent(UITransform)!;
+    self.scrollToOffset(
       v2(
         node.position.x +
           nodeUITransform.width * (0.5 - nodeUITransform.anchorX) -

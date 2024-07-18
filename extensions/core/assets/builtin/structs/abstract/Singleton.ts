@@ -2,12 +2,14 @@
  * 单例
  */
 export default abstract class Singleton {
-  private static _instance: any;
-
-  static getInstance<T>(this: new () => T): T {
-    if (!(<any>this)._instance) {
-      (<any>this)._instance = new this();
+  static getInstance<T extends abstract new (...args: any) => any>(
+    this: T,
+    ...args: ConstructorParameters<T>
+  ): InstanceType<T> {
+    const self = this as any;
+    if (!self._instance) {
+      self._instance = new self(...args);
     }
-    return (<any>this)._instance;
+    return self._instance;
   }
 }

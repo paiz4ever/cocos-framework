@@ -6,7 +6,7 @@ if (!EDITOR) {
     component: new () => T,
     handler?: (c: T) => void
   ): T {
-    const ts = this as Component;
-    return ts.node?.setComponent(component, handler);
+    const self = this as Component;
+    return self.node?.setComponent(component, handler);
   };
 }

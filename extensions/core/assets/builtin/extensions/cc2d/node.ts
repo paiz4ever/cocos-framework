@@ -6,10 +6,10 @@ if (!EDITOR) {
     component: new () => T,
     handler?: (c: T) => void
   ): T {
-    const ts = this as Node;
-    let c = ts.getComponent(component);
+    const self = this as Node;
+    let c = self.getComponent(component);
     if (!c) {
-      c = ts.addComponent(component);
+      c = self.addComponent(component);
     }
     handler && handler(c);
     return c;

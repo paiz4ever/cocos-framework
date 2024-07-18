@@ -1,10 +1,11 @@
 /**
  * 红点系统
+ * 采用树形结构统一管理红点，仅需关心叶子节点（主动节点）的红点状态即可，它的父节点（被动节点）由系统维护
+ *
  * 一、使用说明：
- * 1、采用树形结构统一管理红点，仅需关心叶子节点（主动节点）的红点状态即可，它的父节点（被动节点）由系统维护
- * 2、路径使用"|"隔开
- * 3、可以搭配红点组件使用RedDotComponent（挂载到红点上即可），也可RedDotSystem.on(path)来监听红点状态
- * 4、建议使用枚举来统一管理所有的红点路径
+ * 1、路径使用"|"隔开
+ * 2、可以搭配红点组件使用RedDotComponent（挂载到红点上即可），也可RedDotSys.on(path)来监听红点状态
+ * 3、建议使用枚举来统一管理所有的红点路径
  *
  * 二、用例：
  *    | - A1 - A11
@@ -15,7 +16,7 @@
  * 三、注意：
  * 1、无法重复添加同一个节点，会被跳过
  * 2、无法删除被动节点（当存在子节点时）
- * 3、如果使用RedDotSystem.on(path)监听，记得使用RedDotSys.off或者RedDotSys.offTarget处理注销监听(用法同EventTarget)
+ * 3、如果使用RedDotSys.on(path)监听，记得使用RedDotSys.off或者RedDotSys.offTarget处理注销监听(用法同EventTarget)
  * 4、当手动添加被动节点RedDotSys.add("A")时，它是被允许的，此时它被当作主动节点。但是当它的子节点（真正的主动节点）被添加时它会被自动纠正成被动节点
  */
 import SingleEventEmitter from "core/builtin/structs/abstract/SingleEventEmitter";

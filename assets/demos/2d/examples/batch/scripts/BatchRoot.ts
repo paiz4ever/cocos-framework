@@ -28,8 +28,8 @@ const { ccclass, property } = _decorator;
  * 复杂遮挡关系的处理
  */
 
-@ccclass("BatchContainer")
-export class BatchContainer extends Component {
+@ccclass("BatchRoot")
+export class BatchRoot extends Component {
   /**
    * 格式化节点
    * @notice 仅保留UIRenderer和UITransform
@@ -99,9 +99,9 @@ export class BatchContainer extends Component {
       groupContainer.setSiblingIndex(orders.get(key)!);
       group.forEach((n) => {
         const node = instantiate(n);
-        BatchContainer.format(node);
+        BatchRoot.format(node);
         groupContainer.addChild(node);
-        BatchContainer.sync(n, node);
+        BatchRoot.sync(n, node);
         n.setComponent(UIOpacity, (c) => (c.opacity = 0));
       });
     });
@@ -111,9 +111,9 @@ export class BatchContainer extends Component {
   private divide() {
     const node = instantiate(this.node);
     node.name = `$Divided${this.node.name}`;
-    BatchContainer.format(node);
+    BatchRoot.format(node);
     this.node.parent?.addChild(node);
-    BatchContainer.sync(this.node, node);
+    BatchRoot.sync(this.node, node);
     node.setSiblingIndex(this.node.getSiblingIndex());
     this.dividedNode = node;
   }

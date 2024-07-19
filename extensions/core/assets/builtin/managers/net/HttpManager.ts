@@ -21,7 +21,7 @@ export default class HttpMgr {
   ): Promise<any> {
     let { url, data, isFullUrl } = options;
     if (!isFullUrl) {
-      let domain = ConfigMgr.cnf.app.domain;
+      const domain = ConfigMgr.cnf.app.domain;
       url = `https://${
         PlatformMgr.getEnv() === "production" ? domain["prod"] : domain["dev"]
       }${url}`;

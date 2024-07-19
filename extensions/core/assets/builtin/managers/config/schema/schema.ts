@@ -18,22 +18,18 @@ export class GuideItem {
     constructor(_json_: any) {
         if (_json_.id === undefined) { throw new Error() }
         this.id = _json_.id
-        if (_json_.target_path === undefined) { throw new Error() }
-        this.targetPath = _json_.target_path
         if (_json_.desc === undefined) { throw new Error() }
         this.desc = _json_.desc
         if (_json_.redirect === undefined) { throw new Error() }
         this.redirect = _json_.redirect
+        if (_json_.next === undefined) { throw new Error() }
+        this.next = _json_.next
     }
 
     /**
      * id
      */
     readonly id: number
-    /**
-     * 路径
-     */
-    readonly targetPath: string
     /**
      * 描述
      */
@@ -42,6 +38,10 @@ export class GuideItem {
      * 中断重定向
      */
     readonly redirect: number
+    /**
+     * 下一步引导
+     */
+    readonly next: number
 
     resolve(tables:Tables)
     {

@@ -1,8 +1,8 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, CCInteger, Component, Node } from "cc";
 const { ccclass, property } = _decorator;
 
-@ccclass('GuideComponent')
+@ccclass("GuideComponent")
 export class GuideComponent extends Component {
-
+  @property({ type: CCInteger, tooltip: "引导步骤ID" })
+  declare guideStepID: number;
 }
-

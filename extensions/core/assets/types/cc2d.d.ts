@@ -9,6 +9,22 @@ declare module "cc" {
       component: new () => T,
       handler?: (c: T) => void
     ): T;
+    /**
+     * // TODO
+     * 过滤组件满足条件的保留
+     */
+    filterComponents<T extends Component>(
+      component: new () => T,
+      filter: (c: T) => boolean
+    ): T[];
+    /**
+     * // TODO
+     * 过滤组件满足条件的直接退出递归
+     */
+    filterComponent<T extends Component>(
+      component: new () => T,
+      filter: (c: T) => boolean
+    ): T;
   }
   interface Component {
     /**

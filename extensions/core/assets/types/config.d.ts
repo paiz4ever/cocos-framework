@@ -4,15 +4,15 @@ type TBuiltinConfig = {
 };
 
 interface IAppConfig {
+  /** 名字 */
+  name?: string;
+  /** 名字缩写 */
+  abbr?: string;
   /** 请求域名 */
-  domain: {
+  domain?: {
     prod: string;
     dev: string;
   };
-  /** 名字 */
-  name: string;
-  /** 名字缩写 */
-  abbr?: string;
   /** 包名 */
   pkg?: string;
   /** 平台配置 */

@@ -1,62 +1,62 @@
 [
   {
     "id": 10000,
-    "target_path": "Canvas",
     "desc": "引导1",
-    "redirect": 0
+    "redirect": 0,
+    "next": 10001
   },
   {
     "id": 10001,
-    "target_path": "Canvas",
     "desc": "引导2",
-    "redirect": 10000
+    "redirect": 10000,
+    "next": 10002
   },
   {
     "id": 10002,
-    "target_path": "Canvas",
     "desc": "引导3",
-    "redirect": 10000
+    "redirect": 10000,
+    "next": 10003
   },
   {
     "id": 10003,
-    "target_path": "Canvas",
     "desc": "引导4",
-    "redirect": 10000
+    "redirect": 10000,
+    "next": 10004
   },
   {
     "id": 10004,
-    "target_path": "Canvas",
     "desc": "引导5",
-    "redirect": 10003
+    "redirect": 10003,
+    "next": 10005
   },
   {
     "id": 10005,
-    "target_path": "Canvas",
     "desc": "引导6",
-    "redirect": 10003
+    "redirect": 10003,
+    "next": 10006
   },
   {
     "id": 10006,
-    "target_path": "Canvas",
     "desc": "引导7",
-    "redirect": 10003
+    "redirect": 10003,
+    "next": 10007
   },
   {
     "id": 10007,
-    "target_path": "Canvas",
     "desc": "引导8",
-    "redirect": 10006
+    "redirect": 10006,
+    "next": 10008
   },
   {
     "id": 10008,
-    "target_path": "Canvas",
     "desc": "引导9",
-    "redirect": 10006
+    "redirect": 10006,
+    "next": 10009
   },
   {
     "id": 10009,
-    "target_path": "Canvas",
     "desc": "引导10",
-    "redirect": 0
+    "redirect": 0,
+    "next": 0
   }
 ]

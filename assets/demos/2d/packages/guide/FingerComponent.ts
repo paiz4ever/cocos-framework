@@ -12,7 +12,11 @@ export class FingerComponent extends Component {
   }
 
   set(node: Node) {
-    TweenUtil.runStickAction(this.node, this.amplitude);
+    TweenUtil.runStickAction({
+      node: this.node,
+      amplitude: this.amplitude,
+      frequency: 1,
+    });
     this.node.worldPosition = node.worldPosition;
   }
 }

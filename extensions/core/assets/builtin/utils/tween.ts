@@ -17,16 +17,22 @@ export namespace TweenUtil {
 
   /**
    * 手指戳动画
-   * @param node 手指节点
-   * @param amplitude 幅度
+   * @param options.node 手指节点
+   * @param options.amplitude 幅度
+   * @param options.frequency 频率
    */
-  export function runStickAction(node: Node, amplitude: number) {
+  export function runStickAction(options: {
+    node: Node;
+    amplitude: number;
+    frequency: number;
+  }) {
+    const { node, amplitude, frequency } = options;
     Tween.stopAllByTarget(node);
     tween(node)
-      .by(0.3, {
+      .by(1 / 2 / frequency, {
         worldPosition: v3(amplitude, -amplitude),
       })
-      .by(0.3, {
+      .by(1 / 2 / frequency, {
         worldPosition: v3(-amplitude, amplitude),
       })
       .union()

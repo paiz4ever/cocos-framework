@@ -8,6 +8,23 @@
 //------------------------------------------------------------------------------
 
 
+export namespace guide { 
+export enum EOperation {
+    /**
+     * 点击引导
+     */
+    CLICK = 1,
+    /**
+     * 滑动引导
+     */
+    SLIDE = 2,
+    /**
+     * 链接引导
+     */
+    CONTACT = 3,
+}
+
+} 
 
 
 
@@ -24,6 +41,8 @@ export class GuideItem {
         this.redirect = _json_.redirect
         if (_json_.next === undefined) { throw new Error() }
         this.next = _json_.next
+        if (_json_.operation === undefined) { throw new Error() }
+        this.operation = _json_.operation
     }
 
     /**
@@ -42,9 +61,14 @@ export class GuideItem {
      * 下一步引导
      */
     readonly next: number
+    /**
+     * 引导操作类型
+     */
+    readonly operation: guide.EOperation
 
     resolve(tables:Tables)
     {
+        
         
         
         

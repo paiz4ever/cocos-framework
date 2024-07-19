@@ -29,8 +29,16 @@ export default abstract class Root extends Component {
   protected onInitBefore() {
     return Promise.resolve(void 0);
   }
-  /** 初始化结束 */
+  /** 初始化完成 */
   protected onInitComplete() {
+    return Promise.resolve(void 0);
+  }
+  /** 初始化全部结束（此时进入游戏） */
+  protected onInitEnd() {
+    return Promise.resolve(void 0);
+  }
+  /** 初始化错误 */
+  protected onInitError(error: any) {
     return Promise.resolve(void 0);
   }
 
@@ -73,9 +81,7 @@ export default abstract class Root extends Component {
     ErrorMonitor.init();
     // 配置初始化
     ConfigMgr.init(this.appConfig)
-      .then(() => {
-        return this.onInitBefore();
-      })
+      .then(() => this.onInitBefore())
       .then(() => {
         // 初始化音频
         AudioMgr.init();
@@ -84,12 +90,12 @@ export default abstract class Root extends Component {
           PlatformMgr.init().then(PlatformMgr.login),
         ]);
       })
-      .then(() => {
-        return this.onInitComplete();
-      })
+      .then(() => this.onInitComplete())
       .then(() => {
         this.loadingView?.destroy();
-      });
+      })
+      .then(() => this.onInitEnd())
+      .catch((error) => this.onInitError(error));
   }
 
   private async loadRes() {

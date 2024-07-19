@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "ce83a4da-7681-40e8-8111-caeaea0800b2",
+  "uuid": "c42ad9f3-b02a-41d6-b4af-a33faf5c04f3",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "ce83a4da-7681-40e8-8111-caeaea0800b2@6c48a",
+      "uuid": "c42ad9f3-b02a-41d6-b4af-a33faf5c04f3@6c48a",
       "displayName": "finger",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "ce83a4da-7681-40e8-8111-caeaea0800b2",
+        "imageUuidOrDatabaseUri": "c42ad9f3-b02a-41d6-b4af-a33faf5c04f3",
         "isUuid": true,
         "visible": false,
         "minfilter": "linear",
@@ -34,7 +34,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "ce83a4da-7681-40e8-8111-caeaea0800b2@f9941",
+      "uuid": "c42ad9f3-b02a-41d6-b4af-a33faf5c04f3@f9941",
       "displayName": "finger",
       "id": "f9941",
       "name": "spriteFrame",
@@ -114,7 +114,7 @@
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "ce83a4da-7681-40e8-8111-caeaea0800b2@6c48a",
+        "imageUuidOrDatabaseUri": "c42ad9f3-b02a-41d6-b4af-a33faf5c04f3@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.12",
@@ -127,8 +127,8 @@
   },
   "userData": {
     "type": "sprite-frame",
-    "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "redirect": "ce83a4da-7681-40e8-8111-caeaea0800b2@6c48a"
+    "fixAlphaTransparencyArtifacts": false,
+    "redirect": "c42ad9f3-b02a-41d6-b4af-a33faf5c04f3@6c48a"
   }
 }

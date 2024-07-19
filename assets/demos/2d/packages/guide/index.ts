@@ -15,6 +15,7 @@ import {
   Input,
   Layers,
   Node,
+  Prefab,
   UITransform,
   director,
   find,
@@ -25,6 +26,8 @@ import Singleton from "core/builtin/structs/abstract/Singleton";
 import { createMask } from "core/builtin/utils/node";
 import { alignFullScreen } from "core/builtin/utils/ui-layout";
 import { GuideComponent } from "./GuideComponent";
+import { PREVIEW } from "cc/env";
+import { FingerComponent } from "./FingerComponent";
 
 export function guidable(viewName: string) {
   return function (target: any) {
@@ -45,18 +48,29 @@ export function guidable(viewName: string) {
 
 class GuideView {
   private declare node: Node;
+  private declare finger: Node;
+  private declare descBox: Node;
   private declare layer: number;
   private preventSwallow = false;
   private declare target: {
     node: Node;
     layer: number;
   };
+  declare onGuide: boolean;
 
-  constructor(options: { layer: number; uiCamera: Node }) {
-    const { layer, uiCamera } = options;
+  constructor(options: {
+    layer: number;
+    uiCamera: Node;
+    prefabs?: {
+      finger?: () => Promise<Prefab>;
+      descBox?: () => Promise<Prefab>;
+    };
+  }) {
+    const { layer, uiCamera, prefabs } = options;
     this.layer = layer;
     this.node = new Node("__Guide__");
     this.node.active = false;
+    this.onGuide = false;
     // 这里不要设置Layers.BitMask.UI_2D，因为该层级依赖于节点层级结构（需要时刻保持guide节点在最顶层）
     // 而引导层由于相机priority高于主相机，所以节点后渲染
     this.node.layer = 1 << this.layer;
@@ -74,6 +88,24 @@ class GuideView {
     director.getScene()!.addChild(this.node);
     director.addPersistRootNode(this.node);
     this.node.addChild(guideCamera);
+    if (prefabs?.finger) {
+      prefabs.finger().then((prefab) => {
+        this.finger = instantiate(prefab);
+        this.finger.layer = 1 << this.layer;
+        this.finger.name = "__GuideFinger__";
+        this.finger.setComponent(FingerComponent);
+        this.node.addChild(this.finger);
+      });
+    }
+    if (prefabs?.descBox) {
+      prefabs.descBox().then((prefab) => {
+        this.descBox = instantiate(prefab);
+        this.descBox.layer = 1 << this.layer;
+        this.descBox.name = "__GuideDescBox__";
+        this.descBox.setComponent(GuideComponent);
+        this.node.addChild(this.descBox);
+      });
+    }
     createMask({
       name: "__GuideMask__",
       parent: this.node,
@@ -91,11 +123,14 @@ class GuideView {
       n.layer = 1 << this.layer;
     });
     this.node.active = true;
+    this.finger.getComponent(FingerComponent)!.set(node);
+    this.onGuide = true;
   }
 
   close() {
     this.clean();
     this.node.active = false;
+    this.onGuide = false;
   }
 
   private clean() {
@@ -120,8 +155,10 @@ class GuideView {
       e.preventSwallow = this.preventSwallow;
       if (this.preventSwallow) {
         this.clean();
-        const res = GuideSys.next();
+        this.onGuide = false;
+        const res = GuideSystem.getInstance().next();
         if (!res) this.node.active = false;
+        else this.onGuide = true;
       }
     });
     this.node.on(Input.EventType.TOUCH_CANCEL, (e: EventTouch) => {
@@ -153,7 +190,12 @@ class GuideSystem extends Singleton {
   private declare targetNode: Node;
   /** 是否可以进入引导 */
   private get canGuide() {
-    return this.initialized && !this.suppressed && !!this.stepID;
+    return (
+      this.initialized &&
+      !this.suppressed &&
+      !!this.stepID &&
+      !this.guideView.onGuide
+    );
   }
   private declare defaultStepID: number;
   /** 当前步骤ID */
@@ -161,7 +203,9 @@ class GuideSystem extends Singleton {
 
   /**
    * 初始化
-   * @param uiCamera 主摄像机节点或者路径
+   * @param options.uiCamera 主摄像机节点或者路径
+   * @param options.reader 引导步骤读取函数
+   * @param options.writer 引导步骤写入函数
    */
   init(options: {
     reader: () => Promise<{
@@ -170,8 +214,12 @@ class GuideSystem extends Singleton {
     }>;
     writer: (stepID: number) => Promise<void>;
     uiCamera?: Node | string;
+    prefabs?: {
+      finger?: () => Promise<Prefab>;
+      descBox?: () => Promise<Prefab>;
+    };
   }) {
-    let { reader, writer, uiCamera } = options;
+    let { reader, writer, uiCamera, prefabs } = options;
     const layer = GuideSystem.createLayer();
     if (layer === -1) {
       console.warn(
@@ -190,6 +238,7 @@ class GuideSystem extends Singleton {
       return;
     }
     this.init = () => {};
+    this.guideView = new GuideView({ layer, uiCamera, prefabs });
     reader().then(({ defaultStepID, lastStepID }) => {
       if (!lastStepID) {
         this.stepID = defaultStepID;
@@ -205,35 +254,19 @@ class GuideSystem extends Singleton {
       this.initialized = true;
       this.defaultStepID = defaultStepID;
       this.writer = writer;
-      this.guideView = new GuideView({ layer, uiCamera });
       this.run();
     });
   }
 
-  /** 开始引导 */
-  run() {
+  /** 触发引导 */
+  trigger() {
     if (!this.canGuide) return false;
-    const item = ConfigMgr.tables.TbGuide.get(this.stepID!);
-    if (!item) return false;
     const components = director
       .getScene()!
       .getComponentsInChildren(GuideComponent);
     const target = components.find((c) => c.guideStepID === this.stepID);
-    if (!target || !target.node.activeInHierarchy) return false;
-    this.guideView.open(target.node);
-    return true;
-  }
-
-  /** 下一步引导 */
-  next() {
-    const item = ConfigMgr.tables.TbGuide.get(this.stepID!);
-    if (!item || !item.next) {
-      this.stepID = undefined;
-      console.warn("Guide is over");
-      return false;
-    }
-    this.stepID = item.next;
-    return this.run();
+    if (!target) return false;
+    return this.run(target);
   }
 
   /** 重置引导 */
@@ -254,6 +287,36 @@ class GuideSystem extends Singleton {
     this.run();
   }
 
+  /** 开始引导 */
+  run(target?: GuideComponent) {
+    if (!this.canGuide) return false;
+    if (target && target.guideStepID !== this.stepID) return false;
+    if (!target) {
+      const components = director
+        .getScene()!
+        .getComponentsInChildren(GuideComponent);
+      target = components.find((c) => c.guideStepID === this.stepID);
+      if (!target || !target.autoTrigger) return false;
+    }
+    if (!target.node.activeInHierarchy) {
+      return false;
+    }
+    this.guideView.open(target.node);
+    return true;
+  }
+
+  /** 下一步引导 */
+  next() {
+    const item = ConfigMgr.tables.TbGuide.get(this.stepID!);
+    if (!item || !item.next) {
+      this.stepID = undefined;
+      console.warn("Guide is over");
+      return false;
+    }
+    this.stepID = item.next;
+    return this.run();
+  }
+
   private registerView(viewName: string) {
     let viewCount = this.views.get(viewName) || 0;
     this.views.set(viewName, viewCount + 1);
@@ -270,5 +333,24 @@ class GuideSystem extends Singleton {
   }
 }
 
-const GuideSys = GuideSystem.getInstance();
+interface IGuideSystem {
+  init(options: {
+    reader: () => Promise<{
+      defaultStepID: number;
+      lastStepID: number | undefined;
+    }>;
+    writer: (stepID: number) => Promise<void>;
+    uiCamera?: Node | string;
+    prefabs?: {
+      finger?: () => Promise<Prefab>;
+      descBox?: () => Promise<Prefab>;
+    };
+  }): void;
+  trigger(): boolean;
+  reset(): void;
+  suppress(): void;
+  permit(): void;
+}
+const GuideSys: IGuideSystem = GuideSystem.getInstance();
 export default GuideSys;
+if (PREVIEW) (window as any).GuideSys = GuideSys;

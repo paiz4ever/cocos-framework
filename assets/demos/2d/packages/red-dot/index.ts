@@ -19,6 +19,7 @@
  * 3、如果使用RedDotSys.on(path)监听，记得使用RedDotSys.off或者RedDotSys.offTarget处理注销监听(用法同EventTarget)
  * 4、当手动添加被动节点RedDotSys.add("A")时，它是被允许的，此时它被当作主动节点。但是当它的子节点（真正的主动节点）被添加时它会被自动纠正成被动节点
  */
+import { PREVIEW } from "cc/env";
 import SingleEventEmitter from "core/builtin/structs/abstract/SingleEventEmitter";
 
 class RedDotNode {
@@ -112,3 +113,4 @@ class RedDotSystem extends SingleEventEmitter<{ [key: string]: [number] }> {
 }
 const RedDotSys = RedDotSystem.getInstance();
 export default RedDotSys;
+if (PREVIEW) (window as any).RedDotSys = RedDotSys;

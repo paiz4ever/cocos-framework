@@ -1,0 +1,22 @@
+[
+  {
+    "scene": "scene1",
+    "id": 10000,
+    "desc": "场景1"
+  },
+  {
+    "scene": "scene2",
+    "id": 10001,
+    "desc": "场景2"
+  },
+  {
+    "scene": "scene3",
+    "id": 10002,
+    "desc": "场景3"
+  },
+  {
+    "scene": "scene4",
+    "id": 10003,
+    "desc": "场景4"
+  }
+]

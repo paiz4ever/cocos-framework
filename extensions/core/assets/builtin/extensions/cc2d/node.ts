@@ -14,4 +14,8 @@ if (!EDITOR) {
     handler && handler(c);
     return c;
   };
+
+  Node.prototype.activateSingleChild = function (index: number) {
+    this.children.forEach((v, i) => (v.active = i === index));
+  };
 }

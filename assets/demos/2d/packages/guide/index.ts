@@ -17,6 +17,7 @@ import {
   Node,
   Prefab,
   UITransform,
+  Vec3,
   director,
   find,
   instantiate,
@@ -28,23 +29,8 @@ import { alignFullScreen } from "core/builtin/utils/ui-layout";
 import { GuideComponent } from "./GuideComponent";
 import { PREVIEW } from "cc/env";
 import { FingerComponent } from "./FingerComponent";
-
-export function guidable(viewName: string) {
-  return function (target: any) {
-    let oldOnEnable = target.prototype.onEnable;
-    let oldOnDisable = target.prototype.onDisable;
-    target.prototype.onEnable = function () {
-      oldOnEnable && oldOnEnable.call(this);
-      // @ts-ignore
-      GuideMgr.registerView(viewName);
-    };
-    target.prototype.onDisable = function () {
-      oldOnDisable && oldOnDisable.call(this);
-      // @ts-ignore
-      GuideMgr.unregisterView(viewName);
-    };
-  };
-}
+import { guide, GuideItem } from "core/builtin/managers/config/schema/schema";
+import { OperationUtil } from "core/builtin/utils/operation";
 
 class GuideView {
   private declare node: Node;
@@ -52,10 +38,14 @@ class GuideView {
   private declare descBox: Node;
   private declare layer: number;
   private preventSwallow = false;
-  private declare target: {
-    node: Node;
-    layer: number;
-  };
+  private snapshot: Map<
+    string,
+    {
+      c: GuideComponent;
+      layer: number;
+    }
+  > = new Map();
+  private declare target?: Node;
   declare onGuide: boolean;
 
   constructor(options: {
@@ -113,17 +103,64 @@ class GuideView {
     });
   }
 
-  open(node: Node) {
+  open(reflect: Record<string, GuideComponent>, cnf: GuideItem) {
     this.clean();
-    this.target = {
-      node,
-      layer: node.layer,
+    const callback = () => {
+      this.over();
     };
-    node.walk((n) => {
-      n.layer = 1 << this.layer;
-    });
+    switch (cnf.operation) {
+      case guide.EOperation.CLICK:
+        this.target = reflect[cnf.target || ""]?.node;
+        if (!this.target) {
+          this.close();
+          return;
+        }
+        OperationUtil.click({
+          node: this.target,
+          callback,
+        });
+        break;
+      case guide.EOperation.SLIDE:
+        this.target = reflect[cnf.target || ""]?.node;
+        if (!this.target) {
+          this.close();
+          return;
+        }
+        OperationUtil.slide({
+          node: this.target,
+          direction: reflect[cnf.target || ""]!.slideDirection,
+          callback,
+        });
+        break;
+      case guide.EOperation.CONTACT:
+        if (!cnf.target) {
+          this.close();
+          return;
+        }
+        const [from, to] = cnf.target.split("|");
+        this.target = reflect[from]?.node;
+        if (!this.target) {
+          this.close();
+          return;
+        }
+        OperationUtil.contact({
+          node: this.target,
+          target: reflect[to]?.node,
+          callback,
+        });
+        break;
+    }
+    for (let k in reflect) {
+      this.snapshot.set(k, {
+        c: reflect[k],
+        layer: reflect[k].node.layer,
+      });
+      reflect[k].node.walk((n) => {
+        n.layer = 1 << this.layer;
+      });
+    }
     this.node.active = true;
-    this.finger.getComponent(FingerComponent)!.set(node);
+    this.finger.getComponent(FingerComponent)!.set(this.target);
     this.onGuide = true;
   }
 
@@ -134,17 +171,20 @@ class GuideView {
   }
 
   private clean() {
-    if (!this.target) return;
-    const { node, layer } = this.target;
-    node.walk((n) => {
-      n.layer = layer;
+    if (!this.snapshot.size) return;
+    this.snapshot.forEach((v) => {
+      v.c.node.walk((n) => {
+        n.layer = v.layer;
+      });
     });
+    this.target = undefined;
+    this.snapshot.clear();
   }
 
   private initEvent() {
     this.node.on(Input.EventType.TOUCH_START, (e: EventTouch) => {
-      if (this.target?.node) {
-        this.preventSwallow = this.target.node
+      if (this.target) {
+        this.preventSwallow = this.target
           .getComponent(UITransform)!
           .getBoundingBoxToWorld()
           .contains(e.getUILocation());
@@ -153,13 +193,6 @@ class GuideView {
     });
     this.node.on(Input.EventType.TOUCH_END, (e: EventTouch) => {
       e.preventSwallow = this.preventSwallow;
-      if (this.preventSwallow) {
-        this.clean();
-        this.onGuide = false;
-        const res = GuideSystem.getInstance().next();
-        if (!res) this.node.active = false;
-        else this.onGuide = true;
-      }
     });
     this.node.on(Input.EventType.TOUCH_CANCEL, (e: EventTouch) => {
       e.preventSwallow = this.preventSwallow;
@@ -167,6 +200,14 @@ class GuideView {
     this.node.on(Input.EventType.TOUCH_MOVE, (e: EventTouch) => {
       e.preventSwallow = this.preventSwallow;
     });
+  }
+
+  private over() {
+    this.clean();
+    this.onGuide = false;
+    const res = GuideSystem.getInstance().next();
+    if (!res) this.node.active = false;
+    else this.onGuide = true;
   }
 }
 
@@ -185,7 +226,6 @@ class GuideSystem extends Singleton {
   private initialized = false;
   private declare writer: (stepID: number) => Promise<void>;
   private declare guideView: GuideView;
-  private views: Map<string, number> = new Map();
   private suppressed = false;
   private declare targetNode: Node;
   /** 是否可以进入引导 */
@@ -234,7 +274,9 @@ class GuideSystem extends Singleton {
       uiCamera = find(uiCamera) as Node;
     }
     if (!uiCamera) {
-      console.warn("GuideSystem init failed because the uiCamera is null");
+      console.warn(
+        "GuideSystem init failed because the uiCamera could not be found"
+      );
       return;
     }
     this.init = () => {};
@@ -260,13 +302,7 @@ class GuideSystem extends Singleton {
 
   /** 触发引导 */
   trigger() {
-    if (!this.canGuide) return false;
-    const components = director
-      .getScene()!
-      .getComponentsInChildren(GuideComponent);
-    const target = components.find((c) => c.guideStepID === this.stepID);
-    if (!target) return false;
-    return this.run(target);
+    return this.run(true);
   }
 
   /** 重置引导 */
@@ -288,20 +324,28 @@ class GuideSystem extends Singleton {
   }
 
   /** 开始引导 */
-  run(target?: GuideComponent) {
+  run(isTrigger = false) {
     if (!this.canGuide) return false;
-    if (target && target.guideStepID !== this.stepID) return false;
-    if (!target) {
-      const components = director
-        .getScene()!
-        .getComponentsInChildren(GuideComponent);
-      target = components.find((c) => c.guideStepID === this.stepID);
-      if (!target || !target.autoTrigger) return false;
+    const reflect = Object.create(null);
+    const components = director
+      .getScene()!
+      .getComponentsInChildren(GuideComponent);
+    const targets = components.filter(
+      (c) =>
+        c.guideStepID === this.stepID &&
+        (isTrigger || c.autoTrigger) &&
+        c.node.activeInHierarchy
+    );
+    if (!targets.length) return false;
+    if (targets.length === 1) {
+      reflect[targets[0].guideName] = targets[0];
+    } else {
+      targets.forEach((target, i) => {
+        reflect[target.guideName || `__target${i}__`] = target;
+      });
     }
-    if (!target.node.activeInHierarchy) {
-      return false;
-    }
-    this.guideView.open(target.node);
+    const item = ConfigMgr.tables.TbGuide.get(this.stepID!)!;
+    this.guideView.open(reflect, item);
     return true;
   }
 
@@ -315,21 +359,6 @@ class GuideSystem extends Singleton {
     }
     this.stepID = item.next;
     return this.run();
-  }
-
-  private registerView(viewName: string) {
-    let viewCount = this.views.get(viewName) || 0;
-    this.views.set(viewName, viewCount + 1);
-    this.run();
-  }
-
-  private unregisterView(viewName: string) {
-    let viewCount = this.views.get(viewName) || 0;
-    if (viewCount <= 1) {
-      this.views.delete(viewName);
-    } else {
-      this.views.set(viewName, viewCount - 1);
-    }
   }
 }
 

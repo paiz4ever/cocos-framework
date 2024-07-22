@@ -41,8 +41,11 @@ export class GuideItem {
         this.redirect = _json_.redirect
         if (_json_.next === undefined) { throw new Error() }
         this.next = _json_.next
+        if (_json_.scene === undefined) { throw new Error() }
+        this.scene = _json_.scene
         if (_json_.operation === undefined) { throw new Error() }
         this.operation = _json_.operation
+        if(_json_.target != undefined) { this.target = _json_.target } else { this.target = undefined }
     }
 
     /**
@@ -62,9 +65,18 @@ export class GuideItem {
      */
     readonly next: number
     /**
-     * 引导操作类型
+     * 引导场景
+     */
+    readonly scene: string
+    scene_ref: GuideScene | undefined
+    /**
+     * 引导操作
      */
     readonly operation: guide.EOperation
+    /**
+     * 引导目标（当同时存在多个目标时必填）
+     */
+    readonly target: string|undefined
 
     resolve(tables:Tables)
     {
@@ -72,6 +84,45 @@ export class GuideItem {
         
         
         
+        this.scene_ref = tables.TbGuideScene.get(this.scene)
+        
+        
+    }
+}
+
+
+
+
+
+export class GuideScene {
+
+    constructor(_json_: any) {
+        if (_json_.scene === undefined) { throw new Error() }
+        this.scene = _json_.scene
+        if (_json_.id === undefined) { throw new Error() }
+        this.id = _json_.id
+        if (_json_.desc === undefined) { throw new Error() }
+        this.desc = _json_.desc
+    }
+
+    /**
+     * 场景
+     */
+    readonly scene: string
+    /**
+     * guideID
+     */
+    readonly id: number
+    id_ref: GuideItem | undefined
+    /**
+     * 描述
+     */
+    readonly desc: string
+
+    resolve(tables:Tables)
+    {
+        
+        this.id_ref = tables.TbGuide.get(this.id)
         
     }
 }
@@ -112,17 +163,53 @@ export class TbGuide{
 }
 
 
+export namespace guide {
+export class TbGuideScene{
+    private _dataMap: Map<string, GuideScene>
+    private _dataList: GuideScene[]
+    constructor(_json_: any) {
+        this._dataMap = new Map<string, GuideScene>()
+        this._dataList = []
+        for(var _json2_ of _json_) {
+            let _v: GuideScene
+            _v = new GuideScene(_json2_)
+            this._dataList.push(_v)
+            this._dataMap.set(_v.scene, _v)
+        }
+    }
+
+    getDataMap(): Map<string, GuideScene> { return this._dataMap; }
+    getDataList(): GuideScene[] { return this._dataList; }
+
+    get(key: string): GuideScene | undefined { return this._dataMap.get(key); }
+
+    resolve(tables:Tables)
+    {
+        for(let  data of this._dataList)
+        {
+            data.resolve(tables)
+        }
+    }
+
+}
+}
+
+
 
 type JsonLoader = (file: string) => any
 
 export class Tables {
     private _TbGuide: guide.TbGuide
     get TbGuide(): guide.TbGuide  { return this._TbGuide;}
+    private _TbGuideScene: guide.TbGuideScene
+    get TbGuideScene(): guide.TbGuideScene  { return this._TbGuideScene;}
 
     constructor(loader: JsonLoader) {
         this._TbGuide = new guide.TbGuide(loader('guide_tbguide'))
+        this._TbGuideScene = new guide.TbGuideScene(loader('guide_tbguidescene'))
 
         this._TbGuide.resolve(this)
+        this._TbGuideScene.resolve(this)
     }
 }
 

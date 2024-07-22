@@ -10,6 +10,12 @@ declare module "cc" {
       handler?: (c: T) => void
     ): T;
     /**
+     * 激活指定索引的子节点（其余子节点不激活）
+     * @param index 子节点的索引
+     * @note 你可以使用`-1`使所有子节点都不激活
+     */
+    activateSingleChild(index: number): void;
+    /**
      * // TODO
      * 过滤组件满足条件的保留
      */

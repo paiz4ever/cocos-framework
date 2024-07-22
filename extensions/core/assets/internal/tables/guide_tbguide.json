@@ -4,27 +4,35 @@
     "desc": "引导1",
     "redirect": 0,
     "next": 10001,
-    "operation": 1
+    "scene": "scene1",
+    "operation": 1,
+    "target": "btn1"
   },
   {
     "id": 10001,
     "desc": "引导2",
     "redirect": 10000,
     "next": 10002,
-    "operation": 1
+    "scene": "scene2",
+    "operation": 1,
+    "target": ""
   },
   {
     "id": 10002,
     "desc": "引导3",
     "redirect": 10000,
     "next": 10003,
-    "operation": 2
+    "scene": "scene3",
+    "operation": 2,
+    "target": "btn1"
   },
   {
     "id": 10003,
     "desc": "引导4",
     "redirect": 10000,
     "next": 0,
-    "operation": 3
+    "scene": "scene4",
+    "operation": 3,
+    "target": "btn1|btn2"
   }
 ]

@@ -8,6 +8,7 @@ if (!EDITOR) {
     }
     return this._tempVec2.set(this.x, this.y);
   };
+
   math.Vec2.prototype.v3 = function () {
     if (!this._tempVec3) {
       this._tempVec3 = new math.Vec3(this.x, this.y, 0);

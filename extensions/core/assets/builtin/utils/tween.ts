@@ -1,34 +1,47 @@
 import { Node, randomRange, tween, Tween, UIOpacity, v3 } from "cc";
 
 export namespace TweenUtil {
-  /** 呼吸动画（缩放） */
-  export function runBreathingAction(node: Node, duration?: number) {
+  /**
+   * 呼吸动画
+   * @param options.node 节点
+   * @param options.amplitude 幅度（默认：0.1）
+   * @param options.frequency 频率 次/秒（默认：1）
+   */
+  export function runBreathingAction(options: {
+    node: Node;
+    amplitude?: number;
+    frequency?: number;
+  }) {
+    let { node, amplitude, frequency } = options;
+    amplitude = amplitude ?? 0.1;
+    frequency = frequency || 1;
     Tween.stopAllByTarget(node);
-    let scale = node.getScale();
-    let targetScale = scale.clone().add3f(0.15, 0.15, 0.15);
-    let tw = tween(node)
-      .to(duration || 1, { scale: targetScale })
-      .to(duration || 1, { scale })
+    const scale = node.getScale();
+    const targetScale = scale.clone().add3f(amplitude, amplitude, amplitude);
+    return tween(node)
+      .to(1 / 2 / frequency, { scale: targetScale })
+      .to(1 / 2 / frequency, { scale })
       .union()
       .repeatForever()
       .start();
-    return tw;
   }
 
   /**
    * 手指戳动画
    * @param options.node 手指节点
-   * @param options.amplitude 幅度
-   * @param options.frequency 频率
+   * @param options.amplitude 幅度（默认：10）
+   * @param options.frequency 频率 次/秒（默认：1）
    */
   export function runStickAction(options: {
     node: Node;
-    amplitude: number;
-    frequency: number;
+    amplitude?: number;
+    frequency?: number;
   }) {
-    const { node, amplitude, frequency } = options;
+    let { node, amplitude, frequency } = options;
+    amplitude = amplitude ?? 10;
+    frequency = frequency || 1;
     Tween.stopAllByTarget(node);
-    tween(node)
+    return tween(node)
       .by(1 / 2 / frequency, {
         worldPosition: v3(amplitude, -amplitude),
       })
@@ -40,36 +53,45 @@ export namespace TweenUtil {
       .start();
   }
 
-  /** 渐显渐隐动画 */
-  export function runOpacityAction(
-    node: Node,
-    from: 0 | 255,
-    to: 0 | 255,
-    options?: {
-      duration?: number;
-    }
-  ) {
+  /**
+   * 渐显渐隐动画
+   * @param options.node 节点
+   * @param options.from 开始值
+   * @param options.to 结束值
+   * @param options.duration 持续时间（默认：0.5）
+   */
+  export function runOpacityAction(options: {
+    node: Node;
+    from: 0 | 255;
+    to: 0 | 255;
+    duration?: number;
+  }) {
+    let { node, from, to, duration } = options;
+    duration = duration ?? 0.5;
     Tween.stopAllByTarget(node);
     const opacityC = node.setComponent(UIOpacity);
     return new Promise((resolve) => {
       tween(opacityC)
         .set({ opacity: from })
-        .to(options?.duration || 0.5, { opacity: to })
+        .to(duration, { opacity: to })
         .call(resolve)
         .start();
     });
   }
 
-  /** 随机移动动画 */
-  export function runRandomMoveAction(node: Node, range: number) {
-    let startX = node.position.x;
-    let startY = node.position.y;
+  /**
+   * 随机移动动画
+   * @param options.node 节点
+   * @param options.range 移动范围
+   */
+  export function runRandomMoveAction(options: { node: Node; range: number }) {
+    const { node, range } = options;
     function move() {
       tween(node)
-        .to(0.15, {
+        .by(0.15, {
           position: v3(
-            startX + randomRange(-range, range),
-            startY + randomRange(-range, range),
+            randomRange(-range, range),
+            randomRange(-range, range),
             0
           ),
         })
@@ -79,12 +101,16 @@ export namespace TweenUtil {
     move();
   }
 
-  /** 软弹簧动画 */
-  export function runBounceAction(node: Node) {
+  /**
+   * 软弹簧动画
+   * @param options.node 节点
+   */
+  export function runBounceAction(options: { node: Node }) {
+    const { node } = options;
     Tween.stopAllByTarget(node);
     let scaleX = node.scale.x;
     let scaleY = node.scale.y;
-    tween(node)
+    return tween(node)
       .to(
         0.15,
         { scale: v3(scaleX * 0.5, scaleY * 1.2, node.scale.z) },

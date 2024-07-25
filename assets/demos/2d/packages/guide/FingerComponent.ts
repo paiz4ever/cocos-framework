@@ -1,5 +1,5 @@
+import { TweenUtil } from "builtin/utils";
 import { _decorator, Component, Node, Tween } from "cc";
-import { TweenUtil } from "core/builtin/utils/tween";
 const { ccclass, property } = _decorator;
 
 @ccclass("FingerComponent")

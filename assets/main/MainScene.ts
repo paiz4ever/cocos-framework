@@ -1,11 +1,11 @@
-import { _decorator, Component, Node } from "cc";
-import Root from "core/root/Root";
+import app from "app";
+import { _decorator, Component, Node, Vec3 } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("MainScene")
-export class MainScene extends Root {
+export class MainScene extends app.Root {
   /** 替换为自己的配置 */
-  protected appConfig: IAppConfig = {
+  protected appConfig = {
     name: "xxx",
     domain: {
       prod: "https://prod.xxxxxx.com",
@@ -20,7 +20,7 @@ export class MainScene extends Root {
     },
   };
 
-  protected onInitComplete() {
+  protected onInitEnd() {
     /** 此处执行展示首屏场景等操作 */
     /** ... */
     return Promise.resolve(void 0);

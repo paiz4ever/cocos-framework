@@ -1,14 +1,6 @@
-import {
-  BlockInputEvents,
-  Color,
-  Layers,
-  Node,
-  Sprite,
-  SpriteFrame,
-  Widget,
-} from "cc";
+import { BlockInputEvents, Color, Layers, Node, Sprite, Widget } from "cc";
 import { alignFullScreen } from "./ui-layout";
-import { LoadMgr } from "../managers";
+import { ResMgr } from "../../internal/managers";
 
 /**
  * 创建遮罩
@@ -32,11 +24,11 @@ export function createMask(options?: {
   if (options?.parent) {
     options.parent.addChild(mask);
   }
-  LoadMgr.loadSpriteFrame({
-    bundle: "textures",
+  ResMgr.loadSpriteFrame({
+    bundleName: "textures",
     path: "single-color",
   })
-    .then((spriteFrame: SpriteFrame) => {
+    .then((spriteFrame) => {
       if (!mask.isValid) return;
       mask.setComponent(Sprite, (c) => {
         c.spriteFrame = spriteFrame;

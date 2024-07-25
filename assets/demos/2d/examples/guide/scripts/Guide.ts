@@ -1,10 +1,10 @@
 import { _decorator, Input, Node, Prefab, tween, v3 } from "cc";
 import GuideSys from "../../../packages/guide";
-import Root from "core/root/Root";
+import app from "app";
 const { ccclass, property } = _decorator;
 
 @ccclass("Guide")
-export class Guide extends Root {
+export class Guide extends app.Root {
   protected appConfig: IAppConfig = {};
 
   @property(Node)
@@ -18,7 +18,7 @@ export class Guide extends Root {
 
   private declare layer: number;
 
-  protected onInitComplete(): Promise<undefined> {
+  protected onInitEnd() {
     GuideSys.init({
       reader: () => {
         return new Promise((resolve) => {
@@ -36,7 +36,7 @@ export class Guide extends Root {
       },
     });
     this.init();
-    return super.onInitComplete();
+    return super.onInitEnd();
   }
 
   init() {

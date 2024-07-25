@@ -1,0 +1,11 @@
+{
+  "printWidth": 80,
+  "overrides": [
+    {
+      "files": "./extensions/core/@types/app.d.ts",
+      "options": {
+        "printWidth": 1000
+      }
+    }
+  ]
+}

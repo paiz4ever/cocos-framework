@@ -22,15 +22,13 @@ import {
   find,
   instantiate,
 } from "cc";
-import { ConfigMgr } from "core/builtin/managers";
-import Singleton from "core/builtin/structs/abstract/Singleton";
-import { createMask } from "core/builtin/utils/node";
-import { alignFullScreen } from "core/builtin/utils/ui-layout";
 import { GuideComponent } from "./GuideComponent";
-import { PREVIEW } from "cc/env";
+import { DEBUG } from "cc/env";
 import { FingerComponent } from "./FingerComponent";
-import { guide, GuideItem } from "core/builtin/managers/config/schema/schema";
-import { OperationUtil } from "core/builtin/utils/operation";
+import { alignFullScreen, createMask, OperationUtil } from "builtin/utils";
+import { guide, GuideItem } from "table";
+import { Singleton } from "builtin/structs";
+import app from "app";
 
 class GuideView {
   private declare node: Node;
@@ -285,7 +283,7 @@ class GuideSystem extends Singleton {
       if (!lastStepID) {
         this.stepID = defaultStepID;
       } else {
-        const item = ConfigMgr.tables.TbGuide.get(lastStepID);
+        const item = app.table.TbGuide.get(lastStepID);
         if (!item || !item.next) {
           console.warn("Guide is over");
           return;
@@ -344,14 +342,14 @@ class GuideSystem extends Singleton {
         reflect[target.guideName || `__target${i}__`] = target;
       });
     }
-    const item = ConfigMgr.tables.TbGuide.get(this.stepID!)!;
+    const item = app.table.TbGuide.get(this.stepID!)!;
     this.guideView.open(reflect, item);
     return true;
   }
 
   /** 下一步引导 */
   next() {
-    const item = ConfigMgr.tables.TbGuide.get(this.stepID!);
+    const item = app.table.TbGuide.get(this.stepID!);
     if (!item || !item.next) {
       this.stepID = undefined;
       console.warn("Guide is over");
@@ -382,4 +380,4 @@ interface IGuideSystem {
 }
 const GuideSys: IGuideSystem = GuideSystem.getInstance();
 export default GuideSys;
-if (PREVIEW) (window as any).GuideSys = GuideSys;
+if (DEBUG) (window as any).GuideSys = GuideSys;

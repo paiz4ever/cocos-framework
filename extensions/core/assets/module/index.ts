@@ -9,4 +9,4 @@ Object.defineProperty(app, "table", {
 if (DEBUG) {
   window["app"] = app;
 }
-export default app;
+export default app as any;

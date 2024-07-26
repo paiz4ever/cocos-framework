@@ -2,11 +2,12 @@
   "ver": "1.2.0",
   "importer": "directory",
   "imported": true,
-  "uuid": "e699607d-d115-4e9c-8d74-4a64f10fbefe",
+  "uuid": "22fd7b17-8dbb-4ac4-a766-b055d44e8c25",
   "files": [],
   "subMetas": {},
   "userData": {
     "isBundle": true,
-    "bundleConfigID": "bcFBF1tatOEZuxTX7nWMeb"
+    "bundleConfigID": "bcFBF1tatOEZuxTX7nWMeb",
+    "bundleName": "internal-tables"
   }
 }

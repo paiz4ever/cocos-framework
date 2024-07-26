@@ -1,6 +1,9 @@
 import {
   _decorator,
+  Camera,
+  Canvas,
   Component,
+  director,
   game,
   Label,
   Node,
@@ -10,22 +13,14 @@ import {
 } from "cc";
 import AudioMgr from "../managers/audio/AudioManager";
 import PlatformMgr from "../managers/platform/PlatformManager";
-import { ConfigMgr } from "../managers";
+import { ConfigMgr, UIMgr } from "../managers";
 import { ErrorMonitor } from "../../builtin/minitors";
 import { DEBUG } from "cc/env";
+import app from "../../module";
 
 const { ccclass, property } = _decorator;
 
 export default abstract class Root extends Component {
-  @property(Node)
-  loadingView?: Node;
-  @property(Label)
-  loadingText?: Label;
-  @property(ProgressBar)
-  bar?: ProgressBar;
-  @property(Node)
-  barDot?: Node;
-
   /** 应用配置 */
   protected abstract appConfig: IAppConfig;
   /** 初始化开始前 */
@@ -41,65 +36,42 @@ export default abstract class Root extends Component {
     return Promise.resolve(void 0);
   }
 
-  private _progress = 0;
-  get progress() {
-    return this._progress;
-  }
-  set progress(p: number) {
-    if (p === 0) {
-      this._progress = 0;
-    } else {
-      this._progress = Math.min(0.999, Math.max(p, this._progress));
-    }
-    this._progress = Math.min(0.999, Math.max(p, this._progress));
-    if (this.bar) {
-      this.bar.progress = this._progress;
-      this.barDot?.setPosition(
-        -this.bar.totalLength / 2 + this.bar.totalLength * this._progress,
-        0,
-        0
-      );
-    }
-  }
-  private _resCount = 0;
-  get resCount() {
-    return this._resCount;
-  }
-  set resCount(c: number) {
-    this._resCount = c;
-    if (this.loadingText) {
-    }
-  }
-
   protected onLoad(): void {
-    this.initRoot();
-    this.initProcess();
+    this.init();
   }
 
-  private initRoot() {
-    if (DEBUG) profiler.showStats();
+  declare canvas: Canvas;
+  declare camera: Camera;
 
-    game.frameRate = 999;
-    this.progress = 0;
-    this.resCount = 0;
-  }
+  private async init() {
+    try {
+      // ===================常规初始化===================
+      if (DEBUG) profiler.showStats();
+      (app as any).root = this;
+      this.canvas = this.getComponent(Canvas);
+      this.camera = this.canvas.cameraComponent;
+      director.addPersistRootNode(this.node);
+      // ===================常规初始化完成===================
 
-  private initProcess() {
-    // 初始化错误监听
-    ErrorMonitor.init();
-    // 配置初始化
-    ConfigMgr.init(this.appConfig)
-      .then(() => this.onInitStart())
-      .then(() => {
-        // 初始化音频
-        AudioMgr.init();
-        return Promise.all([
-          // 初始化平台并登录
-          PlatformMgr.init().then(PlatformMgr.login),
-        ]);
-      })
-      .then(() => this.onInitEnd())
-      .then(() => this.loadingView?.destroy())
-      .catch((error) => this.onInitError(error));
+      // ===================流程启动===================
+      // 初始化错误监听
+      ErrorMonitor.init();
+      // 初始化音频
+      AudioMgr.init();
+      // 初始化UI
+      UIMgr.init(this);
+      // 配置初始化
+      await ConfigMgr.init(this.appConfig);
+      await Promise.all([
+        // 初始化平台并登录
+        PlatformMgr.init().then(PlatformMgr.login),
+      ]);
+      await this.onInitStart();
+      await this.onInitEnd();
+      // ===================流程启动完成===================
+      // this.loadingView?.destroy();
+    } catch (error) {
+      this.onInitError(error);
+    }
   }
 }

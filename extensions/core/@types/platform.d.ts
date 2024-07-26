@@ -3,57 +3,122 @@ declare const tt: any;
 declare const ks: any;
 
 interface IPlatform {
-  /** 初始化 */
+  /**
+   * 初始化
+   * @param options 注入的自定义处理函数（登陆，订阅等）
+   */
   init: (options?: IInjectOptions) => Promise<void>;
-  /** 生命周期-前台 监听 */
+  /**
+   * 游戏前台监听
+   * @param cb 回调函数
+   */
   onShow: (cb: Function) => void;
-  /** 生命周期-前台 取消监听 */
+  /**
+   * 取消游戏前台监听
+   * @param cb 回调函数
+   */
   offShow: (cb: Function) => void;
-  /** 生命周期-后台｜销毁 监听 */
+  /**
+   * 游戏后台监听
+   * @param cb 回调函数
+   */
   onHide: (cb: Function) => void;
-  /** 生命周期-后台｜销毁 取消监听*/
+  /**
+   * 取消游戏后台监听
+   * @param cb 回调函数
+   */
   offHide: (cb: Function) => void;
-  /** 登陆 */
+  /**
+   * 登陆
+   * @description 后台登陆请求使用init注入loginRpc函数
+   */
   login: () => Promise<void>;
-  /** 获取用户信息 */
+  /**
+   * 获取用户信息
+   */
   getUserInfo: () => Promise<IUserInfo>;
-  /** 上报 */
+  /**
+   * 发送埋点
+   * @param evtName 埋点事件名
+   * @param evtData 埋点数据
+   */
   report: (evtName: string, evtData?: Object) => void;
-  /** 获取环境 */
+  /**
+   * 获取环境
+   */
   getEnv(): TEnv;
-  /** 获取系统信息 */
+  /**
+   * 获取系统信息
+   */
   getSystemInfo(): ISystemInfo;
-  /** 展示激励广告 */
+  /**
+   * 展示激励广告
+   * @param adScene 广告场景名
+   */
   showRewardAd: (adScene?: string) => Promise<void>;
-  /** 分享 */
+  /**
+   * 分享
+   * @param options.title 标题
+   * @param options.desc 描述（可选）
+   */
   share: (options: IShareOptions) => Promise<void>;
-  /** 开始录屏 */
+  /**
+   * 开始录屏
+   */
   startRecord: () => void;
-  /** 暂停录屏 */
+  /**
+   * 暂停录屏
+   */
   pauseRecord: () => void;
-  /** 恢复录屏 */
+  /**
+   * 恢复录屏
+   */
   resumeRecord: () => void;
-  /** 结束录屏 */
+  /**
+   * 结束录屏
+   */
   stopRecord: () => void;
-  /** 分享录屏 */
+  /**
+   * 分享录屏
+   */
   shareRecord: (options: IShareOptions) => Promise<void>;
-  /** 检查是否可以分享录屏 */
+  /**
+   * 检查是否可以分享录屏
+   */
   checkShareRecord: () => boolean;
-  /** 添加桌面 */
+  /**
+   * 添加桌面
+   */
   addDesktop: () => Promise<void>;
-  /** 检查是否添加桌面 */
+  /**
+   * 检查是否添加桌面
+   */
   checkAddDesktop: () => Promise<boolean>;
-  /** 添加喜欢 */
+  /**
+   * 添加收藏
+   */
   addFavorite: () => Promise<void>;
 
   /** ============== 抖小独有 ================ */
-  /** 前往侧边栏 */
+  /**
+   * 前往侧边栏
+   */
   ttToSideBar: () => void;
-  /** 订阅 */
+  /**
+   * 订阅
+   * @param type 订阅类型
+   * @param data 订阅数据
+   * @description 后台订阅请求使用init注入subscribeRpc函数
+   */
   ttSubscribe: (type: string, data: any) => Promise<void>;
-  /** 展示游戏资源互推 */
+  /**
+   * 展示游戏资源互推
+   * @description grid样式定义使用init注入getGridGamePanelInfo函数
+   */
   ttShowGridGamePanel: () => void;
-  /** 游戏资源互推 */
+  /**
+   * 隐藏游戏资源互推
+   */
   ttHideGridGamePanel: () => void;
 }
 

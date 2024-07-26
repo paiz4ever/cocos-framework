@@ -23,7 +23,7 @@
   },
   // 去除掉引用内部代码提示，不影响构建
   "exclude": [
-    "./extensions/core/assets/internal",
     "./extensions/core/assets/module",
+    "./extensions/core/assets/internal",
   ],
 }

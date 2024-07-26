@@ -9,3 +9,4 @@ export { default as audio } from "../internal/managers/audio/AudioManager";
 export { default as time } from "../internal/managers/time/TimeManager";
 export { default as event } from "../internal/managers/event/EventManager";
 export { default as Root } from "../internal/root/Root";
+export * as utils from "../internal/utils";

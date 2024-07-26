@@ -21,7 +21,7 @@ class ConfigManager extends Singleton {
 
   async init(appConfig: IAppConfig) {
     let tableAssets = await ResMgr.loadDir({
-      bundleName: "tables",
+      bundleName: "internal-tables",
       type: JsonAsset,
     });
     ResMgr.removeBundle("tables");

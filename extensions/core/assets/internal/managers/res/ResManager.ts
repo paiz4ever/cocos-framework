@@ -29,20 +29,24 @@ class ResManager extends Singleton {
 
   loadBundle(options?: {
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
   }): Promise<AssetManager.Bundle> {
-    let { bundleName, version } = options;
+    let { bundleName, bundleVersion } = options;
     if (!bundleName) bundleName = "resources";
     return new Promise((resolve, reject) => {
       if (assetManager.bundles.has(bundleName)) {
         resolve(assetManager.bundles.get(bundleName));
         return;
       }
-      if (version) {
-        assetManager.loadBundle(bundleName, { version }, (err, bundle) => {
-          if (err) return reject(err);
-          resolve(bundle);
-        });
+      if (bundleVersion) {
+        assetManager.loadBundle(
+          bundleName,
+          { version: bundleVersion },
+          (err, bundle) => {
+            if (err) return reject(err);
+            resolve(bundle);
+          }
+        );
       } else {
         assetManager.loadBundle(bundleName, (err, bundle) => {
           if (err) return reject(err);
@@ -67,7 +71,7 @@ class ResManager extends Singleton {
   preload<T extends Asset>(options: {
     path: string | string[];
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     type?: new (...args: any[]) => T;
     onProgress?: (
       finish: number,
@@ -75,8 +79,8 @@ class ResManager extends Singleton {
       item: AssetManager.RequestItem
     ) => void;
   }): Promise<AssetManager.RequestItem[]> {
-    let { path, bundleName, version, type, onProgress } = options;
-    return this.loadBundle({ bundleName, version }).then((bundle) => {
+    let { path, bundleName, bundleVersion, type, onProgress } = options;
+    return this.loadBundle({ bundleName, bundleVersion }).then((bundle) => {
       return new Promise((resolve, reject) => {
         // @ts-ignore
         if (type === SpriteFrame) {
@@ -102,7 +106,7 @@ class ResManager extends Singleton {
   preloadDir<T extends Asset>(options: {
     path?: string;
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     type?: new (...args: any[]) => T;
     onProgress?: (
       finished: number,
@@ -110,8 +114,8 @@ class ResManager extends Singleton {
       item: AssetManager.RequestItem
     ) => void;
   }): Promise<AssetManager.RequestItem[]> {
-    const { path, type, bundleName, version, onProgress } = options;
-    return this.loadBundle({ bundleName, version }).then((bundle) => {
+    const { path, type, bundleName, bundleVersion, onProgress } = options;
+    return this.loadBundle({ bundleName, bundleVersion }).then((bundle) => {
       return new Promise((resolve, reject) => {
         bundle.preloadDir(path || "", type, onProgress, (err, items) => {
           if (err) return reject(err);
@@ -124,7 +128,7 @@ class ResManager extends Singleton {
   load<T extends Asset>(options: {
     path: string;
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     type?: new (...args: any[]) => T;
     onProgress?: (
       finished: number,
@@ -135,7 +139,7 @@ class ResManager extends Singleton {
   load<T extends Asset>(options: {
     path: string[];
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     type?: new (...args: any[]) => T;
     onProgress?: (
       finished: number,
@@ -146,7 +150,7 @@ class ResManager extends Singleton {
   load<T extends Asset>(options: {
     path: string | string[];
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     type?: new (...args: any[]) => T;
     onProgress?: (
       finished: number,
@@ -154,8 +158,8 @@ class ResManager extends Singleton {
       item: AssetManager.RequestItem
     ) => void;
   }): Promise<T | T[]> {
-    let { path, bundleName, version, type, onProgress } = options;
-    return this.loadBundle({ bundleName, version }).then((bundle) => {
+    let { path, bundleName, bundleVersion, type, onProgress } = options;
+    return this.loadBundle({ bundleName, bundleVersion }).then((bundle) => {
       return new Promise((resolve, reject) => {
         // @ts-ignore
         if (type === SpriteFrame) {
@@ -181,7 +185,7 @@ class ResManager extends Singleton {
   loadDir<T extends Asset>(options: {
     path?: string;
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     type?: new (...args: any[]) => T;
     onProgress?: (
       finished: number,
@@ -189,8 +193,8 @@ class ResManager extends Singleton {
       item: AssetManager.RequestItem
     ) => void;
   }): Promise<T[]> {
-    const { path, type, bundleName, version, onProgress } = options;
-    return this.loadBundle({ bundleName, version }).then((bundle) => {
+    const { path, type, bundleName, bundleVersion, onProgress } = options;
+    return this.loadBundle({ bundleName, bundleVersion }).then((bundle) => {
       return new Promise((resolve, reject) => {
         bundle.loadDir(path || "", type, onProgress, (err, assets) => {
           if (err) return reject(err);
@@ -225,21 +229,21 @@ class ResManager extends Singleton {
     path: string;
     target?: Label | Node;
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     onProgress?: (
       finished: number,
       total: number,
       item: AssetManager.RequestItem
     ) => void;
   }): Promise<Font> {
-    let { target, path, bundleName, version, onProgress } = options;
+    let { target, path, bundleName, bundleVersion, onProgress } = options;
     if (target instanceof Node) {
       target = target.getComponent(Label);
     }
     return this.load({
       path,
       bundleName,
-      version,
+      bundleVersion,
       type: Font,
       onProgress,
     }).then((asset) => {
@@ -254,21 +258,21 @@ class ResManager extends Singleton {
     path: string;
     target?: sp.Skeleton;
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     onProgress?: (
       finished: number,
       total: number,
       item: AssetManager.RequestItem
     ) => void;
   }): Promise<sp.SkeletonData> {
-    let { target, path, bundleName, version, onProgress } = options;
+    let { target, path, bundleName, bundleVersion, onProgress } = options;
     if (target instanceof Node) {
       target = target.getComponent(sp.Skeleton);
     }
     return this.load({
       path,
       bundleName,
-      version,
+      bundleVersion,
       type: sp.SkeletonData,
       onProgress,
     }).then((asset) => {
@@ -283,21 +287,21 @@ class ResManager extends Singleton {
     path: string;
     target?: Sprite;
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     onProgress?: (
       finished: number,
       total: number,
       item: AssetManager.RequestItem
     ) => void;
   }): Promise<SpriteFrame> {
-    let { target, path, bundleName, version, onProgress } = options;
+    let { target, path, bundleName, bundleVersion, onProgress } = options;
     if (target instanceof Node) {
       target = target.getComponent(Sprite);
     }
     return this.load({
       path,
       bundleName,
-      version,
+      bundleVersion,
       type: SpriteFrame,
       onProgress,
     }).then((asset) => {
@@ -311,18 +315,18 @@ class ResManager extends Singleton {
   loadPrefab(options: {
     path: string | string[];
     bundleName?: string;
-    version?: string;
+    bundleVersion?: string;
     onProgress?: (
       finished: number,
       total: number,
       item: AssetManager.RequestItem
     ) => void;
   }): Promise<Prefab | Prefab[]> {
-    let { path, bundleName, version, onProgress } = options;
+    let { path, bundleName, bundleVersion, onProgress } = options;
     return this.load({
       path: path as any,
       bundleName,
-      version,
+      bundleVersion,
       type: Prefab,
       onProgress,
     });

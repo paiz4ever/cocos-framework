@@ -5,7 +5,6 @@ import { AudioSource, Node, director } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
 import EventMgr from "../event/EventManager";
 import StorageMgr from "../storage/StorageManager";
-import LoadMgr from "../res/ResManager";
 
 class AudioManager extends Singleton {
   init() {

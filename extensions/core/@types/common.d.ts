@@ -14,3 +14,10 @@ type ExpandArgFuntion<T, R> = T extends any[]
   ? (...arg: T) => R
   : (arg: T) => R;
 type ArgArray<T> = T extends any[] ? T : [T];
+
+/**
+ * 移除可选属性
+ */
+type RemoveOptional<T> = {
+  [K in keyof T as {} extends { [P in K]: T[K] } ? never : K]: T[K];
+};

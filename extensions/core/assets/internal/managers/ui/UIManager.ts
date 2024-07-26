@@ -1,8 +1,9 @@
-import { Node } from "cc";
+import { Layers, Node } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
 import Root from "../../root/Root";
+import { alignFullScreen } from "../../../builtin/utils";
 
-const Layers: TLayer[] = [
+const AllLayers: TLayer[] = [
   "GameView",
   "Fixed",
   "PopView",
@@ -28,7 +29,13 @@ class UIManager extends Singleton {
 
   init(root: Root) {
     this.root = root;
-    Layers.forEach((layer) => {});
+    AllLayers.forEach((layer) => {
+      const node = new Node(layer);
+      node.layer = Layers.BitMask.UI_2D;
+      alignFullScreen(node);
+      node.addComponent;
+      this.layers.set(layer, node);
+    });
   }
 
   show(options: IUIShowOptions) {}

@@ -247,7 +247,7 @@ class ResManager extends Singleton {
       type: Font,
       onProgress,
     }).then((asset) => {
-      if (target) {
+      if (target && target.isValid) {
         target.font = asset;
       }
       return asset;
@@ -276,7 +276,7 @@ class ResManager extends Singleton {
       type: sp.SkeletonData,
       onProgress,
     }).then((asset) => {
-      if (target) {
+      if (target && target.isValid) {
         target.skeletonData = asset;
       }
       return asset;
@@ -305,7 +305,7 @@ class ResManager extends Singleton {
       type: SpriteFrame,
       onProgress,
     }).then((asset) => {
-      if (target) {
+      if (target && target.isValid) {
         target.spriteFrame = asset;
       }
       return asset;

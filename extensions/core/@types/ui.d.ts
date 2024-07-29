@@ -48,11 +48,11 @@ interface IUIShowOptions {
   /**
    * UI展示时触发
    */
-  onShow?: () => void;
+  onShow?: () => Promise<void>;
   /**
    * UI关闭时触发
    */
-  onHide?: () => void;
+  onHide?: () => Promise<void>;
 }
 
 interface IUIHideOptions {
@@ -68,5 +68,5 @@ interface IUIHideOptions {
   /**
    * UI关闭时触发
    */
-  onHide?: () => void;
+  onHide?: () => Promise<void>;
 }

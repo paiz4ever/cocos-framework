@@ -33,7 +33,7 @@ class UIManager extends Singleton {
       const node = new Node(layer);
       node.layer = Layers.BitMask.UI_2D;
       alignFullScreen(node);
-      node.addComponent;
+
       this.layers.set(layer, node);
     });
   }

@@ -14,9 +14,21 @@ export class BaseView<T = any> extends Component {
   /**
    * 关闭界面
    */
-  protected async hide() {
+  async hide() {
     await this._hide();
     UIMgr.removeBaseView(this.UIID, this);
+  }
+
+  /**
+   * 挂载到编辑器EventHandler调用（通常是button）
+   * @param funcName data透传过来的函数名
+   */
+  private async call(_, funcName: string) {
+    if (!this.data[funcName] || typeof this.data[funcName] !== "function") {
+      console.warn("invalid func: " + funcName);
+      return;
+    }
+    await this.data[funcName]?.(this);
   }
 
   private async _hide(options?: {

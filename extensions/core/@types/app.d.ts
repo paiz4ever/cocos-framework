@@ -210,6 +210,11 @@ declare module app {
      * @param options.onShow UI挂载后触发（可选）
      * @param options.onHide UI隐藏前触发（可选）
      * @returns UI完全挂载后回调（onShow完毕）
+     * @example
+     * // 可以使用data传递函数来快捷设置回调
+     * app.ui.show({ id: UIID.Test, data: { click: (bv: BaseView) => { console.log("点击了"); } } });
+     * // UIViewUtil有许多通用的页面动画
+     * app.ui.show({ id: UIID.Test, onShow: UIViewUtil.show.slideRTL, onHide: UIViewUtil.hide.slide } });
      */
     show(options: { id: number; data?: any; silent?: boolean; onShow?: (node: Node, data?: any) => Promise<void>; onHide?: (node: Node) => Promise<void> }): Promise<Node>;
     /**
@@ -276,11 +281,11 @@ declare module app {
     onTouch(callback: (evt: Event) => void): void;
     /**
      * 取消触摸监听
-     * @param callback 注册回调
+     * @param callback 注册回调（可选，不指定则取消所有监听）
      */
-    offTouch(callback: (evt: Event) => void): void;
+    offTouch(callback?: (evt: Event) => void): void;
     /**
-     * 是否正在显示loading
+     * 是否正在loading
      */
     isLoading(): boolean;
   };

@@ -1,4 +1,4 @@
-import { Asset, AssetManager, Component, Font, Label, sp, Sprite, SpriteFrame, Node, Prefab, Camera, Canvas } from "cc";
+import { Asset, AssetManager, Component, Font, Label, sp, Sprite, SpriteFrame, Node, Prefab, Camera, Canvas, Event } from "cc";
 import { Tables } from "../assets/internal/managers/config/schema/schema";
 
 declare module app {
@@ -207,24 +207,24 @@ declare module app {
      * @param options.id UIID
      * @param options.data 传递的数据
      * @param options.silent 不显示加载loading，也不屏蔽触摸（可选，默认为 false）
-     * @param options.onShow UI显示时触发（可选）
-     * @param options.onHide UI隐藏时触发（可选）
-     * @returns UI显示时回调
+     * @param options.onShow UI挂载后触发（可选）
+     * @param options.onHide UI隐藏前触发（可选）
+     * @returns UI完全挂载后回调（onShow完毕）
      */
-    show(options: IUIShowOptions): Promise<any>;
+    show(options: { id: number; data?: any; silent?: boolean; onShow?: (node: Node, data?: any) => Promise<void>; onHide?: (node: Node) => Promise<void> }): Promise<Node>;
     /**
      * 隐藏UI
      * @param options.id UIID
      * @param options.data 传递的数据
      * @param options.release 是否释放资源，优先级大于ui本身的设定（可选）
-     * @param options.onHide UI隐藏时触发（可选）
-     * @returns UI隐藏时回调
+     * @param options.onHide UI隐藏前触发（可选）
+     * @returns UI完全隐藏后回调（onHide完毕）
      */
-    hide(options: IUIHideOptions): Promise<any>;
+    hide(options: { id: number; release?: boolean; onHide?: (node: Node) => Promise<void> }): Promise<void>;
     /**
      * 隐藏所有UI
      * @param options.release 是否释放资源，优先级大于ui本身的设定（可选）
-     * @returns 所有UI隐藏时回调
+     * @returns 所有UI隐藏后回调
      */
     hideAll(options?: { release?: boolean }): Promise<void>;
     /**
@@ -232,16 +232,18 @@ declare module app {
      * @param options.id UIID
      * @param options.data 传递的数据
      * @param options.silent 不显示加载loading，也不屏蔽触摸（可选，默认为 false）
-     * @param options.onShow UI显示时触发（可选）
-     * @param options.onHide UI隐藏时触发（可选）
-     * @returns UI显示时回调
+     * @param options.onShow UI挂载后触发（可选）
+     * @param options.onHide UI隐藏前触发（可选）
+     * @returns UI完全挂载后回调（onShow完毕）
      */
-    replace(options: IUIShowOptions): Promise<any>;
+    replace(options: { id: number; data?: any; silent?: boolean; onShow?: (node: Node, data?: any) => Promise<void>; onHide?: (node: Node) => Promise<void> }): Promise<Node>;
     /**
      * 显示toast
+     * @param msg 消息内容
      * @param options.msg 消息内容
      * @param options.duration 消息持续时间（可选，单位：秒）
      */
+    showToast(msg: string): void;
     showToast(options: { msg: string; duration?: number }): void;
     /**
      * 隐藏toast
@@ -249,26 +251,34 @@ declare module app {
     hideToast(): void;
     /**
      * 显示loading
-     * @param options.msg loading文字（可选）
+     * @returns uuid 关闭loading的唯一标识
      */
-    showLoading(options?: { msg?: string }): void;
+    showLoading(): string;
     /**
      * 隐藏loading
+     * @param uuid 关闭loading的唯一标识（可选，不指定则关闭所有）
      */
-    hideLoading(): void;
+    hideLoading(uuid?: string): void;
     /**
      * 屏蔽触摸
+     * @returns uuid 关闭loading的唯一标识
      */
-    block(): void;
+    block(): string;
     /**
      * 解除屏蔽触摸
+     * @param uuid 关闭loading的唯一标识（可选，不指定则关闭所有）
      */
-    unblock(): void;
+    unblock(uuid?: string): void;
     /**
-     * UI是否显示
-     * @param id UIID
+     * 触摸监听
+     * @param callback 注册回调
      */
-    isShowing(id: number): boolean;
+    onTouch(callback: (evt: Event) => void): void;
+    /**
+     * 取消触摸监听
+     * @param callback 注册回调
+     */
+    offTouch(callback: (evt: Event) => void): void;
     /**
      * 是否正在显示loading
      */

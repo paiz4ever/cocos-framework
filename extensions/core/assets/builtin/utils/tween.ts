@@ -1,4 +1,5 @@
 import { Node, randomRange, tween, Tween, UIOpacity, v3 } from "cc";
+import { DEBUG } from "cc/env";
 
 export namespace TweenUtil {
   /**
@@ -132,3 +133,4 @@ export namespace TweenUtil {
       .start();
   }
 }
+if (DEBUG) (window as any)["TweenUtil"] = TweenUtil;

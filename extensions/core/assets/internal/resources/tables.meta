@@ -8,6 +8,7 @@
   "userData": {
     "isBundle": true,
     "bundleConfigID": "bcFBF1tatOEZuxTX7nWMeb",
-    "bundleName": "internal-tables"
+    "bundleName": "internal-tables",
+    "priority": 2
   }
 }

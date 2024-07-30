@@ -1,0 +1,13 @@
+{
+  "ver": "1.2.0",
+  "importer": "directory",
+  "imported": true,
+  "uuid": "b7d092ed-045a-447f-91a5-b83a05f371fe",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "isBundle": true,
+    "bundleName": "dev-test",
+    "bundleConfigID": "bcFBF1tatOEZuxTX7nWMeb"
+  }
+}

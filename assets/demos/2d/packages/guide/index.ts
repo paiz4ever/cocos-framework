@@ -25,7 +25,7 @@ import {
 import { GuideComponent } from "./GuideComponent";
 import { DEBUG } from "cc/env";
 import { FingerComponent } from "./FingerComponent";
-import { alignFullScreen, createMask, OperationUtil } from "builtin/utils";
+import { UILayoutUtil, createMask, OperationUtil } from "builtin/utils";
 import { guide, GuideItem } from "table";
 import { Singleton } from "builtin/structs";
 import app from "app";
@@ -63,7 +63,7 @@ class GuideView {
     // 而引导层由于相机priority高于主相机，所以节点后渲染
     this.node.layer = 1 << this.layer;
     this.initEvent();
-    alignFullScreen(this.node);
+    UILayoutUtil.alignFullScreen(this.node);
     const guideCamera = instantiate(uiCamera);
     guideCamera.setComponent(Camera, (c) => {
       c.visibility = 1 << this.layer;

@@ -8,6 +8,7 @@
   "userData": {
     "isBundle": true,
     "bundleConfigID": "bcFBF1tatOEZuxTX7nWMeb",
-    "bundleName": "internal-textures"
+    "bundleName": "internal-textures",
+    "priority": 2
   }
 }

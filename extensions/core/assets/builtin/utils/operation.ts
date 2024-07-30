@@ -10,6 +10,7 @@ import {
   tween,
   v3,
 } from "cc";
+import { DEBUG } from "cc/env";
 
 export namespace OperationUtil {
   /**
@@ -273,3 +274,4 @@ export namespace OperationUtil {
     );
   }
 }
+if (DEBUG) (window as any)["OperationUtil"] = OperationUtil;

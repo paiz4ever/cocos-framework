@@ -17,6 +17,10 @@ import {
 import Singleton from "../../../builtin/structs/abstract/Singleton";
 
 class ResManager extends Singleton {
+  async init() {
+    await this.loadDir({ bundleName: "internal-textures" });
+  }
+
   loadRemote(options: { url: string; ext?: string }): Promise<Asset> {
     const { url, ext } = options;
     return new Promise((resolve, reject) => {
@@ -312,6 +316,26 @@ class ResManager extends Singleton {
     });
   }
 
+  loadPrefab(options: {
+    path: string;
+    bundleName?: string;
+    bundleVersion?: string;
+    onProgress?: (
+      finished: number,
+      total: number,
+      item: AssetManager.RequestItem
+    ) => void;
+  }): Promise<Prefab>;
+  loadPrefab(options: {
+    path: string[];
+    bundleName?: string;
+    bundleVersion?: string;
+    onProgress?: (
+      finished: number,
+      total: number,
+      item: AssetManager.RequestItem
+    ) => void;
+  }): Promise<Prefab[]>;
   loadPrefab(options: {
     path: string | string[];
     bundleName?: string;

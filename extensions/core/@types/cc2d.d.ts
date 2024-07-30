@@ -20,6 +20,12 @@ declare module "cc" {
       handler?: (c: T) => void
     ): boolean;
     /**
+     * 设置临时属性
+     * @description 该属性在节点销毁时会被清除
+     * @returns 是否设置成功
+     */
+    setTempAttr(key: string, val: any): boolean;
+    /**
      * 激活指定索引的子节点（其余子节点不激活）
      * @param index 子节点的索引
      * @note 你可以使用`-1`使所有子节点都不激活

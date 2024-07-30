@@ -1,19 +1,7 @@
-import {
-  _decorator,
-  Camera,
-  Canvas,
-  Component,
-  director,
-  game,
-  Label,
-  Node,
-  profiler,
-  ProgressBar,
-  resources,
-} from "cc";
+import { _decorator, Camera, Canvas, Component, director, profiler } from "cc";
 import AudioMgr from "../managers/audio/AudioManager";
 import PlatformMgr from "../managers/platform/PlatformManager";
-import { ConfigMgr, UIMgr } from "../managers";
+import { ConfigMgr, ResMgr, UIMgr } from "../managers";
 import { ErrorMonitor } from "../../builtin/minitors";
 import { DEBUG } from "cc/env";
 import app from "../../module";
@@ -33,7 +21,7 @@ export default abstract class Root extends Component {
   }
   /** 初始化错误 */
   protected onInitError(error: any) {
-    return Promise.resolve(void 0);
+    return Promise.reject(error);
   }
 
   protected onLoad(): void {
@@ -56,6 +44,8 @@ export default abstract class Root extends Component {
       // ===================流程启动===================
       // 初始化错误监听
       ErrorMonitor.init();
+      // 初始化资源
+      await ResMgr.init();
       // 初始化音频
       AudioMgr.init();
       // 初始化UI

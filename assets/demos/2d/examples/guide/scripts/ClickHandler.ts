@@ -8,14 +8,20 @@ export class ClickHandler extends Component {
 
   protected onLoad(): void {
     (window as any)["node_" + this.nodeName] = this.node;
-    this.node.on(Input.EventType.TOUCH_START, (e: EventTouch) => {
-      console.log("TOUCH_START : ", this.nodeName);
-    });
-    this.node.on(Input.EventType.TOUCH_END, (e: EventTouch) => {
-      console.log("TOUCH_END : ", this.nodeName);
-    });
-    this.node.on(Input.EventType.TOUCH_MOVE, (e: EventTouch) => {
-      console.log("TOUCH_MOVE : ", this.nodeName);
-    });
+    this.node.on(
+      Input.EventType.TOUCH_START,
+      (e: EventTouch) => {
+        // e.propagationStopped = this.nodeName === "C";
+        console.log("TOUCH_START : ", this.nodeName);
+      },
+      // true
+      this
+      // this.nodeName === "C"
+      // true
+    );
+  }
+
+  log() {
+    console.log("BUtton", this.nodeName);
   }
 }

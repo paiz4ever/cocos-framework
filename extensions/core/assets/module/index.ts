@@ -6,7 +6,5 @@ Object.defineProperty(app, "table", {
     return app.config.tables;
   },
 });
-if (DEBUG) {
-  window["app"] = app;
-}
 export default app as any;
+if (DEBUG) (window as any)["app"] = app;

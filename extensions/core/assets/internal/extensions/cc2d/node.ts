@@ -32,6 +32,16 @@ if (!EDITOR) {
     }
   };
 
+  Node.prototype.setTempAttr = function (key: string, value: any) {
+    const self = this as Node;
+    if (Reflect.has(self, key)) return false;
+    self[key] = value;
+    self.on(Node.EventType.NODE_DESTROYED, () => {
+      delete self[key];
+    });
+    return true;
+  };
+
   Node.prototype.activateSingleChild = function (index: number) {
     this.children.forEach((v, i) => (v.active = i === index));
   };

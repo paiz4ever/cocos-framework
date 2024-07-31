@@ -203,6 +203,14 @@ declare module app {
    */
   export const ui: {
     /**
+     * 2D主相机（同root）
+     */
+    readonly camera: Camera;
+    /**
+     * 2D渲染画布（同root）
+     */
+    readonly canvas: Canvas;
+    /**
      * 显示UI
      * @param options.id UIID
      * @param options.data 传递的数据
@@ -216,32 +224,22 @@ declare module app {
      * // UIViewUtil有许多通用的页面动画
      * app.ui.show({ id: UIID.Test, onShow: UIViewUtil.show.slideRTL, onHide: UIViewUtil.hide.slide } });
      */
-    show(options: { id: number; data?: any; silent?: boolean; onShow?: (node: Node, data?: any) => Promise<void>; onHide?: (node: Node) => Promise<void> }): Promise<Node>;
+    show(options: { id: number; data?: any; silent?: boolean; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void }): Promise<Node>;
     /**
      * 隐藏UI
      * @param options.id UIID
-     * @param options.data 传递的数据
      * @param options.release 是否释放资源，优先级大于ui本身的设定（可选）
      * @param options.onHide UI隐藏前触发（可选）
      * @returns UI完全隐藏后回调（onHide完毕）
      */
-    hide(options: { id: number; release?: boolean; onHide?: (node: Node) => Promise<void> }): Promise<void>;
+    hide(options: { id: number; release?: boolean; onHide?: (node: Node) => Promise<void> | void }): void;
     /**
      * 隐藏所有UI
+     * @param options.layer 需要隐藏的层级（可选）
      * @param options.release 是否释放资源，优先级大于ui本身的设定（可选）
      * @returns 所有UI隐藏后回调
      */
-    hideAll(options?: { release?: boolean }): Promise<void>;
-    /**
-     * 替换UI
-     * @param options.id UIID
-     * @param options.data 传递的数据
-     * @param options.silent 不显示加载loading，也不屏蔽触摸（可选，默认为 false）
-     * @param options.onShow UI挂载后触发（可选）
-     * @param options.onHide UI隐藏前触发（可选）
-     * @returns UI完全挂载后回调（onShow完毕）
-     */
-    replace(options: { id: number; data?: any; silent?: boolean; onShow?: (node: Node, data?: any) => Promise<void>; onHide?: (node: Node) => Promise<void> }): Promise<Node>;
+    hideAll(options?: { layer?: TUILayer | TUILayer[]; release?: boolean }): void;
     /**
      * 显示toast
      * @param msg 消息内容

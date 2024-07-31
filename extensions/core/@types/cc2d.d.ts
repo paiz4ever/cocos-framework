@@ -125,4 +125,18 @@ declare module "cc" {
      */
     function pointInRect(point: Readonly<math.Vec2>, rect: math.Rect): boolean;
   }
+  namespace Button {
+    /**
+     * // TODO
+     * 设置全局点击音效
+     */
+    function setAudio(): void;
+  }
+  namespace Label {
+    /**
+     * // TODO
+     * 设置全局字体
+     */
+    function setFont(): void;
+  }
 }

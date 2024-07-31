@@ -8,16 +8,19 @@ export class BaseView<T = any> extends Component {
   declare autoRelease: boolean;
 
   protected declare readonly data: T;
-  private declare onHide?: (node: Node) => Promise<void>;
-  private declare UIID: number;
+  private declare _onShow?: (node: Node, data?: any) => Promise<void>;
+  private declare _onHide?: (node: Node) => Promise<void>;
+  declare readonly UIID: number;
 
   /**
    * 关闭界面
    */
   async hide() {
     await this._hide();
-    UIMgr.removeBaseView(this.UIID, this);
   }
+
+  protected onShow(): Promise<void> | void {}
+  protected onHide(): Promise<void> | void {}
 
   /**
    * 挂载到编辑器EventHandler调用（通常是button）
@@ -31,30 +34,52 @@ export class BaseView<T = any> extends Component {
     await this.data[funcName]?.(this);
   }
 
+  private async _show() {
+    await this._onShow?.(this.node, this.data);
+    await this.onShow?.();
+  }
+
   private async _hide(options?: {
     release?: boolean;
     onHide?: (node: Node) => Promise<void>;
   }) {
     const { release, onHide } = options || {};
-    let hideFunc = onHide || this.onHide;
+    let hideFunc = onHide || this._onHide;
     await hideFunc?.(this.node);
+    await this.onHide?.();
     const isRelease = release || this.autoRelease;
     if (isRelease) {
       this.node?.destroy();
     } else {
+      this._recycle();
       this.node?.removeFromParent();
     }
+    UIMgr.removeBaseView(this.UIID, this, isRelease);
   }
 
-  private _inject(options: {
+  private _init(options: {
     id: number;
     data: T;
+    onShow?: (node: Node, data?: any) => Promise<void>;
     onHide?: (node: Node) => Promise<void>;
   }) {
-    const { id, data, onHide } = options;
+    const { id, data, onShow, onHide } = options;
+    // @ts-ignore
     this.UIID = id;
     // @ts-ignore
     this.data = data;
-    this.onHide = onHide;
+    this._onShow = onShow;
+    this._onHide = onHide;
+  }
+
+  private _recycle() {
+    // @ts-ignore
+    const prefab = this.node._prefab.asset.data;
+    if (prefab) {
+      // 复原缓存节点的属性到原始状态
+      this.node.setPosition(prefab._lpos);
+      this.node.setRotation(prefab._lrot);
+      this.node.setScale(prefab._lscale);
+    }
   }
 }

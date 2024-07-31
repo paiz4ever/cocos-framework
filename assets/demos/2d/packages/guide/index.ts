@@ -25,7 +25,7 @@ import {
 import { GuideComponent } from "./GuideComponent";
 import { DEBUG } from "cc/env";
 import { FingerComponent } from "./FingerComponent";
-import { UILayoutUtil, createMask, OperationUtil } from "builtin/utils";
+import { UILayoutUtil, OperationUtil, UIViewUtil } from "builtin/utils";
 import { guide, GuideItem } from "table";
 import { Singleton } from "builtin/structs";
 import app from "app";
@@ -94,7 +94,7 @@ class GuideView {
         this.node.addChild(this.descBox);
       });
     }
-    createMask({
+    UIViewUtil.createShade({
       name: "__GuideMask__",
       parent: this.node,
       color: new Color(0, 0, 0, 200),

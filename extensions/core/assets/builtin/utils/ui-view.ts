@@ -1,5 +1,9 @@
 import {
+  BlockInputEvents,
+  Color,
+  Layers,
   Node,
+  Sprite,
   tween,
   UIOpacity,
   UITransform,
@@ -9,6 +13,8 @@ import {
   Widget,
 } from "cc";
 import { DEBUG } from "cc/env";
+import { UILayoutUtil } from "./ui-layout";
+import { ResMgr } from "../../internal/managers";
 
 export namespace UIViewUtil {
   const MaxScaleVec = v3(1.2, 1.2, 1.2);
@@ -76,7 +82,6 @@ export namespace UIViewUtil {
       RTL,
     }
     function slide(node: Node, direction: Direction) {
-      const endPosition = node.getWorldPosition();
       const widgetC = node.getComponent(Widget);
       let alignMode: Widget.AlignMode;
       if (widgetC) {
@@ -84,10 +89,11 @@ export namespace UIViewUtil {
         widgetC.alignMode = Widget.AlignMode.ONCE;
         widgetC.updateAlignment();
       }
+      const endPosition = node.getWorldPosition();
       let { height: ph, width: pw } = view.getVisibleSize();
       let { height: ch, width: cw } =
         node.getComponent(UITransform).contentSize;
-      const startPosition = node.getWorldPosition();
+      const startPosition = endPosition.clone();
       if (direction === Direction.TTB) {
         startPosition.y = ph + ch / 2;
       } else if (direction === Direction.BTT) {
@@ -145,6 +151,50 @@ export namespace UIViewUtil {
     export function slide(node: Node) {
       return node["slideReverseFunc"]?.();
     }
+  }
+
+  /**
+   * 创建阴影遮罩
+   * @param options.name 遮罩节点名称
+   * @param options.parent 父节点
+   * @param options.color 遮罩颜色
+   * @param options.layer 层级
+   * @param options.preventBlockInput 是否阻止触摸输入
+   * @return 遮罩节点
+   */
+  export function createShade(options?: {
+    name?: string;
+    parent?: Node;
+    color?: Color;
+    layer?: number;
+    preventBlockInput?: boolean;
+  }): Node {
+    const shade = new Node(options?.name || "__Shade__");
+    UILayoutUtil.alignFullScreen(shade);
+    if (!options?.preventBlockInput) {
+      shade.addComponent(BlockInputEvents);
+    }
+    shade.layer = options?.layer ?? Layers.BitMask.UI_2D;
+    if (options?.parent) {
+      options.parent.addChild(shade);
+    }
+    ResMgr.loadSpriteFrame({
+      bundleName: "internal-textures",
+      path: "single-color",
+    })
+      .then((spriteFrame) => {
+        if (!shade.isValid) return;
+        shade.setComponent(Sprite, (c) => {
+          c.spriteFrame = spriteFrame;
+          c.color = options?.color || new Color(0, 0, 0, 127);
+        });
+        shade.getComponent(Widget).updateAlignment();
+      })
+      .catch((e) => {
+        shade.destroy();
+        return Promise.reject(e);
+      });
+    return shade;
   }
 }
 if (DEBUG) (window as any)["UIViewUtil"] = UIViewUtil;

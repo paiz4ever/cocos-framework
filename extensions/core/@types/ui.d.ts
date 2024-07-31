@@ -1,8 +1,7 @@
 type TUILayer =
-  | "GameView" // 游戏视图层（基于堆栈）
-  | "Fixed" // 固定层（常驻于游戏视图上）
-  | "PopView" // 弹出视图层（基于堆栈）
-  | "Modal"; // 模态层（全局唯一，多个视图会以队列分别显示）
+  | "Game" // 游戏视图层（单例）
+  | "Pop" // 弹出视图层（基于堆栈）
+  | "Modal"; // 模态层（单例，多个视图会以队列分别显示）
 type TLayer =
   | TUILayer
   | "Loading" // Loading层（加载）
@@ -27,6 +26,9 @@ interface IUIResource {
 type IUIResourceWithLayer = IUIResource & {
   /**
    * UI层级
+   * - `Game`：游戏视图层（单例）
+   * - `Pop`：弹出视图层（基于堆栈）
+   * - `Modal`：模态层（单例，多个视图会以队列分别显示）
    */
   layer: TUILayer;
 };

@@ -1,5 +1,6 @@
 /**
  * Toast组件
+ * @description 自定义Toast请继承或直接使用此组件
  */
 import { _decorator, Component, Label, Node } from "cc";
 const { ccclass, property } = _decorator;

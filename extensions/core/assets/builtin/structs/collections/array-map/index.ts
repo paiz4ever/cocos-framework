@@ -17,6 +17,27 @@ export class ArrayMap<T, V> {
   }
 
   /**
+   * 设置键对应的数据
+   */
+  set(key: T, values: V[]): void {
+    this.map.set(key, values);
+  }
+
+  /**
+   * 弹出最后一个
+   */
+  pop(key: T): V | null {
+    return this.map.get(key)?.pop() ?? null;
+  }
+
+  /**
+   * 弹出第一个
+   */
+  shift(key: T): V | null {
+    return this.map.get(key)?.shift() ?? null;
+  }
+
+  /**
    * 获取键对应的数据
    */
   get(key: T): V[] {

@@ -211,10 +211,13 @@ declare module app {
      */
     readonly canvas: Canvas;
     /**
+     * ui根节点
+     */
+    readonly root: Node;
+    /**
      * 显示UI
      * @param options.id UIID
      * @param options.data 传递的数据
-     * @param options.silent 不显示加载loading，也不屏蔽触摸（可选，默认为 false）
      * @param options.onShow UI挂载后触发（可选）
      * @param options.onHide UI隐藏前触发（可选）
      * @returns UI完全挂载后回调（onShow完毕）
@@ -224,7 +227,7 @@ declare module app {
      * // UIViewUtil有许多通用的页面动画
      * app.ui.show({ id: UIID.Test, onShow: UIViewUtil.show.slideRTL, onHide: UIViewUtil.hide.slide } });
      */
-    show(options: { id: number; data?: any; silent?: boolean; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void }): Promise<Node>;
+    show(options: { id: number; data?: any; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void }): Promise<Node>;
     /**
      * 隐藏UI
      * @param options.id UIID
@@ -240,6 +243,15 @@ declare module app {
      * @returns 所有UI隐藏后回调
      */
     hideAll(options?: { layer?: TUILayer | TUILayer[]; release?: boolean }): void;
+    /**
+     * 切换UI
+     * @param options.id UIID
+     * @param options.data 传递的数据
+     * @param options.onShow UI挂载后触发（可选）
+     * @param options.onHide UI隐藏前触发（可选）
+     * @returns UI完全挂载后回调（onShow完毕）
+     */
+    replace(options: { id: number; data?: any; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void }): Promise<Node>;
     /**
      * 显示toast
      * @param msg 消息内容

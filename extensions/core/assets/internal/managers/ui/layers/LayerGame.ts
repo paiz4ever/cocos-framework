@@ -4,6 +4,10 @@ import { BaseView } from "../../../../builtin/components/ui/BaseView";
 const { ccclass, property } = _decorator;
 
 export default class LayerGame extends LayerBase {
+  constructor() {
+    super("LayerGame");
+  }
+
   async addView(node: Node) {
     const old = this.children[0];
     await super.addView(node);

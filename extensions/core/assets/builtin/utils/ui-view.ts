@@ -103,7 +103,7 @@ export namespace UIViewUtil {
       } else if (direction === Direction.RTL) {
         startPosition.x = pw + cw / 2;
       }
-      node.setTempAttr("slideReverseFunc", () => {
+      node.setTemporaryProperty("$SlideReverseFunc", () => {
         return new Promise((resolve) => {
           tween(node)
             .to(0.25, { worldPosition: startPosition })
@@ -149,7 +149,7 @@ export namespace UIViewUtil {
     }
 
     export function slide(node: Node) {
-      return node["slideReverseFunc"]?.();
+      return node.getTemporaryProperty("$SlideReverseFunc")?.();
     }
   }
 

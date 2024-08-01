@@ -22,7 +22,7 @@ export default class LayerToast extends LayerBase {
   private squeezeSpeed = 200;
 
   constructor() {
-    super();
+    super("LayerToast");
     this.pool = new NodePool();
     director.getScheduler().scheduleUpdate(this, 0, false);
   }

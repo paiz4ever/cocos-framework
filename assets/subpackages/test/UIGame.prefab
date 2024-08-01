@@ -34,20 +34,20 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 59
+        "__id__": 60
       },
       {
-        "__id__": 61
+        "__id__": 62
       },
       {
-        "__id__": 63
+        "__id__": 64
       },
       {
-        "__id__": 65
+        "__id__": 66
       }
     ],
     "_prefab": {
-      "__id__": 67
+      "__id__": 68
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -1234,7 +1234,7 @@
       }
     ],
     "_prefab": {
-      "__id__": 58
+      "__id__": 59
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -1509,7 +1509,11 @@
     "__prefab": {
       "__id__": 57
     },
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 58
+      }
+    ],
     "_interactable": true,
     "_transition": 2,
     "_normalColor": {
@@ -1568,6 +1572,16 @@
     "fileId": "62YE4J61hNo4XzWZOLxKCl"
   },
   {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 1
+    },
+    "component": "",
+    "_componentId": "45b58JFuUZMWYl0ZQRD6+ZZ",
+    "handler": "hide",
+    "customEventData": ""
+  },
+  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -1590,7 +1604,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 60
+      "__id__": 61
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -1618,16 +1632,16 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 62
+      "__id__": 63
     },
     "_customMaterial": null,
     "_srcBlendFactor": 2,
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 247,
+      "g": 128,
+      "b": 128,
       "a": 255
     },
     "_spriteFrame": {
@@ -1663,7 +1677,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 64
+      "__id__": 65
     },
     "_alignFlags": 45,
     "_target": null,
@@ -1699,7 +1713,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 66
+      "__id__": 67
     },
     "autoRelease": false,
     "_id": ""

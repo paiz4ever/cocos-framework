@@ -17,7 +17,7 @@ export default class LayerLoading extends LayerBase {
   private declare loadingNode: Node;
 
   constructor() {
-    super();
+    super("LayerLoading");
     this.blockInputEvents = this.setComponent(
       BlockInputEvents,
       (c) => (c.enabled = false)

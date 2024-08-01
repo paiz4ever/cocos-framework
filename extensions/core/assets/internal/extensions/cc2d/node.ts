@@ -32,14 +32,26 @@ if (!EDITOR) {
     }
   };
 
-  Node.prototype.setTempAttr = function (key: string, value: any) {
+  Node.prototype.setTemporaryProperty = function (key: string, value: any) {
     const self = this as Node;
-    if (Reflect.has(self, key)) return false;
-    self[key] = value;
-    self.on(Node.EventType.NODE_DESTROYED, () => {
-      delete self[key];
-    });
-    return true;
+    let tp = Reflect.get(self, "$TemporaryProperty");
+    if (!tp) {
+      tp = Object.create(null);
+      self.on(Node.EventType.NODE_DESTROYED, () => {
+        Reflect.deleteProperty(self, "$TemporaryProperty");
+      });
+    }
+    tp[key] = value;
+    return Reflect.set(self, "$TemporaryProperty", tp);
+  };
+
+  Node.prototype.getTemporaryProperty = function (key: string) {
+    const self = this as Node;
+    const tp = Reflect.get(self, "$TemporaryProperty");
+    if (!tp) {
+      return;
+    }
+    return tp[key];
   };
 
   Node.prototype.activateSingleChild = function (index: number) {

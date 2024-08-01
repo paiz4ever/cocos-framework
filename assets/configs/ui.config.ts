@@ -9,6 +9,8 @@ ConfigUtil.coverDefaultUI({});
 export enum UIID {
   UIGame,
   UITest,
+  UITest2,
+  UITest3,
 }
 
 /**
@@ -18,6 +20,8 @@ ConfigUtil.injectUI({
   config: {
     [UIID.UIGame]: { path: "UIGame", layer: "Game" },
     [UIID.UITest]: { path: "UITest", layer: "Modal" },
+    [UIID.UITest2]: { path: "UITest2", layer: "Modal" },
+    [UIID.UITest3]: { path: "UITest3", layer: "Modal" },
   },
   bundle: "dev-test",
 });

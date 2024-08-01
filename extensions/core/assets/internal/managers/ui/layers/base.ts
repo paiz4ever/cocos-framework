@@ -3,8 +3,8 @@ import { UILayoutUtil } from "../../../../builtin/utils";
 import { BaseView } from "../../../../builtin/components/ui/BaseView";
 
 export class LayerBase extends Node {
-  constructor() {
-    super();
+  constructor(name?: string) {
+    super(name);
     this.layer = Layers.BitMask.UI_2D;
     UILayoutUtil.alignFullScreen(this);
   }

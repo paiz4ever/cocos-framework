@@ -31,9 +31,13 @@ const LayersOrder: TLayer[] = [
   "Toast",
   "Dev",
 ];
+const UILayersOrder: TUILayer[] = ["Game", "Pop", "Modal"];
+
+const MAX_CACHE_SIZE = 25; // 缓存的最大阈值
+const LRU_DELETE_COUNT = 10; // 到达最大阈值后用 LRU 算法删除的个数
 
 class UIManager extends Singleton {
-  private declare root: Root;
+  private declare gameRoot: Root;
   private declare layerRoot: LayerRoot;
   private declare layers: Map<TLayer, LayerBase>;
   private declare viewMap: ArrayMap<number, BaseView>;
@@ -45,17 +49,21 @@ class UIManager extends Singleton {
   declare config: IUIConfig;
 
   get camera() {
-    return this.root.camera;
+    return this.gameRoot.camera;
   }
 
   get canvas() {
-    return this.root.canvas;
+    return this.gameRoot.canvas;
+  }
+
+  get root() {
+    return this.layerRoot;
   }
 
   init(root: Root) {
-    this.root = root;
+    this.gameRoot = root;
     this.layerRoot = new LayerRoot();
-    this.root.node.addChild(this.layerRoot);
+    this.gameRoot.node.addChild(this.layerRoot);
     this.layers = new Map();
     this.viewMap = new ArrayMap();
     this.viewCache = new ArrayMap();
@@ -72,11 +80,10 @@ class UIManager extends Singleton {
   async show(options: {
     id: number;
     data?: any;
-    silent?: boolean;
     onShow?: (node: Node, data?: any) => Promise<void> | void;
     onHide?: (node: Node) => Promise<void> | void;
   }) {
-    const { id, silent } = options;
+    const { id } = options;
     const res = this.config?.[id];
     if (!res) {
       throw new Error("invalid ui ID: " + id);
@@ -101,7 +108,7 @@ class UIManager extends Singleton {
       throw new Error("view must have BaseView component");
     }
     bvC.constructor.prototype._init.call(bvC, options);
-    this.viewMap.add(id, bvC);
+    this.viewMap.setValue(id, bvC);
     await layerNode.addView(viewNode);
     return viewNode;
   }
@@ -118,19 +125,25 @@ class UIManager extends Singleton {
     );
     const bvCs = this.viewMap.get(id) || [];
     for (let bvC of bvCs) {
-      if (!bvC.isValid) continue;
+      if (!bvC?.isValid) continue;
       bvC.constructor.prototype._hide.call(bvC, options);
     }
   }
 
-  hideAll(options?: { layer?: TUILayer | TUILayer[]; release?: boolean }) {
+  hideAll(options?: {
+    layer?: TUILayer | TUILayer[];
+    release?: boolean;
+    _filter?: BaseView[];
+  }) {
     let layer = options?.layer;
     const layerModal = this.layers.get("Modal") as LayerModal;
     if (!layer) {
-      layerModal.queue = [];
+      layerModal.queue = layerModal.queue.filter((v) =>
+        options?._filter?.includes(v.getComponent(BaseView))
+      );
       const bvCs = this.viewMap.allValues() || [];
       for (let bvC of bvCs) {
-        if (!bvC.isValid) continue;
+        if (!bvC?.isValid) continue;
         bvC.constructor.prototype._hide.call(bvC, {
           ...options,
           onHide: () => {},
@@ -142,13 +155,17 @@ class UIManager extends Singleton {
       }
       for (let l of layer) {
         if (l === "Modal") {
-          layerModal.queue = [];
+          layerModal.queue = layerModal.queue.filter((v) =>
+            options?._filter?.includes(v.getComponent(BaseView))
+          );
         }
         const layerNode = this.layers.get(l);
         if (!layerNode) continue;
-        const bvCs = layerNode.children.map((v) => v.getComponent(BaseView));
+        const bvCs = layerNode.children
+          .map((v) => v.getComponent(BaseView))
+          .filter((v) => !!v && !options?._filter?.includes(v));
         for (let bvC of bvCs) {
-          if (!bvC.isValid) continue;
+          if (!bvC?.isValid) continue;
           bvC.constructor.prototype._hide.call(bvC, {
             ...options,
             onHide: () => {},
@@ -156,6 +173,53 @@ class UIManager extends Singleton {
         }
       }
     }
+  }
+
+  async replace(options: {
+    id: number;
+    data?: any;
+    onShow?: (node: Node, data?: any) => Promise<void> | void;
+    onHide?: (node: Node) => Promise<void> | void;
+  }) {
+    const { id } = options;
+    const res = this.config?.[id];
+    if (!res) {
+      throw new Error("invalid ui ID: " + id);
+    }
+    const { layer, path, bundleName, bundleVersion } = res;
+    const layerNode = this.layers.get(layer);
+    if (!layerNode) {
+      throw new Error("invalid ui layer: " + layer);
+    }
+    let viewNode = this.viewCache.pop(id);
+    if (!viewNode) {
+      const prefab = await ResMgr.loadPrefab({
+        path,
+        bundleName,
+        bundleVersion,
+      });
+      prefab.addRef();
+      viewNode = instantiate(prefab);
+    }
+    const bvC = viewNode.getComponent(BaseView);
+    if (!bvC) {
+      throw new Error("view must have BaseView component");
+    }
+    const bottomLayer: TUILayer[] = [];
+    const topLayer: TUILayer[] = [];
+    let list = bottomLayer;
+    for (let l of UILayersOrder) {
+      list.push(l);
+      if (l === layer) {
+        list = topLayer;
+      }
+    }
+    topLayer.length && this.hideAll({ layer: topLayer });
+    bvC.constructor.prototype._init.call(bvC, options);
+    this.viewMap.setValue(id, bvC);
+    await layerNode.addView(viewNode);
+    bottomLayer.length && this.hideAll({ layer: bottomLayer, _filter: [bvC] });
+    return viewNode;
   }
 
   showToast(options: { msg: string; duration?: number } | string) {
@@ -208,7 +272,26 @@ class UIManager extends Singleton {
       // @ts-ignore
       target[0].node._prefab?.asset.decRef();
     } else {
-      this.viewCache.add(id, target[0].node);
+      const node = target[0].node;
+      node.setTemporaryProperty("$LastRecycleTime", Date.now());
+      this.viewCache.setValue(id, node);
+      if (this.viewCache.allSizeValue() > MAX_CACHE_SIZE) {
+        const all = this.viewCache.allValues().sort((a, b) => {
+          return (
+            b.getTemporaryProperty("$LastRecycleTime") -
+            a.getTemporaryProperty("$LastRecycleTime")
+          );
+        });
+        let count = LRU_DELETE_COUNT;
+        while (count > 0 && all.length > 0) {
+          const node = all.pop();
+          node.destroy();
+          // @ts-ignore
+          node._prefab?.asset.decRef(false);
+          this.viewCache.deleteValue(node);
+          count--;
+        }
+      }
     }
     if (bvCs.length === 0) {
       this.viewMap.delete(id);

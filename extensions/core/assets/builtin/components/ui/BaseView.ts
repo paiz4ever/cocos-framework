@@ -11,6 +11,7 @@ export class BaseView<T = any> extends Component {
   private declare _onShow?: (node: Node, data?: any) => Promise<void>;
   private declare _onHide?: (node: Node) => Promise<void>;
   declare readonly UIID: number;
+  attached = false;
 
   /**
    * 关闭界面
@@ -19,8 +20,8 @@ export class BaseView<T = any> extends Component {
     await this._hide();
   }
 
-  protected onShow(): Promise<void> | void {}
-  protected onHide(): Promise<void> | void {}
+  protected onShow?(): Promise<void> | void {}
+  protected onHide?(): Promise<void> | void {}
 
   /**
    * 挂载到编辑器EventHandler调用（通常是button）
@@ -35,6 +36,8 @@ export class BaseView<T = any> extends Component {
   }
 
   private async _show() {
+    if (this.attached) return;
+    this.attached = true;
     await this._onShow?.(this.node, this.data);
     await this.onShow?.();
   }
@@ -44,15 +47,20 @@ export class BaseView<T = any> extends Component {
     onHide?: (node: Node) => Promise<void>;
   }) {
     const { release, onHide } = options || {};
-    let hideFunc = onHide || this._onHide;
-    await hideFunc?.(this.node);
-    await this.onHide?.();
     const isRelease = release || this.autoRelease;
-    if (isRelease) {
-      this.node?.destroy();
-    } else {
-      this._recycle();
-      this.node?.removeFromParent();
+    const attached = this.attached;
+    this.attached = false;
+    // 类似Modal一类带队列的ui，可能此时ui还未挂载，但它存在在UIManager的viewMap中，仍然需要removeBaseView
+    if (attached) {
+      let hideFunc = onHide || this._onHide;
+      await hideFunc?.(this.node);
+      await this.onHide?.();
+      if (isRelease) {
+        this.node?.destroy();
+      } else {
+        this._recycle();
+        this.node?.removeFromParent();
+      }
     }
     UIMgr.removeBaseView(this.UIID, this, isRelease);
   }

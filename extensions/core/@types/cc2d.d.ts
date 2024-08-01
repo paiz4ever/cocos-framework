@@ -24,7 +24,11 @@ declare module "cc" {
      * @description 该属性在节点销毁时会被清除
      * @returns 是否设置成功
      */
-    setTempAttr(key: string, val: any): boolean;
+    setTemporaryProperty(key: string, val: any): boolean;
+    /**
+     * 获取临时属性
+     */
+    getTemporaryProperty(key: string): any;
     /**
      * 激活指定索引的子节点（其余子节点不激活）
      * @param index 子节点的索引

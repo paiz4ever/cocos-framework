@@ -7,7 +7,7 @@ export default class LayerPop extends LayerBase {
   private declare shade: Node;
 
   constructor() {
-    super();
+    super("LayerPop");
     this.shade = UIViewUtil.createShade({
       name: "__PopMask__",
       parent: this,

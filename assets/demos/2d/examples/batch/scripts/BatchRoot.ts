@@ -59,18 +59,9 @@ export class BatchRoot extends Component {
 
   protected onLoad(): void {
     return;
-    console.log("onLoad 0: ", director.root!.device.numDrawCalls);
     this.divide();
-    console.log("onLoad 1: ", director.root!.device.numDrawCalls);
     this.classify();
   }
-
-  // protected update(dt: number): void {
-  //   const root = director.root;
-  //   if (root) {
-  //     console.log("Draw Calls: ", root.device.numDrawCalls);
-  //   }
-  // }
 
   /**
    * 子节点分组

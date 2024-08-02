@@ -1,4 +1,4 @@
-import { Asset, AssetManager, Component, Font, Label, sp, Sprite, SpriteFrame, Node, Prefab, Camera, Canvas, Event } from "cc";
+import { Asset, AssetManager, Component, Font, Label, sp, Sprite, SpriteFrame, Node, Prefab, Camera, Canvas, Event, AudioClip } from "cc";
 import { Tables } from "../assets/internal/managers/config/schema/schema";
 
 declare module app {
@@ -98,7 +98,7 @@ declare module app {
     /**
      * 加载资源
      * @param options.path 资源路径
-     * @param options.bundleName 资源包名称（可选，默认为 resources）
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.type 资源类型（可选，存在同名资源时区分）
      * @param options.onProgress 加载进度（可选）
@@ -111,7 +111,7 @@ declare module app {
     /**
      * 加载资源目录
      * @param options.path 资源路径目录
-     * @param options.bundleName 资源包名称（可选，默认为 resources）
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.type 资源类型（可选，仅加载该类型资源）
      * @param options.onProgress 加载进度（可选）
@@ -122,7 +122,7 @@ declare module app {
     /**
      * 预加载资源
      * @param options.path 资源路径
-     * @param options.bundleName 资源包名称（可选，默认为 resources）
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.type 资源类型（可选，存在同名资源时区分）
      * @param options.onProgress 加载进度（可选）
@@ -133,7 +133,7 @@ declare module app {
     /**
      * 预加载资源目录
      * @param options.path 资源路径目录
-     * @param options.bundleName 资源包名称（可选，默认为 resources）
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.type 资源类型（可选，仅加载该类型资源）
      * @param options.onProgress 加载进度（可选）
@@ -146,25 +146,28 @@ declare module app {
      * @param options.path 资源路径
      * @param options.bundleName 资源包名称（可选）
      * @param options.type 资源类型（可选，存在同名资源时区分）
+     * @notice 调用此函数请确保依赖资源的节点已经被销毁
      * @example
      * app.res.release({ path: "test", bundleName: "test", type: SpriteFrame })
      */
     release(options: { path: string; bundleName?: string; type?: typeof Asset }): void;
     /**
      * 释放所有资源
-     * @param bundleName 资源包名称（可选，默认为 resources）
+     * @param bundleName 资源包名称（可选，默认为 `resources`）
+     * @notice 调用此函数请确保依赖资源的节点已经被销毁
      */
     releaseAll(bundleName?: string): void;
     /**
      * 释放未使用的资源
-     * @param bundleName 资源包名称（可选，默认为 resources）
+     * @param bundleName 资源包名称（可选，默认为 `resources`）
+     * @notice 调用此函数请确保是自主正确的管理好资源的 `ref` 计数（一般此函数是用作 `decRef(false)` 残留下的资源）
      */
     releaseUnused(bundleName?: string): void;
     /**
      * 加载字体资源
      * @param options.path 资源路径
      * @param options.target 目标对象（可选）
-     * @param options.bundleName 资源包名称（可选，默认为 resources）
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.onProgress 加载进度（可选）
      */
@@ -173,7 +176,7 @@ declare module app {
      * 加载Spine资源
      * @param options.path 资源路径
      * @param options.target 目标对象（可选）
-     * @param options.bundleName 资源包名称（可选，默认为 resources）
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.onProgress 加载进度（可选）
      */
@@ -182,7 +185,7 @@ declare module app {
      * 加载图片资源
      * @param options.path 资源路径
      * @param options.target 目标对象（可选）
-     * @param options.bundleName 资源包名称（可选，默认为 resources）
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.onProgress 加载进度（可选）
      */
@@ -190,12 +193,21 @@ declare module app {
     /**
      * 加载预制体
      * @param options.path 资源路径
-     * @param options.bundleName 资源包名称（可选，默认为 resources）
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.onProgress 加载进度（可选）
      */
     loadPrefab(options: { path: string; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<Prefab>;
     loadPrefab(options: { path: string[]; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<Prefab[]>;
+    /**
+     * 加载音频
+     * @param options.path 资源路径
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
+     * @param options.bundleVersion 资源包版本（可选）
+     * @param options.onProgress 加载进度（可选）
+     */
+    loadAudio(options: { path: string; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<AudioClip>;
+    loadAudio(options: { path: string[]; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<AudioClip[]>;
   };
 
   /**
@@ -214,6 +226,10 @@ declare module app {
      * ui根节点
      */
     readonly root: Node;
+    /**
+     * 是否正在loading
+     */
+    readonly isLoading: boolean;
     /**
      * 显示UI
      * @param options.id UIID
@@ -295,12 +311,13 @@ declare module app {
      */
     offTouch(callback?: (evt: Event) => void): void;
     /**
-     * 是否正在loading
+     * 获取UI资源信息
+     * @param id UIID
      */
-    isLoading(): boolean;
+    getInfo(id: number): IUIResource;
   };
 
-  type TConfig = TBuiltinConfig & TGameConfig;
+  type TConfig = TInternalConfig & TGameConfig;
   /**
    * 数据配置管理
    * @example
@@ -329,7 +346,7 @@ declare module app {
    */
   export const table: Tables;
 
-  type TStorage = TBuiltinStorage & TGameStorage;
+  type TStorage = TInternalStorage & TGameStorage;
   /**
    * 存储管理
    */
@@ -386,7 +403,7 @@ declare module app {
      * 发送post请求
      * @param options.url 请求地址
      * @param options.data 请求数据
-     * @param options.isFullUrl 是否完整url（可选，默认为false）
+     * @param options.isFullUrl 是否完整url（可选，默认为 `false`）
      * @example
      * app.http.post({ url: "/test/login", data: { username: "test", password: "123456" } }).then((result) => {})
      */
@@ -395,14 +412,14 @@ declare module app {
      * 发送get请求
      * @param options.url 请求地址
      * @param options.data 请求数据
-     * @param options.isFullUrl 是否完整url（可选，默认为false）
+     * @param options.isFullUrl 是否完整url（可选，默认为 `false`）
      * @example
      * app.http.get({ url: "http://example.com/test", isFullUrl: true }).then((result) => {})
      */
     get<T = any>(options: IHttpOptions): Promise<T>;
   };
 
-  type TEvent = TBuiltinEvent & TGameEvent;
+  type TEvent = TInternalEvent & TGameEvent;
   /**
    * 事件管理
    */
@@ -417,7 +434,96 @@ declare module app {
   /**
    * 音频管理
    */
-  export const audio: any;
+  export const audio: {
+    /**
+     * 音乐是否正在播放
+     */
+    readonly isMusicPlaying: boolean;
+    /**
+     * 音乐静音
+     * @default false
+     */
+    musicMuted: boolean;
+    /**
+     * 音效静音
+     * @default false
+     */
+    effectMuted: boolean;
+    /**
+     * 音乐音量
+     * @notice 调整音量会取消静音
+     * @default 1
+     * @range [0, 1]
+     */
+    musicVolume: number;
+    /**
+     * 音效音量
+     * @notice 调整音量会取消静音
+     * @default 1
+     * @range [0, 1]
+     */
+    effectVolume: number;
+    /**
+     * 播放音乐
+     * @param options.id 音频ID
+     * @param options.repeat 循环次数（可选，默认为 `macro.REPEAT_FOREVER`）
+     * @param options.volume 音量（可选，范围为 `[0, 1]`，默认为 `1`）
+     * @param options.cover 当音频相同时是否覆盖播放（可选）
+     */
+    playMusic(options: { id: number; repeat?: number; volume?: number; cover?: boolean }): Promise<void>;
+    /**
+     * 停止播放音乐
+     * @notice 通过音乐停止后会被回收，无法恢复播放
+     */
+    stopMusic(): void;
+    /**
+     * 暂停播放音乐
+     */
+    pauseMusic(): void;
+    /**
+     * 恢复播放音乐
+     */
+    resumeMusic(): void;
+    /**
+     * 播放音效
+     * @param options.id 音频ID
+     * @param options.repeat 循环次数（可选，默认为 `1`）
+     * @param options.volume 音量（可选，范围为 `[0, 1]`，默认为 `1`）
+     * @returns 音效uuid（用作停止、暂停、恢复）
+     */
+    playEffect(options: { id: number; repeat?: number; volume?: number }): Promise<string>;
+    /**
+     * 停止播放音效
+     * @param uuid 音效uuid（可选，不指定则停止所有）
+     * @notice 通过音效停止后会被回收，无法恢复播放
+     */
+    stopEffect(uuid?: string): void;
+    /**
+     * 暂停播放音效
+     * @param uuid 音效uuid（可选，不指定则暂停所有）
+     */
+    pauseEffect(uuid?: string): void;
+    /**
+     * 恢复播放音效
+     * @param uuid 音效uuid（可选，不指定则恢复所有）
+     */
+    resumeEffect(uuid?: string): void;
+    /**
+     * 释放音频资源
+     * @param id 音频ID
+     */
+    release(id: number[] | number): void;
+    /**
+     * 预加载音频资源
+     * @param id 音频ID
+     */
+    preload(id: number[] | number): void;
+    /**
+     * 获取音频资源信息
+     * @param id 音频ID
+     */
+    getInfo(id: number): IResource;
+  };
 
   /**
    * 多语言管理

@@ -12,6 +12,7 @@ export class UITest extends BaseView {
 
   protected onHide(): Promise<void> | void {
     console.log("隐藏啦", this.data);
+    // app.audio.volume = 1;
   }
 
   @btn({

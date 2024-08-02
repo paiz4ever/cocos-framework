@@ -4,6 +4,7 @@
 import {
   Asset,
   AssetManager,
+  AudioClip,
   Font,
   Label,
   Node,
@@ -352,6 +353,46 @@ class ResManager extends Singleton {
       bundleName,
       bundleVersion,
       type: Prefab,
+      onProgress,
+    });
+  }
+
+  loadAudio(options: {
+    path: string;
+    bundleName?: string;
+    bundleVersion?: string;
+    onProgress?: (
+      finished: number,
+      total: number,
+      item: AssetManager.RequestItem
+    ) => void;
+  }): Promise<AudioClip>;
+  loadAudio(options: {
+    path: string[];
+    bundleName?: string;
+    bundleVersion?: string;
+    onProgress?: (
+      finished: number,
+      total: number,
+      item: AssetManager.RequestItem
+    ) => void;
+  }): Promise<AudioClip[]>;
+  loadAudio(options: {
+    path: string | string[];
+    bundleName?: string;
+    bundleVersion?: string;
+    onProgress?: (
+      finished: number,
+      total: number,
+      item: AssetManager.RequestItem
+    ) => void;
+  }): Promise<AudioClip | AudioClip[]> {
+    let { path, bundleName, bundleVersion, onProgress } = options;
+    return this.load({
+      path: path as any,
+      bundleName,
+      bundleVersion,
+      type: AudioClip,
       onProgress,
     });
   }

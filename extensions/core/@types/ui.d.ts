@@ -8,22 +8,7 @@ type TLayer =
   | "Toast" // Toast层（提示）
   | "Dev"; // 开发层（开发面板及调试）
 
-interface IUIResource {
-  /**
-   * UI资源路径
-   */
-  path: string;
-  /**
-   * 资源包名称
-   */
-  bundleName?: string;
-  /**
-   * 资源包版本
-   */
-  bundleVersion?: string;
-}
-
-type IUIResourceWithLayer = IUIResource & {
+type IUIResource = IResource & {
   /**
    * UI层级
    * - `Game`：游戏视图层（单例）
@@ -34,5 +19,10 @@ type IUIResourceWithLayer = IUIResource & {
 };
 
 interface IUIConfig {
-  [key: number]: IUIResourceWithLayer;
+  [key: number]: IUIResource;
+}
+
+interface IUIDefaultConfig {
+  Loading?: IResource;
+  Toast?: IResource;
 }

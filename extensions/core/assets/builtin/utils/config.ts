@@ -1,12 +1,9 @@
 import { DEBUG } from "cc/env";
-import { UIMgr } from "../../internal/managers";
+import { UIMgr, AudioMgr } from "../../internal/managers";
 
 export namespace ConfigUtil {
-  export function coverDefaultUI(configs: {
-    Loading?: IUIResource;
-    Toast?: IUIResource;
-  }) {
-    UIMgr.defaultConfig = configs;
+  export function coverDefaultUI(config: IUIDefaultConfig) {
+    UIMgr.defaultConfig = config;
   }
 
   /**
@@ -14,28 +11,22 @@ export namespace ConfigUtil {
    * 推荐使用UIID进行页面管理
    * @example
    * injectUI(
-   *   { [UIID.Main]: { path: "", layer: "GameView" } },
+   *   { [UIID.Main]: { path: "", layer: "GameView", bundleName: "bundleA" } },
    *   {
    *     config: {
    *       [UIID.BundleA1]: { path: "bundleA/test", layer: "GameView" },
    *     },
-   *     bundle: "bundleA",
-   *   },
-   *   {
-   *     config: {
-   *       [UIID.BundleB1]: { path: "bundleB/test", layer: "GameView" },
-   *     },
-   *     bundle: { name: "bundleB", version: "f1234" },
+   *     bundle: "bundleA" | { name: "bundleB", version: "f1234" },
    *   }
    * )
    */
   export function injectUI(
     ...arg: (
       | {
-          config: { [x: number]: RemoveOptional<IUIResourceWithLayer> };
+          config: { [x: number]: RemoveOptional<IUIResource> };
           bundle?: { name: string; version?: string } | string;
         }
-      | { [x: number]: RemoveOptional<IUIResourceWithLayer> }
+      | { [x: number]: IUIResource }
     )[]
   ) {
     const cnf: IUIConfig = Object.create(null);
@@ -58,6 +49,39 @@ export namespace ConfigUtil {
       }
     }
     UIMgr.config = cnf;
+  }
+
+  export function injectAudio(
+    ...arg: (
+      | {
+          config: { [x: number]: string };
+          bundle?: { name: string; version?: string } | string;
+        }
+      | { [x: number]: IResource }
+    )[]
+  ) {
+    const cnf: IUIConfig = Object.create(null);
+    for (let data of arg) {
+      if ((data as any).config) {
+        const { config, bundle } = data as any;
+        for (let key in config) {
+          cnf[key] = {
+            path: config[key],
+          };
+          if (bundle) {
+            if (typeof bundle === "string") {
+              cnf[key].bundleName = bundle;
+            } else {
+              cnf[key].bundleName = bundle.name;
+              cnf[key].bundleVersion = bundle.version;
+            }
+          }
+        }
+      } else {
+        Object.assign(cnf, data);
+      }
+    }
+    AudioMgr.config = cnf;
   }
 }
 if (DEBUG) (window as any)["ConfigUtil"] = ConfigUtil;

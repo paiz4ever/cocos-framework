@@ -1,4 +1,4 @@
-type TBuiltinEvent = {
+type TInternalEvent = {
   /** 打印 */
   Log: [string];
   /** 激励视频展示前 */

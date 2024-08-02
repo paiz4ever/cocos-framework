@@ -1,7 +1,8 @@
-import { NATIVE } from "cc/env";
+import { DEBUG, NATIVE } from "cc/env";
 
 export default class ErrorMonitor {
   static init() {
+    if (DEBUG) return;
     try {
       if (NATIVE) {
         (jsb as any).onError(function (location, message, stack) {

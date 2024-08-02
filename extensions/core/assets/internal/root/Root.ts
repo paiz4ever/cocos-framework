@@ -1,4 +1,13 @@
-import { _decorator, Camera, Canvas, Component, director, profiler } from "cc";
+import {
+  _decorator,
+  Camera,
+  Canvas,
+  Component,
+  director,
+  Game,
+  game,
+  profiler,
+} from "cc";
 import AudioMgr from "../managers/audio/AudioManager";
 import PlatformMgr from "../managers/platform/PlatformManager";
 import { ConfigMgr, ResMgr, UIMgr } from "../managers";
@@ -39,6 +48,7 @@ export default abstract class Root extends Component {
       this.canvas = this.getComponent(Canvas);
       this.camera = this.canvas.cameraComponent;
       director.addPersistRootNode(this.node);
+      this.registerEvent();
       // ===================常规初始化完成===================
 
       // ===================流程启动===================
@@ -59,9 +69,21 @@ export default abstract class Root extends Component {
       await this.onInitStart();
       await this.onInitEnd();
       // ===================流程启动完成===================
-      // this.loadingView?.destroy();
     } catch (error) {
       this.onInitError(error);
     }
+  }
+
+  private registerEvent() {
+    game.on(Game.EVENT_HIDE, () => {
+      game.pause();
+      AudioMgr.pauseMusic();
+      AudioMgr.pauseEffect();
+    });
+    game.on(Game.EVENT_SHOW, () => {
+      game.resume();
+      AudioMgr.resumeMusic();
+      AudioMgr.resumeEffect();
+    });
   }
 }

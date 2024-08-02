@@ -1,4 +1,4 @@
-type TBuiltinConfig = {
+type TInternalConfig = {
   /** app配置 */
   app: IAppConfig;
 };

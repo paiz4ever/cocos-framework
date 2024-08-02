@@ -42,10 +42,7 @@ class UIManager extends Singleton {
   private declare layers: Map<TLayer, LayerBase>;
   private declare viewMap: ArrayMap<number, BaseView>;
   private declare viewCache: ArrayMap<number, Node>;
-  declare defaultConfig: {
-    Loading?: IUIResource;
-    Toast?: IUIResource;
-  };
+  declare defaultConfig: IUIDefaultConfig;
   declare config: IUIConfig;
 
   get camera() {
@@ -58,6 +55,10 @@ class UIManager extends Singleton {
 
   get root() {
     return this.layerRoot;
+  }
+
+  get isLoading() {
+    return (this.layers.get("Loading") as LayerLoading).isLoading;
   }
 
   init(root: Root) {
@@ -146,7 +147,7 @@ class UIManager extends Singleton {
         if (!bvC?.isValid) continue;
         bvC.constructor.prototype._hide.call(bvC, {
           ...options,
-          onHide: () => {},
+          onHide: null,
         });
       }
     } else {
@@ -168,7 +169,7 @@ class UIManager extends Singleton {
           if (!bvC?.isValid) continue;
           bvC.constructor.prototype._hide.call(bvC, {
             ...options,
-            onHide: () => {},
+            onHide: null,
           });
         }
       }
@@ -257,8 +258,8 @@ class UIManager extends Singleton {
     return this.layerRoot.offTouch(callback);
   }
 
-  isLoading() {
-    return (this.layers.get("Loading") as LayerLoading).isLoading;
+  getInfo(id: number) {
+    return this.config?.[id];
   }
 
   removeBaseView(id: number, bvC: BaseView, release: boolean) {

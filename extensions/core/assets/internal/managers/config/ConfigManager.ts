@@ -6,7 +6,7 @@ import Singleton from "../../../builtin/structs/abstract/Singleton";
 import * as schema from "./schema/schema";
 import ResMgr from "../res/ResManager";
 
-type TConfig = TBuiltinConfig & TGameConfig;
+type TConfig = TInternalConfig & TGameConfig;
 
 class ConfigManager extends Singleton {
   private declare _tables: schema.Tables;
@@ -24,7 +24,7 @@ class ConfigManager extends Singleton {
       bundleName: "internal-tables",
       type: JsonAsset,
     });
-    ResMgr.removeBundle("tables");
+    ResMgr.removeBundle("internal-tables");
     this._tables = new schema.Tables((fileName: string) => {
       return tableAssets.find((asset) => asset.name === fileName)?.json || [];
     });

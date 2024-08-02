@@ -8,7 +8,7 @@ export default class LayerModal extends LayerBase {
   declare queue: Node[];
 
   constructor() {
-    super("LayerModal");
+    super("__LayerModal__");
     this.queue = [];
     this.shade = UIViewUtil.createShade({
       name: "__ModalMask__",

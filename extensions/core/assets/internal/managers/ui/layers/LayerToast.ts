@@ -22,12 +22,12 @@ export default class LayerToast extends LayerBase {
   private squeezeSpeed = 200;
 
   constructor() {
-    super("LayerToast");
+    super("__LayerToast__");
     this.pool = new NodePool();
     director.getScheduler().scheduleUpdate(this, 0, false);
   }
 
-  initDefault(res: IUIResource) {
+  initDefault(res: IResource) {
     if (!res) {
       res = {
         path: "InternalToast",

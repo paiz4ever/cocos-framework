@@ -17,20 +17,20 @@ export default class LayerLoading extends LayerBase {
   private declare loadingNode: Node;
 
   constructor() {
-    super("LayerLoading");
+    super("__LayerLoading__");
     this.blockInputEvents = this.setComponent(
       BlockInputEvents,
       (c) => (c.enabled = false)
     );
     this.loadingMap = new Map();
-    this.idg = new js.IDGenerator("Loading");
+    this.idg = new js.IDGenerator("LayerLoading");
   }
 
   get isLoading() {
     return !!this.loadingMap.size;
   }
 
-  initDefault(res: IUIResource) {
+  initDefault(res: IResource) {
     if (!res) {
       res = {
         path: "InternalLoading",

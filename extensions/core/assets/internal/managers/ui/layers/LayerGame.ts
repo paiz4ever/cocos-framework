@@ -5,7 +5,7 @@ const { ccclass, property } = _decorator;
 
 export default class LayerGame extends LayerBase {
   constructor() {
-    super("LayerGame");
+    super("__LayerGame__");
   }
 
   async addView(node: Node) {
@@ -14,7 +14,7 @@ export default class LayerGame extends LayerBase {
     if (old) {
       const bvC = old.getComponent(BaseView);
       bvC.constructor.prototype._hide.call(bvC, {
-        onHide: () => {},
+        onHide: null,
       });
     }
   }

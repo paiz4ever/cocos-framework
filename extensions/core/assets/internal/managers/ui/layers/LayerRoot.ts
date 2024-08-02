@@ -21,9 +21,9 @@ export default class LayerRoot extends LayerBase {
   private declare et: EventTarget;
 
   constructor() {
-    super("LayerRoot");
+    super("__LayerRoot__");
     this.touchMap = new Map();
-    this.idg = new js.IDGenerator("Touch");
+    this.idg = new js.IDGenerator("LayerRoot");
     this.et = new EventTarget();
   }
 

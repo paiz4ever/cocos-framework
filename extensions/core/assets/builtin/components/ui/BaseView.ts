@@ -47,12 +47,12 @@ export class BaseView<T = any> extends Component {
     onHide?: (node: Node) => Promise<void>;
   }) {
     const { release, onHide } = options || {};
-    const isRelease = release || this.autoRelease;
+    const isRelease = release ?? this.autoRelease;
     const attached = this.attached;
     this.attached = false;
     // 类似Modal一类带队列的ui，可能此时ui还未挂载，但它存在在UIManager的viewMap中，仍然需要removeBaseView
     if (attached) {
-      let hideFunc = onHide || this._onHide;
+      let hideFunc = onHide === undefined ? this._onHide : onHide;
       await hideFunc?.(this.node);
       await this.onHide?.();
       if (isRelease) {

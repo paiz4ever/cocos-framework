@@ -5,7 +5,7 @@ import { sys } from "cc";
 import SingleEventEmitter from "../../../builtin/structs/abstract/SingleEventEmitter";
 
 // @ts-ignore
-type TStorage = TBuiltinStorage & TGameStorage;
+type TStorage = TInternalStorage & TGameStorage;
 
 class StorageManager extends SingleEventEmitter<TStorage> {
   private storageKey = "cocos-storage";

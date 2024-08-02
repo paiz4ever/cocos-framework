@@ -4,7 +4,7 @@
 import { EventTarget } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
 
-type TEvent = TBuiltinEvent & TGameEvent;
+type TEvent = TInternalEvent & TGameEvent;
 
 class EventManager extends Singleton {
   private et = new EventTarget();

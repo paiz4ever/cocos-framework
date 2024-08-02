@@ -1,4 +1,4 @@
-type TBuiltinStorage = {
+type TInternalStorage = {
   /** 调试模式开启 */
   onDebug: boolean;
   /** 调试设置 */

@@ -3,8 +3,8 @@ type TInternalStorage = {
   onDebug: boolean;
   /** 调试设置 */
   debugSettings: {
-    offGlobalAd: boolean;
-    openKsDev: boolean;
+    offGlobalAd?: boolean;
+    openKsDev?: boolean;
   };
   /** 安装时间 */
   installTime: number;
@@ -15,9 +15,10 @@ type TInternalStorage = {
   };
   /** 用户信息 */
   userAuth: {
-    uuid: string;
-    name: string;
+    uuid?: string;
+    name?: string;
   };
 };
 
-type DayExpire<T> = { data: T; expire: string };
+type DayExpire<T> = { data: T; day: string };
+type WeekExpire<T> = { data: T; week: string };

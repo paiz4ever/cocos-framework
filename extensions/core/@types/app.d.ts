@@ -360,13 +360,13 @@ declare module app {
      * @param key 存储键
      * @param defaultValue 默认值（可选）
      */
-    get<T extends keyof TStorage>(key: T, defaultValue?: Partial<TStorage[T]>): TStorage[T] | null;
+    get<T extends keyof OmitByValueType<TStorage, DayExpire<any> | WeekExpire<any>>>(key: T, defaultValue?: TStorage[T]): TStorage[T] | null;
     /**
      * 设置存储数据
      * @param key 存储键
      * @param vh 存储值或者一个函数（返回存储值）
      */
-    set<T extends keyof TStorage>(key: T, vh: TStorage[T] | ((v: TStorage[T]) => TStorage[T])): void;
+    set<T extends keyof OmitByValueType<TStorage, DayExpire<any> | WeekExpire<any>>>(key: T, vh: TStorage[T] | ((v: TStorage[T]) => TStorage[T])): void;
     /**
      * 删除存储数据
      * @param key 存储键
@@ -377,13 +377,25 @@ declare module app {
      * @param key 存储键
      * @param defaultValue 默认值（可选）
      */
-    getDay<T extends ExtractTargetKey<DayExpire<any>, TStorage>>(key: T, defaultValue?: TStorage[T]["data"]): TStorage[T]["data"] | null;
+    getDay<T extends keyof PickByValueType<TStorage, DayExpire<any>>>(key: T, defaultValue?: TStorage[T]["data"]): TStorage[T]["data"] | null;
     /**
      * 设置本天数据
      * @param key 存储键
      * @param vh 存储值或者一个函数（返回存储值）
      */
-    setDay<T extends ExtractTargetKey<DayExpire<any>, TStorage>>(key: T, vh: TStorage[T]["data"] | ((v: TStorage[T]["data"]) => TStorage[T]["data"])): void;
+    setDay<T extends keyof PickByValueType<TStorage, DayExpire<any>>>(key: T, vh: TStorage[T]["data"] | ((v: TStorage[T]["data"]) => TStorage[T]["data"])): void;
+    /**
+     * 获取本周数据
+     * @param key 存储键
+     * @param defaultValue 默认值（可选）
+     */
+    getWeek<T extends keyof PickByValueType<TStorage, WeekExpire<any>>>(key: T, defaultValue?: TStorage[T]["data"]): TStorage[T]["data"] | null;
+    /**
+     * 设置本周数据
+     * @param key 存储键
+     * @param vh 存储值或者一个函数（返回存储值）
+     */
+    setWeek<T extends keyof PickByValueType<TStorage, WeekExpire<any>>>(key: T, vh: TStorage[T]["data"] | ((v: TStorage[T]["data"]) => TStorage[T]["data"])): void;
     /**
      * 清除存储数据
      */
@@ -424,10 +436,10 @@ declare module app {
    * 事件管理
    */
   export const event: {
-    emit<T extends keyof TEvent>(event: T, ...args: TEvent[T]): void;
-    on<T extends keyof TEvent>(event: T, listener: (...args: TEvent[T]) => void, thisArg?: any): void;
-    once<T extends keyof TEvent>(event: T, listener: (...args: TEvent[T]) => void, thisArg?: any): void;
-    off<T extends keyof TEvent>(event: T, listener?: (...args: TEvent[T]) => void, thisArg?: any): void;
+    emit<K extends keyof TEvent>(event: K, ...data: TEvent[K] extends void ? [] : TEvent[K] extends any[] ? TEvent[K] : [TEvent[K]]): void;
+    on<K extends keyof TEvent>(event: K, listener: EventCallback<TEvent[K]>, thisArg?: any): void;
+    once<K extends keyof TEvent>(event: K, listener: EventCallback<TEvent[K]>, thisArg?: any): void;
+    off<K extends keyof TEvent>(event: K, listener?: EventCallback<TEvent[K]>, thisArg?: any): void;
     offTarget(thisArg?: any): void;
   };
 

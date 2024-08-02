@@ -1,12 +1,18 @@
 type TInternalEvent = {
   /** 打印 */
-  Log: [string];
+  Log: string;
   /** 激励视频展示前 */
-  BeforeShowRewardAd: [];
+  BeforeShowRewardAd: never;
   /** 激励视频展示后 */
-  AfterShowRewardAd: [];
+  AfterShowRewardAd: never;
   /** 激励视频完成 */
-  RewardAdCompleted: [];
+  RewardAdCompleted: never;
   /** 关闭激励视频 */
-  CloseRewardAd: [];
+  CloseRewardAd: never;
 };
+
+type EventCallback<T> = T extends never
+  ? () => void
+  : T extends any[]
+  ? (...args: T) => void
+  : (arg: T) => void;

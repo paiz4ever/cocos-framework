@@ -1,3 +1,6 @@
+/**
+ * UI管理器
+ */
 import { Event, instantiate, Node } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
 import Root from "../../root/Root";

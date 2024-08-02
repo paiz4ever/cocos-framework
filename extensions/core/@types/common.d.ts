@@ -1,43 +1,90 @@
-type ExtractType<O, T> = { [K in keyof O]: O[K] extends T ? O[K] : unknown };
-type Diff<T extends string, U, F> = ({ [P in T]: P } & {
-  [P in keyof U]: U[P] extends F ? string : never;
-} & {
-  [x: string]: never;
-})[T];
-type ExtractTargetKey<T, O> = Diff<
-  Extract<keyof O, string>,
-  ExtractType<O, T>,
-  T
->;
-
-type ExpandArgFuntion<T, R> = T extends any[]
-  ? (...arg: T) => R
-  : (arg: T) => R;
-type ArgArray<T> = T extends any[] ? T : [T];
-
 type ExcludeKeys<T> = { [P in keyof T]: never };
 
 /**
+ * 将所有值转换为元组
+ * @example
+ * type Original = {
+ *     name: string;
+ *     age: number[];
+ * };
+ * // 表示 { name: [string]; age: [number[]]; }
+ * type Filtered = ToTuple<Original>;
+ */
+type ToTuple<T> = {
+  [K in keyof T]: [T[K]];
+};
+
+/**
+ * 剔除掉所有值类型为 U 的属性
+ * @example
+ * type Original = {
+ *     name: string;
+ *     age: number;
+ *     isActive: boolean;
+ *     id: string;
+ * };
+ * // 表示 { age: number; isActive: boolean; }
+ * type Filtered = OmitByValueType<Original, string>;
+ */
+type OmitByValueType<T, U> = {
+  [K in keyof T as T[K] extends U ? never : K]: T[K];
+};
+
+/**
+ * 仅保留所有值类型为 U 的属性
+ * @example
+ * type Original = {
+ *     name: string;
+ *     age: number;
+ *     isActive: boolean;
+ *     id: string;
+ * };
+ * // 表示 { name: string; id: string; }
+ * type Filtered = PickByValueType<Original, string>;
+ */
+type PickByValueType<T, U> = {
+  [K in keyof T as T[K] extends U ? K : never]: T[K];
+};
+
+/**
  * 移除可选属性
+ * @example
+ * type Original = {
+ *     name: string;
+ *     age?: number;
+ * };
+ * // 表示 { name: string; }
+ * type Filtered = RemoveOptional<Original>;
  */
 type RemoveOptional<T> = {
   [K in keyof T as {} extends { [P in K]: T[K] } ? never : K]: T[K];
 };
+
 /**
- * 覆盖属性
+ * 使用 U 覆盖 T 中的属性
+ * @example
+ * type Original = {
+ *     name: string;
+ *     age: number;
+ * };
+ * type Update = {
+ *     name: number;
+ * };
+ * // 表示 { name: number; age: number; }
+ * type Filtered = Overwrite<Original, Update>;
  */
 type Write<T, U> = Omit<T, keyof U> & U;
 
 /**
- * 共存属性
+ * 共存属性，Keys 必须同时存在或者同时不存在
  * @example
- * type Person = {
+ * type Original = {
  *   name: string;
  *   age?: number;
  *   address?: string;
  * }
  * // 表示age和address必须同时存在或者同时不存在
- * type CoexistPerson = Coexist<Person, "age" | "address">;
+ * type Filtered = Coexist<Original, "age" | "address">;
  */
 type Coexist<T, Keys extends keyof T = keyof T> = Pick<
   T,
@@ -46,17 +93,17 @@ type Coexist<T, Keys extends keyof T = keyof T> = Pick<
   (Required<Pick<T, Keys>> | ExcludeKeys<Pick<T, Keys>>);
 
 /**
- * 前提属性（功能上包含Coexist）
+ * 前提属性，PartialKeys 存在前提是 RequireKeys 必须存在（功能上包含Coexist）
  * @example
- * type Person = {
+ * type Original = {
  *   name: string;
  *   age?: number;
  *   address?: string;
  * }
  * // 表示address存在必须age存在
- * type PremisePerson = Premise<Person, "age" , "address">;
- * // 同Coexist<Person, "age" | "address">
- * type PremisePerson = Premise<Person, "age" | "address">;
+ * type Filtered = Premise<Original, "age" , "address">;
+ * // 同Coexist<Original, "age" | "address">
+ * type Filtered = Premise<Original, "age" | "address">;
  */
 type Premise<
   T,

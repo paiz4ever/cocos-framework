@@ -1,5 +1,6 @@
 /**
  * 事件发射器
+ * 本身数据就支持数组的请在类型外包一层ToTuple，否则发送和监听处会被解构（参考 StorageManager）
  */
 import { EventTarget } from "cc";
 
@@ -7,36 +8,35 @@ export default abstract class EventEmitter<T> {
   private et = new EventTarget();
 
   /** 发送事件 */
-  // protected emit<K extends keyof T & string>(key: K);
-  // protected emit<K extends keyof T & string>(key: K, ...args: ArgArray<T[K]>);
-  // TODO ArgArray<T[K]>导致emit类型提示问题 参见StorageMgr
-  protected emit<K extends keyof T & string>(key: K, ...args: ArgArray<T[K]>) {
-    this.et.emit(key, ...(args || []));
+  protected emit<K extends keyof T & string>(
+    key: K,
+    ...data: T[K] extends void ? [] : T[K] extends any[] ? T[K] : [T[K]]
+  ) {
+    this.et.emit(key, ...(data as [any]));
   }
 
-  /** 监听缓存变化 */
+  /** 监听事件 */
   on<K extends keyof T & string>(
     key: K,
-    // TODO boolean无法正常推断 （推断成true|false => any）
-    listener: ExpandArgFuntion<T[K], void>,
+    listener: EventCallback<T[K]>,
     thisArg?: any
   ) {
     this.et.on(key, listener, thisArg);
   }
 
-  /** 监听缓存变化一次 */
+  /** 监听事件一次 */
   once<K extends keyof T & string>(
     key: K,
-    listener: ExpandArgFuntion<T[K], void>,
+    listener: EventCallback<T[K]>,
     thisArg?: any
   ) {
     this.et.once(key, listener, thisArg);
   }
 
-  /** 取消监听 */
+  /** 取消监听事件 */
   off<K extends keyof T & string>(
     key: K,
-    listener?: ExpandArgFuntion<T[K], void>,
+    listener?: EventCallback<T[K]>,
     thisArg?: any
   ) {
     this.et.off(key, listener, thisArg);

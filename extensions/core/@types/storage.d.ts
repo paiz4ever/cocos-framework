@@ -20,5 +20,5 @@ type TInternalStorage = {
   };
 };
 
-type DayExpire<T> = { data: T; day: string };
-type WeekExpire<T> = { data: T; week: string };
+type DayExpire<T> = { data: T; day: number };
+type WeekExpire<T> = { data: T; week: number };

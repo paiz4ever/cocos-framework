@@ -373,31 +373,57 @@ declare module app {
      */
     del<T extends keyof TStorage>(key: T): void;
     /**
-     * 获取本天数据
+     * 获取天过期数据
      * @param key 存储键
      * @param defaultValue 默认值（可选）
+     * @example
+     * // 使用 DayExpire 进行配置
+     * type TGameStorage = {
+     *   // 天过期数据
+     *   dataNum: DayExpire<number>;
+     *   dataBoolean: DayExpire<boolean>;
+     * };
+     *
+     * app.storage.getDay("dataNum", 0);
+     * app.storage.getDay("dataBoolean");
      */
     getDay<T extends keyof PickByValueType<TStorage, DayExpire<any>>>(key: T, defaultValue?: TStorage[T]["data"]): TStorage[T]["data"] | null;
     /**
-     * 设置本天数据
+     * 设置天过期数据
      * @param key 存储键
      * @param vh 存储值或者一个函数（返回存储值）
+     * @example
+     * app.storage.setDay("dataNum", 100);
+     * app.storage.setDay("dataBoolean", () => a === b);
      */
     setDay<T extends keyof PickByValueType<TStorage, DayExpire<any>>>(key: T, vh: TStorage[T]["data"] | ((v: TStorage[T]["data"]) => TStorage[T]["data"])): void;
     /**
-     * 获取本周数据
+     * 获取周过期数据
      * @param key 存储键
      * @param defaultValue 默认值（可选）
+     * @example
+     * // 使用 WeekExpire 进行配置
+     * type TGameStorage = {
+     *   // 周过期数据
+     *   dataNum: WeekExpire<number>;
+     *   dataBoolean: WeekExpire<boolean>;
+     * };
+     *
+     * app.storage.getWeek("dataNum", 0);
+     * app.storage.getWeek("dataBoolean");
      */
     getWeek<T extends keyof PickByValueType<TStorage, WeekExpire<any>>>(key: T, defaultValue?: TStorage[T]["data"]): TStorage[T]["data"] | null;
     /**
-     * 设置本周数据
+     * 设置周过期数据
      * @param key 存储键
      * @param vh 存储值或者一个函数（返回存储值）
+     * @example
+     * app.storage.setWeek("dataNum", 100);
      */
     setWeek<T extends keyof PickByValueType<TStorage, WeekExpire<any>>>(key: T, vh: TStorage[T]["data"] | ((v: TStorage[T]["data"]) => TStorage[T]["data"])): void;
     /**
      * 清除存储数据
+     * @notice 调试相关设置会被保留
      */
     clear(): void;
   };

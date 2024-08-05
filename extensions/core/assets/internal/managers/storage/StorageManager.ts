@@ -1,7 +1,5 @@
 /**
  * 缓存管理器
- * // TODO
- * week expire
  */
 import { sys } from "cc";
 import SingleEventEmitter from "../../../builtin/structs/abstract/SingleEventEmitter";
@@ -76,14 +74,15 @@ class StorageManager extends SingleEventEmitter<ToTuple<TStorage>> {
     key: T,
     defaultValue?: TStorage[T]["data"]
   ): TStorage[T]["data"] | null {
+    const timestamp = dayjs().startOf("D").valueOf();
     let data = this.get(
       key as any,
       {
         data: defaultValue,
-        day: new Date().toLocaleDateString(),
+        day: timestamp,
       } as TStorage[T]
     );
-    if (data?.day === new Date().toLocaleDateString()) {
+    if (data?.day === timestamp) {
       return data?.data;
     }
     return defaultValue !== undefined ? (defaultValue as any) : null;
@@ -93,6 +92,7 @@ class StorageManager extends SingleEventEmitter<ToTuple<TStorage>> {
     key: T,
     vh: TStorage[T]["data"] | ((v: TStorage[T]["data"]) => TStorage[T]["data"])
   ) {
+    const timestamp = dayjs().startOf("D").valueOf();
     let data = this.getAll();
     if (!data) {
       this.data = {} as TStorage;
@@ -103,12 +103,12 @@ class StorageManager extends SingleEventEmitter<ToTuple<TStorage>> {
         data: (vh as (v: TStorage[T]["data"]) => TStorage[T]["data"])(
           data[key]?.data
         ),
-        day: new Date().toLocaleDateString(),
+        day: timestamp,
       } as TStorage[T];
     } else {
       data[key] = {
         data: vh,
-        day: new Date().toLocaleDateString(),
+        day: timestamp,
       } as TStorage[T];
     }
     // @ts-ignore
@@ -120,14 +120,15 @@ class StorageManager extends SingleEventEmitter<ToTuple<TStorage>> {
     key: T,
     defaultValue?: TStorage[T]["data"]
   ): TStorage[T]["data"] | null {
+    const timestamp = dayjs().locale("zh-cn").startOf("w").valueOf();
     let data = this.get(
       key as any,
       {
         data: defaultValue,
-        week: new Date().toLocaleDateString(),
+        week: timestamp,
       } as TStorage[T]
     );
-    if (data?.day === new Date().toLocaleDateString()) {
+    if (data?.week === timestamp) {
       return data?.data;
     }
     return defaultValue !== undefined ? (defaultValue as any) : null;
@@ -137,6 +138,7 @@ class StorageManager extends SingleEventEmitter<ToTuple<TStorage>> {
     key: T,
     vh: TStorage[T]["data"] | ((v: TStorage[T]["data"]) => TStorage[T]["data"])
   ) {
+    const timestamp = dayjs().locale("zh-cn").startOf("w").valueOf();
     let data = this.getAll();
     if (!data) {
       this.data = {} as TStorage;
@@ -147,12 +149,12 @@ class StorageManager extends SingleEventEmitter<ToTuple<TStorage>> {
         data: (vh as (v: TStorage[T]["data"]) => TStorage[T]["data"])(
           data[key]?.data
         ),
-        week: new Date().toLocaleDateString(),
+        week: timestamp,
       } as TStorage[T];
     } else {
       data[key] = {
         data: vh,
-        week: new Date().toLocaleDateString(),
+        week: timestamp,
       } as TStorage[T];
     }
     // @ts-ignore
@@ -177,4 +179,3 @@ class StorageManager extends SingleEventEmitter<ToTuple<TStorage>> {
 
 const StorageMgr = StorageManager.getInstance();
 export default StorageMgr;
-window.dayjs = dayjs;

@@ -7,7 +7,6 @@ import { EventTarget } from "cc";
 export default abstract class EventEmitter<T> {
   private et = new EventTarget();
 
-  /** 发送事件 */
   protected emit<K extends keyof T & string>(
     key: K,
     ...data: T[K] extends void ? [] : T[K] extends any[] ? T[K] : [T[K]]
@@ -15,7 +14,6 @@ export default abstract class EventEmitter<T> {
     this.et.emit(key, ...(data as [any]));
   }
 
-  /** 监听事件 */
   on<K extends keyof T & string>(
     key: K,
     listener: EventCallback<T[K]>,
@@ -24,7 +22,6 @@ export default abstract class EventEmitter<T> {
     this.et.on(key, listener, thisArg);
   }
 
-  /** 监听事件一次 */
   once<K extends keyof T & string>(
     key: K,
     listener: EventCallback<T[K]>,
@@ -33,7 +30,6 @@ export default abstract class EventEmitter<T> {
     this.et.once(key, listener, thisArg);
   }
 
-  /** 取消监听事件 */
   off<K extends keyof T & string>(
     key: K,
     listener?: EventCallback<T[K]>,
@@ -42,7 +38,6 @@ export default abstract class EventEmitter<T> {
     this.et.off(key, listener, thisArg);
   }
 
-  /** 取消监听所有 */
   offTarget(thisArg: any) {
     this.et.targetOff(thisArg);
   }

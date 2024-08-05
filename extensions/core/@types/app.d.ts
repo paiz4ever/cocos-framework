@@ -426,6 +426,32 @@ declare module app {
      * @notice 调试相关设置会被保留
      */
     clear(): void;
+    /**
+     * 监听数据变化
+     * @param key 存储键
+     * @param listener 监听回调
+     * @param thisArg 监听回调this指向（可选）
+     */
+    on<K extends keyof ToTuple<TStorage>>(key: K, listener: EventCallback<ToTuple<TStorage>[K]>, thisArg?: any): void;
+    /**
+     * 监听数据变化一次
+     * @param key 存储键
+     * @param listener 监听回调
+     * @param thisArg 监听回调this指向（可选）
+     */
+    once<K extends keyof ToTuple<TStorage>>(key: K, listener: EventCallback<ToTuple<TStorage>[K]>, thisArg?: any): void;
+    /**
+     * 取消监听
+     * @param key 存储键
+     * @param listener 监听回调（可选，不传则取消该key的所有监听）
+     * @param thisArg 监听回调this指向（可选）
+     */
+    off<K extends keyof ToTuple<TStorage>>(key: K, listener?: EventCallback<ToTuple<TStorage>[K]>, thisArg?: any): void;
+    /**
+     * 取消目标所有监听
+     * @param thisArg 监听回调this指向
+     */
+    offTarget(thisArg: any): void;
   };
 
   /**
@@ -463,10 +489,32 @@ declare module app {
    */
   export const event: {
     emit<K extends keyof TEvent>(event: K, ...data: TEvent[K] extends void ? [] : TEvent[K] extends any[] ? TEvent[K] : [TEvent[K]]): void;
+    /**
+     * 监听事件
+     * @param event 事件名
+     * @param listener 监听回调
+     * @param thisArg 监听回调this指向（可选）
+     */
     on<K extends keyof TEvent>(event: K, listener: EventCallback<TEvent[K]>, thisArg?: any): void;
+    /**
+     * 监听事件一次
+     * @param event 事件名
+     * @param listener 监听回调
+     * @param thisArg 监听回调this指向（可选）
+     */
     once<K extends keyof TEvent>(event: K, listener: EventCallback<TEvent[K]>, thisArg?: any): void;
+    /**
+     * 取消监听
+     * @param event 事件名
+     * @param listener 监听回调（可选，不传则取消该key的所有监听）
+     * @param thisArg 监听回调this指向（可选）
+     */
     off<K extends keyof TEvent>(event: K, listener?: EventCallback<TEvent[K]>, thisArg?: any): void;
-    offTarget(thisArg?: any): void;
+    /**
+     * 取消目标所有监听
+     * @param thisArg 监听回调this指向
+     */
+    offTarget(thisArg: any): void;
   };
 
   /**
@@ -565,8 +613,25 @@ declare module app {
 
   /**
    * 多语言管理
+   * @description 资源请放置在 assets/language 路径下的各自语言目录中
+   * @description 使用 builtin/components/language 中组件进行多语言控制
    */
-  export const language: any;
+  export const language: {
+    /**
+     * 当前语言
+     */
+    readonly current: TLanguage;
+    /**
+     * 设置语言
+     * @param lang 语言
+     */
+    set(lang: TLanguage): Promise<void>;
+    /**
+     * 语言是否支持
+     * @param langs 语言
+     */
+    isSupport(langs: TLanguage[] | TLanguage): boolean;
+  };
 
   /**
    * 定时管理

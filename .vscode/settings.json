@@ -1,6 +1,6 @@
 {
   "typescript.preferences.autoImportFileExcludePatterns": [
-    "./extensions/core/assets/module",
-    "./extensions/core/assets/internal"
+    // "./extensions/core/assets/module",
+    // "./extensions/core/assets/internal"
   ]
 }

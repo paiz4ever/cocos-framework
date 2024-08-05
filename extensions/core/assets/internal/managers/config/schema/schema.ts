@@ -41,8 +41,6 @@ export class GuideItem {
         this.redirect = _json_.redirect
         if (_json_.next === undefined) { throw new Error() }
         this.next = _json_.next
-        if (_json_.scene === undefined) { throw new Error() }
-        this.scene = _json_.scene
         if (_json_.operation === undefined) { throw new Error() }
         this.operation = _json_.operation
         if(_json_.target != undefined) { this.target = _json_.target } else { this.target = undefined }
@@ -65,11 +63,6 @@ export class GuideItem {
      */
     readonly next: number
     /**
-     * 引导场景
-     */
-    readonly scene: string
-    scene_ref: GuideScene | undefined
-    /**
      * 引导操作
      */
     readonly operation: guide.EOperation
@@ -84,7 +77,6 @@ export class GuideItem {
         
         
         
-        this.scene_ref = tables.TbGuideScene.get(this.scene)
         
         
     }
@@ -94,35 +86,34 @@ export class GuideItem {
 
 
 
-export class GuideScene {
+export class LanguageItem {
 
     constructor(_json_: any) {
-        if (_json_.scene === undefined) { throw new Error() }
-        this.scene = _json_.scene
         if (_json_.id === undefined) { throw new Error() }
         this.id = _json_.id
-        if (_json_.desc === undefined) { throw new Error() }
-        this.desc = _json_.desc
+        if (_json_.zh === undefined) { throw new Error() }
+        this.zh = _json_.zh
+        if (_json_.en === undefined) { throw new Error() }
+        this.en = _json_.en
     }
 
     /**
      * 场景
      */
-    readonly scene: string
+    readonly id: string
     /**
-     * guideID
+     * 简体中文
      */
-    readonly id: number
-    id_ref: GuideItem | undefined
+    readonly zh: string
     /**
-     * 描述
+     * 英文
      */
-    readonly desc: string
+    readonly en: string
 
     resolve(tables:Tables)
     {
         
-        this.id_ref = tables.TbGuide.get(this.id)
+        
         
     }
 }
@@ -163,25 +154,25 @@ export class TbGuide{
 }
 
 
-export namespace guide {
-export class TbGuideScene{
-    private _dataMap: Map<string, GuideScene>
-    private _dataList: GuideScene[]
+export namespace language {
+export class TbLanguage{
+    private _dataMap: Map<string, LanguageItem>
+    private _dataList: LanguageItem[]
     constructor(_json_: any) {
-        this._dataMap = new Map<string, GuideScene>()
+        this._dataMap = new Map<string, LanguageItem>()
         this._dataList = []
         for(var _json2_ of _json_) {
-            let _v: GuideScene
-            _v = new GuideScene(_json2_)
+            let _v: LanguageItem
+            _v = new LanguageItem(_json2_)
             this._dataList.push(_v)
-            this._dataMap.set(_v.scene, _v)
+            this._dataMap.set(_v.id, _v)
         }
     }
 
-    getDataMap(): Map<string, GuideScene> { return this._dataMap; }
-    getDataList(): GuideScene[] { return this._dataList; }
+    getDataMap(): Map<string, LanguageItem> { return this._dataMap; }
+    getDataList(): LanguageItem[] { return this._dataList; }
 
-    get(key: string): GuideScene | undefined { return this._dataMap.get(key); }
+    get(key: string): LanguageItem | undefined { return this._dataMap.get(key); }
 
     resolve(tables:Tables)
     {
@@ -201,15 +192,15 @@ type JsonLoader = (file: string) => any
 export class Tables {
     private _TbGuide: guide.TbGuide
     get TbGuide(): guide.TbGuide  { return this._TbGuide;}
-    private _TbGuideScene: guide.TbGuideScene
-    get TbGuideScene(): guide.TbGuideScene  { return this._TbGuideScene;}
+    private _TbLanguage: language.TbLanguage
+    get TbLanguage(): language.TbLanguage  { return this._TbLanguage;}
 
     constructor(loader: JsonLoader) {
         this._TbGuide = new guide.TbGuide(loader('guide_tbguide'))
-        this._TbGuideScene = new guide.TbGuideScene(loader('guide_tbguidescene'))
+        this._TbLanguage = new language.TbLanguage(loader('language_tblanguage'))
 
         this._TbGuide.resolve(this)
-        this._TbGuideScene.resolve(this)
+        this._TbLanguage.resolve(this)
     }
 }
 

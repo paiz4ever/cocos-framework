@@ -1,14 +1,16 @@
 type TInternalEvent = {
   /** 打印 */
-  Log: string;
+  log: string;
+  /** 语言切换 */
+  languageChanged: TLanguage;
   /** 激励视频展示前 */
-  BeforeShowRewardAd: never;
+  rewardAdShowBefore: never;
   /** 激励视频展示后 */
-  AfterShowRewardAd: never;
+  rewardAdShowAfter: never;
   /** 激励视频完成 */
-  RewardAdCompleted: never;
+  rewardAdCompleted: never;
   /** 关闭激励视频 */
-  CloseRewardAd: never;
+  rewardAdClosed: never;
 };
 
 type EventCallback<T> = T extends never

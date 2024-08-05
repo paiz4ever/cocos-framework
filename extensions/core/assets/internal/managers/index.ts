@@ -8,3 +8,4 @@ export { default as AudioMgr } from "./audio/AudioManager";
 export { default as HttpMgr } from "./net/HttpManager";
 export { default as TimeMgr } from "./time/TimeManager";
 export { default as UIMgr } from "./ui/UIManager";
+export { default as LanguageMgr } from "./language/LanguageManager";

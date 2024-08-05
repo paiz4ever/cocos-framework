@@ -20,6 +20,7 @@ import Singleton from "../../../builtin/structs/abstract/Singleton";
 class ResManager extends Singleton {
   async init() {
     await this.loadDir({ bundleName: "internal-textures" });
+    await this.loadBundle({ bundleName: "internal-language" });
   }
 
   loadRemote(options: { url: string; ext?: string }): Promise<Asset> {

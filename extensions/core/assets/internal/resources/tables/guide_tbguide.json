@@ -4,7 +4,6 @@
     "desc": "引导1",
     "redirect": 0,
     "next": 10001,
-    "scene": "scene1",
     "operation": 1,
     "target": "btn1"
   },
@@ -13,7 +12,6 @@
     "desc": "引导2",
     "redirect": 10000,
     "next": 10002,
-    "scene": "scene2",
     "operation": 1,
     "target": ""
   },
@@ -22,7 +20,6 @@
     "desc": "引导3",
     "redirect": 10000,
     "next": 10003,
-    "scene": "scene3",
     "operation": 2,
     "target": "btn1"
   },
@@ -31,7 +28,6 @@
     "desc": "引导4",
     "redirect": 10000,
     "next": 0,
-    "scene": "scene4",
     "operation": 3,
     "target": "btn1|btn2"
   }

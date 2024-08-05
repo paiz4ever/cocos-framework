@@ -60,7 +60,7 @@ class LogManager extends Singleton {
       str = `${prefix}【Internal Error】${e.message}`;
     }
     this.logs.push(str);
-    EventMgr.emit("Log", str);
+    EventMgr.emit("log", str);
   }
 
   getLogs() {

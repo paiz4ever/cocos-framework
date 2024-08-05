@@ -1,0 +1,12 @@
+[
+  {
+    "id": "desc1",
+    "zh": "你好{{name}}",
+    "en": "Hello{{name}}"
+  },
+  {
+    "id": "desc2",
+    "zh": "{{name}}拜拜",
+    "en": "{{name}}ByeBye"
+  }
+]

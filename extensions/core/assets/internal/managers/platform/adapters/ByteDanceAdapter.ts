@@ -130,14 +130,14 @@ export default class ByteDanceAdapter
       this.rewardAd
         .show()
         .then(() => {
-          EventMgr.emit("AfterShowRewardAd");
+          EventMgr.emit("rewardAdShowAfter");
           this.rewardAdResolve = resolve;
           this.rewardAdReject = reject;
         })
         .catch(() => {
           return this.rewardAd.load().then(() => {
             return this.rewardAd.show().then(() => {
-              EventMgr.emit("AfterShowRewardAd");
+              EventMgr.emit("rewardAdShowAfter");
               this.rewardAdResolve = resolve;
               this.rewardAdReject = reject;
             });

@@ -127,7 +127,7 @@ export default class KuaiShouAdapter
       this.rewardAd
         .show()
         .then(() => {
-          EventMgr.emit("AfterShowRewardAd");
+          EventMgr.emit("rewardAdShowAfter");
           this.rewardAdResolve = resolve;
           this.rewardAdReject = reject;
         })

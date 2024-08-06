@@ -6,7 +6,7 @@ const { ccclass, property, menu, requireComponent } = _decorator;
 @menu("language/LanguageSprite")
 @requireComponent(Sprite)
 export class LanguageSprite extends Component {
-  @property({ tooltip: "图片路径" })
+  @property({ tooltip: "图片路径（不同语言路径请保持一致！）" })
   path: string = "";
 
   private isFirstEnable = true;

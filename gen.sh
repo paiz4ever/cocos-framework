@@ -12,5 +12,3 @@ dotnet $LUBAN_DLL \
 --conf $CONF_ROOT/luban.conf \
 -x outputCodeDir=$CORE_ROOT/internal/managers/config/schema \
 -x outputDataDir=$CORE_ROOT/internal/resources/tables
-
-read -p "Press any key to continue..."

@@ -22,7 +22,7 @@ export namespace UIViewUtil {
     /**
      * 缩放动画
      */
-    export function scale(node: Node) {
+    export function scale(node: Node): Promise<void> {
       return new Promise((resolve) => {
         tween(node)
           .set({ scale: Vec3.ZERO })
@@ -36,7 +36,7 @@ export namespace UIViewUtil {
     /**
      * 渐显动画
      */
-    export function fade(node: Node) {
+    export function fade(node: Node): Promise<void> {
       return new Promise((resolve) => {
         const opacityC = node.setComponent(UIOpacity);
         tween(opacityC)
@@ -50,28 +50,28 @@ export namespace UIViewUtil {
     /**
      * 滑动动画（从左到右）
      */
-    export function slideLTR(node: Node) {
+    export function slideLTR(node: Node): Promise<void> {
       return slide(node, Direction.LTR);
     }
 
     /**
      * 滑动动画（从右到左）
      */
-    export function slideRTL(node: Node) {
+    export function slideRTL(node: Node): Promise<void> {
       return slide(node, Direction.RTL);
     }
 
     /**
      * 滑动动画（从上到下）
      */
-    export function slideTTB(node: Node) {
+    export function slideTTB(node: Node): Promise<void> {
       return slide(node, Direction.TTB);
     }
 
     /**
      * 滑动动画（从下到上）
      */
-    export function slideBTT(node: Node) {
+    export function slideBTT(node: Node): Promise<void> {
       return slide(node, Direction.BTT);
     }
 
@@ -81,7 +81,7 @@ export namespace UIViewUtil {
       LTR,
       RTL,
     }
-    function slide(node: Node, direction: Direction) {
+    function slide(node: Node, direction: Direction): Promise<void> {
       const widgetC = node.getComponent(Widget);
       let alignMode: Widget.AlignMode;
       if (widgetC) {
@@ -128,7 +128,7 @@ export namespace UIViewUtil {
     /**
      * 缩放动画
      */
-    export function scale(node: Node) {
+    export function scale(node: Node): Promise<void> {
       return new Promise((resolve) => {
         tween(node)
           .to(0.07, { scale: MaxScaleVec })
@@ -141,14 +141,14 @@ export namespace UIViewUtil {
     /**
      * 渐显动画
      */
-    export function fade(node: Node) {
+    export function fade(node: Node): Promise<void> {
       return new Promise((resolve) => {
         const opacityC = node.setComponent(UIOpacity);
         tween(opacityC).to(0.22, { opacity: 0 }).call(resolve).start();
       });
     }
 
-    export function slide(node: Node) {
+    export function slide(node: Node): Promise<void> {
       return node.getTemporaryProperty("$SlideReverseFunc")?.();
     }
   }

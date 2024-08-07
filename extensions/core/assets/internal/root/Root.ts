@@ -11,7 +11,7 @@ import {
 import AudioMgr from "../managers/audio/AudioManager";
 import PlatformMgr from "../managers/platform/PlatformManager";
 import { ConfigMgr, ResMgr, UIMgr } from "../managers";
-import { ErrorMonitor } from "../../builtin/minitors";
+import { ErrorMonitor } from "../monitors";
 import { DEBUG } from "cc/env";
 import app from "../../module";
 

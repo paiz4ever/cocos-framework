@@ -1,4 +1,4 @@
-import { Asset, AssetManager, Component, Font, Label, sp, Sprite, SpriteFrame, Node, Prefab, Camera, Canvas, Event, AudioClip } from "cc";
+import { Asset, AssetManager, Component, Font, Label, sp, Sprite, SpriteFrame, Node, Prefab, Camera, Canvas, Event, AudioClip, NodePool } from "cc";
 import { Tables } from "../assets/internal/managers/config/schema/schema";
 
 declare module app {
@@ -631,6 +631,17 @@ declare module app {
      * @param langs 语言
      */
     isSupport(langs: TLanguage[] | TLanguage): boolean;
+  };
+
+  /**
+   * 工具
+   */
+  export const utils: {
+    /**
+     * 获取节点池
+     * @param key 节点池key
+     */
+    pool(key: string): NodePool;
   };
 
   /**

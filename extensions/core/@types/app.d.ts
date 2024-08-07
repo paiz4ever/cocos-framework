@@ -208,6 +208,15 @@ declare module app {
      */
     loadAudio(options: { path: string; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<AudioClip>;
     loadAudio(options: { path: string[]; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<AudioClip[]>;
+    /**
+     * 加载Json
+     * @param options.path 资源路径
+     * @param options.bundleName 资源包名称（可选，默认为 `resources`）
+     * @param options.bundleVersion 资源包版本（可选）
+     * @param options.onProgress 加载进度（可选）
+     */
+    loadJson(options: { path: string; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<Object>;
+    loadJson(options: { path: string[]; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<Object[]>;
   };
 
   /**

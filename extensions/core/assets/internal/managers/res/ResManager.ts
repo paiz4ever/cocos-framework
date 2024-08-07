@@ -6,6 +6,7 @@ import {
   AssetManager,
   AudioClip,
   Font,
+  JsonAsset,
   Label,
   Node,
   Prefab,
@@ -395,6 +396,50 @@ class ResManager extends Singleton {
       bundleVersion,
       type: AudioClip,
       onProgress,
+    });
+  }
+
+  loadJson(options: {
+    path: string;
+    bundleName?: string;
+    bundleVersion?: string;
+    onProgress?: (
+      finished: number,
+      total: number,
+      item: AssetManager.RequestItem
+    ) => void;
+  }): Promise<Object>;
+  loadJson(options: {
+    path: string[];
+    bundleName?: string;
+    bundleVersion?: string;
+    onProgress?: (
+      finished: number,
+      total: number,
+      item: AssetManager.RequestItem
+    ) => void;
+  }): Promise<Object[]>;
+  loadJson(options: {
+    path: string | string[];
+    bundleName?: string;
+    bundleVersion?: string;
+    onProgress?: (
+      finished: number,
+      total: number,
+      item: AssetManager.RequestItem
+    ) => void;
+  }): Promise<Object | Object[]> {
+    let { path, bundleName, bundleVersion, onProgress } = options;
+    return this.load({
+      path: path as any,
+      bundleName,
+      bundleVersion,
+      type: JsonAsset,
+      onProgress,
+    }).then((jsonAsset) => {
+      const json = jsonAsset.json;
+      assetManager.releaseAsset(jsonAsset);
+      return json;
     });
   }
 }

@@ -215,8 +215,8 @@ declare module app {
      * @param options.bundleVersion 资源包版本（可选）
      * @param options.onProgress 加载进度（可选）
      */
-    loadJson(options: { path: string; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<Object>;
-    loadJson(options: { path: string[]; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<Object[]>;
+    loadJson<T = Object>(options: { path: string; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<T>;
+    loadJson<T = Object>(options: { path: string[]; bundleName?: string; bundleVersion?: string; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<T[]>;
   };
 
   /**
@@ -369,6 +369,7 @@ declare module app {
      * @param key 存储键
      * @param defaultValue 默认值（可选）
      */
+    get<T extends keyof OmitByValueType<TStorage, DayExpire<any> | WeekExpire<any>>>(key: T, defaultValue: TStorage[T]): TStorage[T];
     get<T extends keyof OmitByValueType<TStorage, DayExpire<any> | WeekExpire<any>>>(key: T, defaultValue?: TStorage[T]): TStorage[T] | null;
     /**
      * 设置存储数据

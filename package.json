@@ -5,7 +5,7 @@
     "version": "3.8.3"
   },
   "scripts": {
-    "update": "npx @paiz4ever/cocos-cli@latest update ./"
+    "update": "npx @paiz4ever/cocos-cli@latest update ."
   },
   "dependencies": {
     "dayjs": "^1.11.11"

@@ -18,17 +18,16 @@ import app from "../../module";
 const { ccclass, property } = _decorator;
 
 export default abstract class Root extends Component {
-  /** 应用配置 */
   protected abstract appConfig: IAppConfig;
-  /** 初始化开始前 */
+
   protected onInitStart() {
     return Promise.resolve(void 0);
   }
-  /** 初始化完成 */
+
   protected onInitEnd() {
     return Promise.resolve(void 0);
   }
-  /** 初始化错误 */
+
   protected onInitError(error: any) {
     return Promise.reject(error);
   }

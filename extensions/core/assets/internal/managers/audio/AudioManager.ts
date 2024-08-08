@@ -3,7 +3,7 @@
  */
 import { AudioClip, js, macro } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
-import Root from "../../root/Root";
+import Root from "../../components/Root";
 import ResMgr from "../res/ResManager";
 import Audio from "./Audio";
 import { ArrayMap } from "../../../builtin/structs";

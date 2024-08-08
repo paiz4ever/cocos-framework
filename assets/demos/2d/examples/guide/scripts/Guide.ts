@@ -4,7 +4,7 @@ import app from "app";
 const { ccclass, property } = _decorator;
 
 @ccclass("Guide")
-export class Guide extends app.Root {
+export class Guide extends app.comp.Root {
   protected appConfig: IAppConfig = {};
 
   @property(Node)

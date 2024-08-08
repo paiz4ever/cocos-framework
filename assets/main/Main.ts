@@ -3,7 +3,7 @@ import { _decorator, Component, Node, Vec3 } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("Main")
-export class Main extends app.Root {
+export class Main extends app.comp.Root {
   /** 替换为自己的配置 */
   protected appConfig = {
     name: "xxx",

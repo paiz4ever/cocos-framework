@@ -9,5 +9,7 @@ export { default as audio } from "../internal/managers/audio/AudioManager";
 export { default as time } from "../internal/managers/time/TimeManager";
 export { default as event } from "../internal/managers/event/EventManager";
 export { default as language } from "../internal/managers/language/LanguageManager";
-export { default as Root } from "../internal/root/Root";
 export * as utils from "../internal/utils";
+import Root from "../internal/components/Root";
+import Recyclable from "../internal/components/Recyclable";
+export const comp = { Root, Recyclable };

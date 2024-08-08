@@ -3,7 +3,7 @@ import { _decorator, instantiate } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("Test")
-export class Test extends app.Root {
+export class Test extends app.comp.Root {
   protected appConfig: IAppConfig = {};
 
   protected onInitEnd(): Promise<any> {

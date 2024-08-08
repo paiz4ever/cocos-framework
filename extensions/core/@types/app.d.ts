@@ -3,46 +3,55 @@ import { Tables } from "../assets/internal/managers/config/schema/schema";
 
 declare module app {
   /**
-   * 根组件
-   * @example
-   * class MyRoot extends app.Root {
-   *    // 设置应用配置
-   *    protected appConfig = {};
-   *
-   *    protected onInitStart() {
-   *      // 初始化其他SDK或行为
-   *      // ...
-   *      return otherSDK.init();
-   *    }
-   *
-   *    protected onInitEnd() {
-   *      return app.ui.show({ id: UUID.Main });
-   *    }
-   * }
+   * 组件集
    */
-  export abstract class Root extends Component {
+  export namespace comp {
     /**
-     * 应用配置
-     * @description
-     * 配置不使用单独文件是由于同一个游戏在同一个平台可能存在不同的配置。
-     * 这样在构建场景时仅需要修改到一个新场景即可
+     * 根组件
+     * @example
+     * class MyRoot extends app.comp.Root {
+     *    // 设置应用配置
+     *    protected appConfig = {};
+     *
+     *    protected onInitStart() {
+     *      // 初始化其他SDK或行为
+     *      // ...
+     *      return otherSDK.init();
+     *    }
+     *
+     *    protected onInitEnd() {
+     *      return app.ui.show({ id: UUID.Main });
+     *    }
+     * }
      */
-    protected abstract appConfig: IAppConfig;
+    export abstract class Root extends Component {
+      /**
+       * 应用配置
+       * @description
+       * 配置不使用单独文件是由于同一个游戏在同一个平台可能存在不同的配置。
+       * 这样在构建场景时仅需要修改到一个新场景即可
+       */
+      protected abstract appConfig: IAppConfig;
+      /**
+       * 初始化开始（可选）
+       * @description 此时仅配置初始化完成
+       */
+      protected onInitStart(): Promise<any>;
+      /**
+       * 初始化结束（可选）
+       * @description 所有初始化已完成，在此加载首页并进入
+       */
+      protected onInitEnd(): Promise<any>;
+      /**
+       * 初始化失败（可选）
+       * @description 加载出现问题，你可以在此重启或者上报
+       */
+      protected onInitError(error: any): Promise<any>;
+    }
     /**
-     * 初始化开始（可选）
-     * @description 此时仅配置初始化完成
+     * 可回收组件
      */
-    protected onInitStart(): Promise<any>;
-    /**
-     * 初始化结束（可选）
-     * @description 所有初始化已完成，在此加载首页并进入
-     */
-    protected onInitEnd(): Promise<any>;
-    /**
-     * 初始化失败（可选）
-     * @description 加载出现问题，你可以在此重启或者上报
-     */
-    protected onInitError(error: any): Promise<any>;
+    export abstract class Recyclable extends Component {}
   }
 
   /**
@@ -674,13 +683,18 @@ declare module app {
   export function error(): void;
 
   /**
-   * 红点管理
+   * 扩展集
    */
-  export const redDot: any;
-  /**
-   * 引导管理
-   */
-  export const guide: any;
+  export namespace ext {
+    /**
+     * 红点管理
+     */
+    export const redDot: any;
+    /**
+     * 引导管理
+     */
+    export const guide: any;
+  }
 }
 
 export default app;

@@ -41,7 +41,7 @@ export namespace UIViewUtil {
         const opacityC = node.setComponent(UIOpacity);
         tween(opacityC)
           .set({ opacity: 0 })
-          .to(0.22, { opacity: 255 })
+          .to(0.5, { opacity: 255 })
           .call(resolve)
           .start();
       });

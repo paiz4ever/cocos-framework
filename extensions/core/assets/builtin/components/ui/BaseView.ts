@@ -10,7 +10,7 @@ export class BaseView<T = any> extends Component {
   protected declare readonly data: T;
   private declare _onShow?: (node: Node, data?: any) => Promise<void>;
   private declare _onHide?: (node: Node) => Promise<void>;
-  declare readonly UIID: number;
+  private declare readonly UIID: number;
   attached = false;
 
   /**
@@ -75,7 +75,7 @@ export class BaseView<T = any> extends Component {
     // @ts-ignore
     this.UIID = id;
     // @ts-ignore
-    this.data = data;
+    this.data = data || {};
     this._onShow = onShow;
     this._onHide = onHide;
   }

@@ -252,6 +252,7 @@ declare module app {
      * // UIViewUtil有许多通用的页面动画
      * app.ui.show({ id: UIID.Test, onShow: UIViewUtil.show.slideRTL, onHide: UIViewUtil.hide.slide } });
      */
+    show(id: number): Promise<Node>;
     show(options: { id: number; data?: any; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void }): Promise<Node>;
     /**
      * 隐藏UI
@@ -260,6 +261,7 @@ declare module app {
      * @param options.onHide UI隐藏前触发（可选）
      * @returns UI完全隐藏后回调（onHide完毕）
      */
+    hide(id: number): void;
     hide(options: { id: number; release?: boolean; onHide?: (node: Node) => Promise<void> | void }): void;
     /**
      * 隐藏所有UI
@@ -608,12 +610,14 @@ declare module app {
      * 释放音频资源
      * @param id 音频ID
      */
-    release(id: number[] | number): void;
+    release(ids: number[]): void;
+    release(id: number): void;
     /**
      * 预加载音频资源
      * @param id 音频ID
      */
-    preload(id: number[] | number): void;
+    preload(ids: number[]): void;
+    preload(id: number): void;
     /**
      * 获取音频资源信息
      * @param id 音频ID

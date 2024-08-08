@@ -81,12 +81,19 @@ class UIManager extends Singleton {
     });
   }
 
-  async show(options: {
-    id: number;
-    data?: any;
-    onShow?: (node: Node, data?: any) => Promise<void> | void;
-    onHide?: (node: Node) => Promise<void> | void;
-  }) {
+  async show(
+    options:
+      | {
+          id: number;
+          data?: any;
+          onShow?: (node: Node, data?: any) => Promise<void> | void;
+          onHide?: (node: Node) => Promise<void> | void;
+        }
+      | number
+  ) {
+    if (typeof options === "number") {
+      options = { id: options };
+    }
     const { id } = options;
     const res = this.config?.[id];
     if (!res) {
@@ -97,6 +104,7 @@ class UIManager extends Singleton {
     if (!layerNode) {
       throw new Error("invalid ui layer: " + layer);
     }
+    const blockID = this.block();
     let viewNode = this.viewCache.pop(id);
     if (!viewNode) {
       const prefab = await ResMgr.loadPrefab({
@@ -114,17 +122,26 @@ class UIManager extends Singleton {
     bvC.constructor.prototype._init.call(bvC, options);
     this.viewMap.setValue(id, bvC);
     await layerNode.addView(viewNode);
+    this.unblock(blockID);
     return viewNode;
   }
 
-  hide(options: {
-    id: number;
-    release?: boolean;
-    onHide?: (node: Node) => Promise<void> | void;
-  }) {
+  hide(
+    options:
+      | {
+          id: number;
+          release?: boolean;
+          onHide?: (node: Node) => Promise<void> | void;
+        }
+      | number
+  ) {
+    if (typeof options === "number") {
+      options = { id: options };
+    }
     const { id } = options;
     const layerModal = this.layers.get("Modal") as LayerModal;
     layerModal.queue = layerModal.queue.filter(
+      // @ts-ignore
       (v) => v.getComponent(BaseView).UIID !== id
     );
     const bvCs = this.viewMap.get(id) || [];

@@ -11,7 +11,7 @@ import {
   LayerModal,
   LayerToast,
   LayerRoot,
-  LayerGame,
+  LayerScene,
   LayerPop,
 } from "./layers";
 import { LayerBase } from "./layers/base";
@@ -19,7 +19,7 @@ import { BaseView } from "../../../builtin/components/ui/BaseView";
 import { ArrayMap } from "../../../builtin/structs";
 
 const AllLayers: { [x in TLayer]: new () => LayerBase } = {
-  Game: LayerGame,
+  Scene: LayerScene,
   Pop: LayerPop,
   Modal: LayerModal,
   Loading: LayerLoading,
@@ -27,14 +27,14 @@ const AllLayers: { [x in TLayer]: new () => LayerBase } = {
   Dev: LayerDev,
 };
 const LayersOrder: TLayer[] = [
-  "Game",
+  "Scene",
   "Pop",
   "Modal",
   "Loading",
   "Toast",
   "Dev",
 ];
-const UILayersOrder: TUILayer[] = ["Game", "Pop", "Modal"];
+const UILayersOrder: TUILayer[] = ["Scene", "Pop", "Modal"];
 
 const MAX_CACHE_SIZE = 25; // 缓存的最大阈值
 const LRU_DELETE_COUNT = 10; // 到达最大阈值后用 LRU 算法删除的个数

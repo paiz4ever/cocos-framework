@@ -19,7 +19,7 @@ export enum UIID {
 ConfigUtil.injectUI(
   {
     config: {
-      [UIID.UIGame]: { path: "UIGame", layer: "Game" },
+      [UIID.UIGame]: { path: "UIGame", layer: "Scene" },
       [UIID.UITest]: { path: "UITest", layer: "Modal" },
       [UIID.UITest2]: { path: "UITest2", layer: "Modal" },
       [UIID.UITest3]: { path: "UITest3", layer: "Modal" },
@@ -27,6 +27,6 @@ ConfigUtil.injectUI(
     bundle: "dev-test",
   },
   {
-    [UIID.UIGame]: { path: "UIGame", layer: "Game", bundleName: "dev-test" },
+    [UIID.UIGame]: { path: "UIGame", layer: "Scene", bundleName: "dev-test" },
   }
 );

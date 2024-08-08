@@ -3,9 +3,9 @@ import { LayerBase } from "./base";
 import { BaseView } from "../../../../builtin/components/ui/BaseView";
 const { ccclass, property } = _decorator;
 
-export default class LayerGame extends LayerBase {
+export default class LayerScene extends LayerBase {
   constructor() {
-    super("__LayerGame__");
+    super("__LayerScene__");
   }
 
   async addView(node: Node) {

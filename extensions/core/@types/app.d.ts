@@ -326,6 +326,12 @@ declare module app {
      * @param id UIID
      */
     getInfo(id: number): IUIResource;
+    /**
+     * 预加载UI
+     * @param id UIID
+     */
+    preload(ids: number[]): void;
+    preload(id: number): void;
   };
 
   type TConfig = TInternalConfig & TGameConfig;

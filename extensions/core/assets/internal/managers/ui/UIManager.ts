@@ -1,7 +1,7 @@
 /**
  * UI管理器
  */
-import { Event, instantiate, Node } from "cc";
+import { Event, instantiate, Node, Prefab } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
 import Root from "../../root/Root";
 import ResMgr from "../res/ResManager";
@@ -280,6 +280,41 @@ class UIManager extends Singleton {
 
   getInfo(id: number) {
     return this.config?.[id];
+  }
+
+  preload(id: number | number[]) {
+    if (typeof id === "number") {
+      const res = this.config?.[id];
+      if (!res) {
+        return;
+      }
+      const { path, bundleName, bundleVersion } = res;
+      ResMgr.preload({
+        path,
+        bundleName,
+        bundleVersion,
+        type: Prefab,
+      });
+      return;
+    }
+    const map = new ArrayMap<string, string>();
+    id.forEach((v) => {
+      const res = this.config?.[v];
+      if (!res) {
+        return;
+      }
+      const { path, bundleName, bundleVersion } = res;
+      map.setValue(bundleName + "_" + bundleVersion, path);
+    });
+    map.forEach((paths, key) => {
+      const [bundleName, bundleVersion] = key.split("_");
+      ResMgr.preload({
+        path: paths,
+        bundleName,
+        bundleVersion,
+        type: Prefab,
+      });
+    });
   }
 
   removeBaseView(id: number, bvC: BaseView, release: boolean) {

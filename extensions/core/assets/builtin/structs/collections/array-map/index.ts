@@ -5,6 +5,10 @@ export class ArrayMap<T, V> {
     this.map = new Map<T, V[]>();
   }
 
+  has(key: T): boolean {
+    return this.map.has(key);
+  }
+
   /**
    * 设置键对应的数据
    */

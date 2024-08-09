@@ -49,9 +49,14 @@ declare module app {
       protected onInitError(error: any): Promise<any>;
     }
     /**
-     * 可回收组件
+     * 可回收节点组件
      */
-    export abstract class Recyclable extends Component {}
+    export abstract class Recyclable extends Component {
+      /**
+       * 节点被回收后会调用此方法
+       */
+      abstract onRecycle(): void;
+    }
   }
 
   /**

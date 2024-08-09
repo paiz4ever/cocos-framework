@@ -4,22 +4,33 @@ import { UIMgr } from "../../../internal/managers";
 const { ccclass, property } = _decorator;
 
 export class LaunchTracker implements ILaunchTracker {
-  constructor(private launchComponent: BaseLaunch) {}
+  constructor(
+    private launchComponent: BaseLaunch,
+    private onEnd?: () => void
+  ) {}
 
   update(finished: number, total: number) {
-    this.launchComponent?.constructor.prototype._refresh(finished, total);
+    this.launchComponent?.constructor.prototype._refresh.call(
+      this.launchComponent,
+      finished,
+      total
+    );
   }
 
-  end() {
-    // @ts-ignore
-    UIMgr.hide("Launch");
+  async end() {
+    await this.launchComponent?.constructor.prototype._hide.call(
+      this.launchComponent,
+      {
+        release: true,
+        onHide: null,
+      }
+    );
+    this.onEnd?.();
   }
 }
 
 @ccclass("BaseLaunch")
 export class BaseLaunch extends BaseView {
-  autoRelease: boolean = true;
-
   @property({ type: Label, tooltip: "进度文本（可选）" })
   declare progressLabel?: Label;
   @property({ type: ProgressBar, tooltip: "进度条（可选）" })

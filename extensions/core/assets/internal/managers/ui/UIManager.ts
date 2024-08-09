@@ -13,6 +13,7 @@ import {
   LayerRoot,
   LayerScene,
   LayerPop,
+  LayerLaunch,
 } from "./layers";
 import { LayerBase } from "./layers/base";
 import { BaseView } from "../../../builtin/components/ui/BaseView";
@@ -26,6 +27,7 @@ const AllLayers: { [x in TLayer]: new () => LayerBase } = {
   Scene: LayerScene,
   Pop: LayerPop,
   Modal: LayerModal,
+  Launch: LayerLaunch,
   Loading: LayerLoading,
   Toast: LayerToast,
   Dev: LayerDev,
@@ -155,7 +157,7 @@ class UIManager extends Singleton {
       // @ts-ignore
       (v) => v.getComponent(BaseView).UIID !== id
     );
-    const bvCs = this.viewMap.get(id) || [];
+    const bvCs = this.viewMap.get(id)?.slice() || [];
     for (let bvC of bvCs) {
       if (!bvC?.isValid) continue;
       bvC.constructor.prototype._hide.call(bvC, options);
@@ -390,12 +392,16 @@ class UIManager extends Singleton {
     }
     this.config["Launch"] = {
       ...res,
-      layer: "Scene",
+      layer: "Launch",
     };
     // @ts-ignore
     const node = await this.show("Launch");
     const baseLaunchC = node.getComponent(BaseLaunch);
-    return new LaunchTracker(baseLaunchC);
+    return new LaunchTracker(baseLaunchC, () => {
+      const layerLaunch = this.layers.get("Launch");
+      layerLaunch.destroy();
+      this.layers.delete("Launch");
+    });
   }
 }
 

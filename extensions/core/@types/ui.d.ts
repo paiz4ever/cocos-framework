@@ -4,6 +4,7 @@ type TUILayer =
   | "Modal"; // 模态层（单例，多个视图会以队列分别显示）
 type TLayer =
   | TUILayer
+  | "Launch" // 启动层
   | "Loading" // Loading层（加载）
   | "Toast" // Toast层（提示）
   | "Dev"; // 开发层（开发面板及调试）
@@ -33,4 +34,5 @@ interface IUIDefaultConfig {
 
 interface ILaunchTracker {
   update: (finished: number, total: number) => void;
+  end: () => void;
 }

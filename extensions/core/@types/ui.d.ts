@@ -33,7 +33,17 @@ interface IUIDefaultConfig {
 }
 
 interface ILaunchTracker {
+  /**
+   * 更新进度
+   */
   update: (finished: number, total: number) => void;
+  /**
+   * 模拟进度
+   * @param timeout 进度持续时间（单位：秒）
+   */
   fake: (timeout: number) => Promise<void>;
+  /**
+   * 结束启动流程
+   */
   end: () => void;
 }

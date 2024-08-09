@@ -1,6 +1,5 @@
 import { _decorator, Component, director, Label, Node, ProgressBar } from "cc";
 import { BaseView } from "./BaseView";
-import { UIMgr } from "../../../internal/managers";
 const { ccclass, property } = _decorator;
 
 export class LaunchTracker implements ILaunchTracker {
@@ -10,7 +9,8 @@ export class LaunchTracker implements ILaunchTracker {
   ) {}
 
   update(finished: number, total: number) {
-    this.launchComponent?.constructor.prototype._refresh.call(
+    if (!this.launchComponent) return;
+    this.launchComponent.constructor.prototype._refresh.call(
       this.launchComponent,
       finished,
       total
@@ -18,6 +18,7 @@ export class LaunchTracker implements ILaunchTracker {
   }
 
   fake(timeout: number): Promise<void> {
+    if (!this.launchComponent) return Promise.resolve(void 0);
     return new Promise((resolve) => {
       let t = 0;
       const target = { uuid: "__LaunchTracker__" };
@@ -37,13 +38,13 @@ export class LaunchTracker implements ILaunchTracker {
   }
 
   async end() {
-    await this.launchComponent?.constructor.prototype._hide.call(
-      this.launchComponent,
-      {
-        release: true,
-        onHide: null,
-      }
-    );
+    if (!this.launchComponent) return;
+    const comp = this.launchComponent;
+    this.launchComponent = null;
+    await comp.constructor.prototype._hide.call(comp, {
+      release: true,
+      onHide: null,
+    });
     this.onEnd?.();
   }
 }
@@ -80,8 +81,8 @@ export class BaseLaunch extends BaseView {
 
   private _refresh(finished: number, total: number) {
     this.progress = finished / total;
-    this.onRefresh(finished, total);
+    this.onRefresh();
   }
 
-  onRefresh(finished: number, total: number) {}
+  onRefresh() {}
 }

@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, ProgressBar } from "cc";
+import { _decorator, Component, director, Label, Node, ProgressBar } from "cc";
 import { BaseView } from "./BaseView";
 import { UIMgr } from "../../../internal/managers";
 const { ccclass, property } = _decorator;
@@ -15,6 +15,25 @@ export class LaunchTracker implements ILaunchTracker {
       finished,
       total
     );
+  }
+
+  fake(timeout: number): Promise<void> {
+    return new Promise((resolve) => {
+      let t = 0;
+      const target = { uuid: "__LaunchTracker__" };
+      director.getScheduler().schedule(
+        (dt) => {
+          t += dt;
+          this.update(t, timeout);
+          if (t >= timeout) {
+            director.getScheduler().unscheduleAllForTarget(target);
+            resolve(void 0);
+          }
+        },
+        target,
+        0
+      );
+    });
   }
 
   async end() {

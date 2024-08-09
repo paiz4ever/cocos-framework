@@ -34,5 +34,6 @@ interface IUIDefaultConfig {
 
 interface ILaunchTracker {
   update: (finished: number, total: number) => void;
+  fake: (timeout: number) => Promise<void>;
   end: () => void;
 }

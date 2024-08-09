@@ -101,7 +101,7 @@ class UIManager extends Singleton {
         }
       | number
   ) {
-    if (typeof options === "number") {
+    if (typeof options !== "object") {
       options = { id: options };
     }
     const { id, onProgress } = options;
@@ -222,7 +222,7 @@ class UIManager extends Singleton {
         }
       | number
   ) {
-    if (typeof options === "number") {
+    if (typeof options !== "object") {
       options = { id: options };
     }
     const { id, onProgress } = options;

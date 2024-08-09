@@ -4,16 +4,16 @@ type TInternalEvent = {
   /** 语言切换 */
   languageChanged: TLanguage;
   /** 激励视频展示前 */
-  rewardAdShowBefore: never;
+  rewardAdShowBefore: void;
   /** 激励视频展示后 */
-  rewardAdShowAfter: never;
+  rewardAdShowAfter: void;
   /** 激励视频完成 */
-  rewardAdCompleted: never;
+  rewardAdCompleted: void;
   /** 关闭激励视频 */
-  rewardAdClosed: never;
+  rewardAdClosed: void;
 };
 
-type EventCallback<T> = T extends never
+type EventCallback<T> = T extends void
   ? () => void
   : T extends any[]
   ? (...args: T) => void

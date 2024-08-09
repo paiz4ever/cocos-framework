@@ -13,7 +13,7 @@ import {
 } from "cc";
 import { LayerBase } from "./base";
 import ResMgr from "../../res/ResManager";
-import { Toast } from "../../../../builtin/components/ui/Toast";
+import { BaseToast } from "../../../../builtin/components/ui/BaseToast";
 const { ccclass, property } = _decorator;
 
 export default class LayerToast extends LayerBase {
@@ -45,10 +45,10 @@ export default class LayerToast extends LayerBase {
       return;
     }
     const toast = this.pool.get() || instantiate(this.toastPrefab);
-    const toastC = toast.getComponent(Toast);
+    const baseToastC = toast.getComponent(BaseToast);
     toast.setPosition(Vec3.ZERO);
     this.addChild(toast);
-    toastC.init(msg);
+    baseToastC.init(msg);
     const opacityC = toast.setComponent(UIOpacity, (c) => (c.opacity = 255));
     tween(opacityC)
       .delay(duration || 2)

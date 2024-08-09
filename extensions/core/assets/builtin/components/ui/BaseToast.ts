@@ -5,8 +5,8 @@
 import { _decorator, Component, Label, Node } from "cc";
 const { ccclass, property } = _decorator;
 
-export class Toast extends Component {
-  @property({ type: Label, tooltip: "Toast文本组件" })
+export class BaseToast extends Component {
+  @property({ type: Label, tooltip: "Toast文本" })
   declare toastLabel: Label;
 
   init(msg: string) {

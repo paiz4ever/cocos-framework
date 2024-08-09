@@ -20,11 +20,11 @@ const { ccclass, property } = _decorator;
 export default abstract class Root extends Component {
   protected abstract appConfig: IAppConfig;
 
-  protected onInitStart() {
+  protected onInitStart(tracker: ILaunchTracker) {
     return Promise.resolve(void 0);
   }
 
-  protected onInitEnd() {
+  protected onInitEnd(tracker: ILaunchTracker) {
     return Promise.resolve(void 0);
   }
 
@@ -55,18 +55,19 @@ export default abstract class Root extends Component {
       ErrorMonitor.init();
       // 初始化资源
       await ResMgr.init();
+      // 初始化UI
+      const tracker = await UIMgr.init(this);
+      await this.onInitStart(tracker);
       // 初始化音频
       AudioMgr.init();
-      // 初始化UI
-      UIMgr.init(this);
       // 配置初始化
       await ConfigMgr.init(this.appConfig);
       await Promise.all([
         // 初始化平台并登录
         PlatformMgr.init().then(PlatformMgr.login),
       ]);
-      await this.onInitStart();
-      await this.onInitEnd();
+      await this.onInitEnd(tracker);
+      tracker.end();
       // ===================流程启动完成===================
     } catch (error) {
       this.onInitError(error);

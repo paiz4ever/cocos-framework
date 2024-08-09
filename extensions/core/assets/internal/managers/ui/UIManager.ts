@@ -1,7 +1,7 @@
 /**
  * UI管理器
  */
-import { Event, instantiate, Node, Prefab } from "cc";
+import { AssetManager, Event, instantiate, Node, Prefab } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
 import Root from "../../components/Root";
 import ResMgr from "../res/ResManager";
@@ -17,6 +17,10 @@ import {
 import { LayerBase } from "./layers/base";
 import { BaseView } from "../../../builtin/components/ui/BaseView";
 import { ArrayMap } from "../../../builtin/structs";
+import {
+  BaseLaunch,
+  LaunchTracker,
+} from "../../../builtin/components/ui/BaseLaunch";
 
 const AllLayers: { [x in TLayer]: new () => LayerBase } = {
   Scene: LayerScene,
@@ -79,6 +83,7 @@ class UIManager extends Singleton {
       }
       this.layerRoot.addChild(layerNode);
     });
+    return this.showLaunch();
   }
 
   async show(
@@ -88,13 +93,18 @@ class UIManager extends Singleton {
           data?: any;
           onShow?: (node: Node, data?: any) => Promise<void> | void;
           onHide?: (node: Node) => Promise<void> | void;
+          onProgress?: (
+            finished: number,
+            total: number,
+            item: AssetManager.RequestItem
+          ) => void;
         }
       | number
   ) {
     if (typeof options === "number") {
       options = { id: options };
     }
-    const { id } = options;
+    const { id, onProgress } = options;
     const res = this.config?.[id];
     if (!res) {
       throw new Error("invalid ui ID: " + id);
@@ -111,6 +121,7 @@ class UIManager extends Singleton {
         path,
         bundleName,
         bundleVersion,
+        onProgress,
       });
       prefab.addRef();
       viewNode = instantiate(prefab);
@@ -196,13 +207,25 @@ class UIManager extends Singleton {
     }
   }
 
-  async replace(options: {
-    id: number;
-    data?: any;
-    onShow?: (node: Node, data?: any) => Promise<void> | void;
-    onHide?: (node: Node) => Promise<void> | void;
-  }) {
-    const { id } = options;
+  async replace(
+    options:
+      | {
+          id: number;
+          data?: any;
+          onShow?: (node: Node, data?: any) => Promise<void> | void;
+          onHide?: (node: Node) => Promise<void> | void;
+          onProgress?: (
+            finished: number,
+            total: number,
+            item: AssetManager.RequestItem
+          ) => void;
+        }
+      | number
+  ) {
+    if (typeof options === "number") {
+      options = { id: options };
+    }
+    const { id, onProgress } = options;
     const res = this.config?.[id];
     if (!res) {
       throw new Error("invalid ui ID: " + id);
@@ -218,6 +241,7 @@ class UIManager extends Singleton {
         path,
         bundleName,
         bundleVersion,
+        onProgress,
       });
       prefab.addRef();
       viewNode = instantiate(prefab);
@@ -354,6 +378,24 @@ class UIManager extends Singleton {
     } else {
       this.viewMap.set(id, bvCs);
     }
+  }
+
+  async showLaunch() {
+    let res = this.defaultConfig["Launch"];
+    if (!res) {
+      res = {
+        path: "InternalLaunch",
+        bundleName: "internal-prefabs",
+      };
+    }
+    this.config["Launch"] = {
+      ...res,
+      layer: "Scene",
+    };
+    // @ts-ignore
+    const node = await this.show("Launch");
+    const baseLaunchC = node.getComponent(BaseLaunch);
+    return new LaunchTracker(baseLaunchC);
   }
 }
 

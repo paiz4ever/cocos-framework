@@ -23,6 +23,14 @@ interface IUIConfig {
 }
 
 interface IUIDefaultConfig {
+  /** 启动页 */
+  Launch?: IResource;
+  /** 加载页 */
   Loading?: IResource;
+  /** 提示 */
   Toast?: IResource;
+}
+
+interface ILaunchTracker {
+  update: (finished: number, total: number) => void;
 }

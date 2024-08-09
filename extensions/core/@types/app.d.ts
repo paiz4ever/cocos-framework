@@ -36,12 +36,12 @@ declare module app {
        * 初始化开始（可选）
        * @description 此时仅配置初始化完成
        */
-      protected onInitStart(): Promise<any>;
+      protected onInitStart(tracker: ILaunchTracker): Promise<any>;
       /**
        * 初始化结束（可选）
        * @description 所有初始化已完成，在此加载首页并进入
        */
-      protected onInitEnd(): Promise<any>;
+      protected onInitEnd(tracker: ILaunchTracker): Promise<any>;
       /**
        * 初始化失败（可选）
        * @description 加载出现问题，你可以在此重启或者上报
@@ -254,6 +254,7 @@ declare module app {
      * @param options.data 传递的数据
      * @param options.onShow UI挂载后触发（可选）
      * @param options.onHide UI隐藏前触发（可选）
+     * @param options.onProgress 加载UI资源进度（可选）
      * @returns UI完全挂载后回调（onShow完毕）
      * @example
      * // 可以使用data传递函数来快捷设置回调
@@ -262,7 +263,7 @@ declare module app {
      * app.ui.show({ id: UIID.Test, onShow: UIViewUtil.show.slideRTL, onHide: UIViewUtil.hide.slide } });
      */
     show(id: number): Promise<Node>;
-    show(options: { id: number; data?: any; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void }): Promise<Node>;
+    show(options: { id: number; data?: any; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<Node>;
     /**
      * 隐藏UI
      * @param options.id UIID
@@ -285,9 +286,11 @@ declare module app {
      * @param options.data 传递的数据
      * @param options.onShow UI挂载后触发（可选）
      * @param options.onHide UI隐藏前触发（可选）
+     * @param options.onProgress 加载UI资源进度（可选）
      * @returns UI完全挂载后回调（onShow完毕）
      */
-    replace(options: { id: number; data?: any; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void }): Promise<Node>;
+    replace(id: number): Promise<Node>;
+    replace(options: { id: number; data?: any; onShow?: (node: Node, data?: any) => Promise<void> | void; onHide?: (node: Node) => Promise<void> | void; onProgress?: (finished: number, total: number, item: AssetManager.RequestItem) => void }): Promise<Node>;
     /**
      * 显示toast
      * @param msg 消息内容

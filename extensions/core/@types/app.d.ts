@@ -319,6 +319,16 @@ declare module app {
      */
     hideLoading(uuid?: string): void;
     /**
+     * 给异步操作包装loading
+     * @param process 异步进程
+     * @description 当异步操作结束或者失败后会自动隐藏loading
+     * @example
+     * app.loading(async () => {
+     *   // 模拟异步操作
+     * })
+     */
+    loading<T = void>(process: Promise<T> | (() => Promise<T>)): Promise<T>;
+    /**
      * 屏蔽触摸
      * @returns uuid 关闭loading的唯一标识
      */

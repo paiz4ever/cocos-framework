@@ -289,6 +289,14 @@ class UIManager extends Singleton {
     return (this.layers.get("Loading") as LayerLoading).deact(uuid);
   }
 
+  loading<T = void>(process: Promise<T> | (() => Promise<T>)) {
+    const uuid = this.showLoading();
+    if (typeof process === "function") {
+      return process().finally(() => this.hideLoading(uuid));
+    }
+    return process.finally(() => this.hideLoading(uuid));
+  }
+
   block() {
     return this.layerRoot.block();
   }

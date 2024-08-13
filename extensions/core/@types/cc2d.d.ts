@@ -1,3 +1,8 @@
+/**
+ * cc2d接口拓展
+ * @version 3.8.3
+ * @notice 引擎升级需注意api可能潜在的冲突
+ */
 declare module "cc" {
   interface Node {
     /**

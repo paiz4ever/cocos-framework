@@ -10,6 +10,10 @@ class ValueReflect {
   value: string = "";
 }
 
+/**
+ * 多语言文本组件
+ * @description 在 language.xlsx 中配置语言映射
+ */
 @ccclass("LanguageLabel")
 @menu("language/LanguageLabel")
 export class LanguageLabel extends Component {

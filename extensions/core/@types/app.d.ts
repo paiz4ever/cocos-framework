@@ -660,7 +660,8 @@ declare module app {
 
   /**
    * 多语言管理
-   * @description 资源请放置在 assets/language 路径下的各自语言目录中
+   * @description 资源文件请放置在 assets/language 路径下的各自语言目录中
+   * @description 在 language.xlsx 中配置语言映射
    * @description 使用 builtin/components/language 中组件进行多语言控制
    */
   export const language: {
@@ -681,7 +682,16 @@ declare module app {
   };
 
   /**
-   * 工具
+   * 定时管理
+   */
+  export const timer: any;
+
+  export function log(): void;
+  export function warn(): void;
+  export function error(): void;
+
+  /**
+   * 工具集
    */
   export const utils: {
     /**
@@ -692,18 +702,9 @@ declare module app {
   };
 
   /**
-   * 定时管理
-   */
-  export const timer: any;
-
-  export function log(): void;
-  export function warn(): void;
-  export function error(): void;
-
-  /**
    * 扩展集
    */
-  export namespace ext {
+  export namespace exts {
     /**
      * 红点管理
      */

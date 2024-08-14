@@ -1,8 +1,13 @@
 import { _decorator, CCBoolean, Component, Node } from "cc";
 import { UIMgr } from "../../../internal/managers";
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
+/**
+ * 页面基础组件
+ * @description 所有页面请继承或直接使用此组件
+ */
 @ccclass("BaseView")
+@menu("ui/BaseView")
 export class BaseView<T = any> extends Component {
   @property({ type: CCBoolean, tooltip: "是否自动释放资源" })
   declare autoRelease: boolean;

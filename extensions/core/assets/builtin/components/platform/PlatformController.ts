@@ -3,9 +3,10 @@
  */
 import { _decorator, Component, Enum, Node } from "cc";
 import { EPlatform, getPlatformName } from "../../utils/platform";
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass("PlatformController")
+@menu("platform/PlatformController")
 export class PlatformController extends Component {
   @property({ type: [Enum(EPlatform)], tooltip: "可见的平台" })
   visibleOnPlatforms: EPlatform[] = [];

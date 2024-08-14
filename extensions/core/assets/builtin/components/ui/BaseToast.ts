@@ -1,10 +1,12 @@
+import { _decorator, Component, Label, Node } from "cc";
+const { ccclass, property, menu } = _decorator;
+
 /**
- * Toast组件
+ * Toast基础组件
  * @description 自定义Toast请继承或直接使用此组件
  */
-import { _decorator, Component, Label, Node } from "cc";
-const { ccclass, property } = _decorator;
-
+@ccclass("BaseToast")
+@menu("ui/BaseToast")
 export class BaseToast extends Component {
   @property({ type: Label, tooltip: "Toast文本" })
   declare toastLabel: Label;

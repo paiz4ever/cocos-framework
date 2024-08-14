@@ -14,8 +14,8 @@ import {
 } from "cc";
 const { ccclass, property } = _decorator;
 
-@ccclass("ScratchCard")
-export class ScratchCard extends Component {
+@ccclass("ScratchCardScene")
+export class ScratchCardScene extends Component {
   @property({ type: Graphics, tooltip: "画笔" })
   declare graphics: Graphics;
   @property({ type: Node, tooltip: "绘制的区域节点" })

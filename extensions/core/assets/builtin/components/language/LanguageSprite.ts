@@ -2,6 +2,10 @@ import { _decorator, Component, Node, Sprite } from "cc";
 import { EventMgr, LanguageMgr, ResMgr } from "../../../internal/managers";
 const { ccclass, property, menu, requireComponent } = _decorator;
 
+/**
+ * 多语言图片组件
+ * @description 图片资源请放置在 assets/language 路径下的各自语言目录中
+ */
 @ccclass("LanguageSprite")
 @menu("language/LanguageSprite")
 @requireComponent(Sprite)

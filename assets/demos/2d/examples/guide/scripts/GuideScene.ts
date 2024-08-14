@@ -3,8 +3,8 @@ import GuideSys from "../../../packages/guide";
 import app from "app";
 const { ccclass, property } = _decorator;
 
-@ccclass("Guide")
-export class Guide extends app.comp.Root {
+@ccclass("GuideScene")
+export class GuideScene extends app.comp.Root {
   protected appConfig: IAppConfig = {};
 
   @property(Node)
@@ -36,7 +36,7 @@ export class Guide extends app.comp.Root {
       },
     });
     this.init();
-    return super.onInitEnd();
+    return Promise.resolve();
   }
 
   init() {

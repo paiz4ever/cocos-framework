@@ -2,8 +2,8 @@ import { _decorator, Component, EventMouse, Input, Node } from "cc";
 import RedDotSys from "../../../packages/red-dot";
 const { ccclass, property } = _decorator;
 
-@ccclass("RedDot")
-export class RedDot extends Component {
+@ccclass("RedDotScene")
+export class RedDotScene extends Component {
   protected onLoad(): void {
     // 根据条件添加红点（注意仅需添加叶子节点）
     RedDotSys.add("A|B|B1");

@@ -19,6 +19,9 @@
       "builtin/*": [
         "./extensions/core/assets/builtin/*",
       ],
+      "config/*": [
+        "./assets/configs/*"
+      ]
     }
   },
   // 去除掉引用内部代码提示，不影响构建

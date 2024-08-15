@@ -22,15 +22,9 @@ export class SpriteButton extends Button {
   private declare sprite: Sprite;
   private declare uiTransform: UITransform;
 
-  @property({
-    tooltip: "点击判定像素大小（越大越不精确）",
-    min: 1,
-    displayOrder: 1,
-  })
-  pixel: number = 1;
-
   protected onLoad(): void {
     this.node.on(Input.EventType.TOUCH_START, this._handleClick, this);
+    this.node.on(Input.EventType.TOUCH_END, this._handleClick, this);
     this.sprite = this.getComponent(Sprite)!;
     this.uiTransform = this.getComponent(UITransform)!;
   }
@@ -46,8 +40,8 @@ export class SpriteButton extends Button {
         this.uiTransform.contentSize.width * this.uiTransform.anchorX,
       this.uiTransform.contentSize.height * (1 - this.uiTransform.anchorY) -
         localPosition.y,
-      this.pixel,
-      this.pixel
+      1,
+      1
     )!;
     if (!buffer?.[3]) {
       this.interactable = false;

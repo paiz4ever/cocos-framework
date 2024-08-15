@@ -1,5 +1,5 @@
 import { Asset, AssetManager, Component, Font, Label, sp, Sprite, SpriteFrame, Node, Prefab, Camera, Canvas, Event, AudioClip, NodePool } from "cc";
-import { Tables } from "../assets/internal/managers/config/schema/schema";
+import { Tables } from "../assets/builtin/definitions/schema";
 
 declare module app {
   /**

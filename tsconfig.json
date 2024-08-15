@@ -13,12 +13,12 @@
       "app": [
         "./extensions/core/@types/app"
       ],
+      "table": [
+        "./extensions/core/assets/builtin/definitions/schema.ts"
+      ],
       "builtin/*": [
         "./extensions/core/assets/builtin/*",
       ],
-      "table": [
-        "./extensions/core/assets/internal/managers/config/schema/schema.ts"
-      ]
     }
   },
   // 去除掉引用内部代码提示，不影响构建

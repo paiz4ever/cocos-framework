@@ -2,6 +2,6 @@
   "imports": {
     "builtin/": "./extensions/core/assets/builtin/",
     "app": "./extensions/core/assets/module/index.ts",
-    "table": "./extensions/core/assets/internal/managers/config/schema/schema.ts"
+    "table": "./extensions/core/assets/builtin/definitions/schema.ts"
   }
 }

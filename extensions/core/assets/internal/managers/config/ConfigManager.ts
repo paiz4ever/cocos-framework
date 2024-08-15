@@ -3,15 +3,15 @@
  */
 import { JsonAsset, warn } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
-import * as schema from "./schema/schema";
+import { Tables } from "../../../builtin/definitions/schema";
 import ResMgr from "../res/ResManager";
 
 type TConfig = TInternalConfig & TGameConfig;
 
 class ConfigManager extends Singleton {
-  private declare _tables: schema.Tables;
+  private declare _tables: Tables;
   private declare _cnf: TConfig;
-  get tables(): schema.Tables {
+  get tables(): Tables {
     return this._tables;
   }
 
@@ -25,7 +25,7 @@ class ConfigManager extends Singleton {
       type: JsonAsset,
     });
     ResMgr.removeBundle("internal-tables");
-    this._tables = new schema.Tables((fileName: string) => {
+    this._tables = new Tables((fileName: string) => {
       return tableAssets.find((asset) => asset.name === fileName)?.json || [];
     });
     this.set("app", appConfig);

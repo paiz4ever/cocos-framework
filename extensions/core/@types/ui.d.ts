@@ -44,6 +44,7 @@ interface ILaunchTracker {
   fake: (timeout: number) => Promise<void>;
   /**
    * 结束启动流程
+   * @notice 一般为内部使用，可以使用此函数提前中断启动
    */
   end: () => void;
 }

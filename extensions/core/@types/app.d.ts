@@ -20,7 +20,7 @@ declare module app {
      *    }
      *
      *    protected onInitEnd() {
-     *      return app.ui.show({ id: UUID.Main });
+     *      return app.ui.show({ id: UIID.Main });
      *    }
      * }
      */
@@ -50,6 +50,7 @@ declare module app {
     }
     /**
      * 可回收节点组件
+     * @notice 请使用 `app.utils.pool` 进行节点回收
      */
     export abstract class Recyclable extends Component {
       /**

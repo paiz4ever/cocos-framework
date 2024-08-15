@@ -148,4 +148,24 @@ declare module "cc" {
      */
     function setFont(): void;
   }
+  interface Sprite {
+    /**
+     * 判断图片是否被命中
+     * @param evt 点击事件
+     * @param localPosition 本地坐标点
+     * @param worldPosition 世界坐标点
+     */
+    hitTest(evt: EventTouch | EventMouse): boolean;
+    hitTest(localPosition: Vec3): boolean;
+    hitTest(worldPosition: Vec3, isWorld: true): boolean;
+    /**
+     * 获取命中图片的颜色
+     * @param evt 点击事件
+     * @param localPosition 本地坐标点
+     * @param worldPosition 世界坐标点
+     */
+    hitColor(evt: EventTouch): Color | null;
+    hitColor(localPosition: Vec3): Color | null;
+    hitColor(worldPosition: Vec3, isWorld: true): Color | null;
+  }
 }

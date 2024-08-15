@@ -13,7 +13,6 @@ import {
   Sprite,
   SpriteFrame,
   assetManager,
-  instantiate,
   sp,
 } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";

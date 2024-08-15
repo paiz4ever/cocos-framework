@@ -15,6 +15,6 @@ if (!EDITOR) {
     handler?: (c: T) => void
   ): boolean {
     const self = this as Component;
-    return self.node?.modifyComponent(component, handler);
+    return !!self.node?.modifyComponent(component, handler);
   };
 }

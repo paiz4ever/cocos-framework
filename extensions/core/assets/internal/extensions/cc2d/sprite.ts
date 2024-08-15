@@ -18,7 +18,7 @@ if (!EDITOR) {
 
   Sprite.prototype.hitColor = function (arg1: any, arg2?: true) {
     const self = this as Sprite;
-    const texture = self.spriteFrame!.texture;
+    const texture = self.spriteFrame!.original!._texture!;
     if (!texture) {
       return null;
     }
@@ -33,14 +33,18 @@ if (!EDITOR) {
     } else if (arg2) {
       localPosition = uiTransform.convertToNodeSpaceAR(arg1);
     } else {
-      localPosition = arg1;
+      localPosition = arg1.clone();
     }
+    localPosition.x /= uiTransform.width / texture.width;
+    localPosition.y /= uiTransform.height / texture.height;
+    const x = (localPosition.x + texture.width * uiTransform.anchorX) | 0;
+    const y =
+      (texture.height * (1 - uiTransform.anchorY) - localPosition.y) | 0;
     // 左上角为原点
     const buffer = RenderTexture.prototype.readPixels.call(
       texture,
-      localPosition.x + uiTransform.contentSize.width * uiTransform.anchorX,
-      uiTransform.contentSize.height * (1 - uiTransform.anchorY) -
-        localPosition.y,
+      x,
+      y,
       1,
       1
     )!;

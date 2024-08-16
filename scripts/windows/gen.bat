@@ -1,7 +1,6 @@
-set WORKSPACE=./tables
-set CONF_ROOT=./tables
-set CORE_ROOT=./extensions/core/assets
-set LUBAN_DLL=%WORKSPACE%\luban\Luban.dll
+set CONF_ROOT=.\tables
+set CORE_ROOT=.\extensions\core\assets
+set LUBAN_DLL=%CONF_ROOT%\luban\Luban.dll
 
 dotnet %LUBAN_DLL% ^
     -t client ^

@@ -20,12 +20,37 @@
   "contributions": {
     "menu": [
       {
-        "path": "i18n:assistant.name",
-        "label": "i18n:assistant.buildAndUpload",
+        "path": "i18n:assistant.name/i18n:assistant.project",
+        "label": "i18n:assistant.generateConfig",
+        "message": "generate-config"
+      },
+      {
+        "path": "i18n:assistant.name/i18n:assistant.publish",
+        "label": "i18n:assistant.publishToWeChat",
         "message": "build-and-upload"
+      },
+      {
+        "path": "i18n:assistant.name/i18n:assistant.publish",
+        "label": "i18n:assistant.publishToByteDance",
+        "message": "build-and-upload"
+      },
+      {
+        "path": "i18n:assistant.name/i18n:assistant.clean",
+        "label": "i18n:assistant.cleanUnusedMetaFile",
+        "message": "clean-unused-meta-file"
       }
     ],
     "messages": {
+      "clean-unused-meta-file": {
+        "methods": [
+          "cleanUnusedMetaFile"
+        ]
+      },
+      "generate-config": {
+        "methods": [
+          "generateConfig"
+        ]
+      },
       "build-and-upload": {
         "methods": [
           "buildAndUpload"

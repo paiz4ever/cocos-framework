@@ -10,5 +10,5 @@ dotnet $LUBAN_DLL \
 -c typescript-json \
 -d json \
 --conf $CONF_ROOT/luban.conf \
--x outputCodeDir=$CORE_ROOT/builtin/definitions \
+-x outputCodeDir=$CORE_ROOT/builtin/definitions/table \
 -x outputDataDir=$CORE_ROOT/internal/resources/tables

@@ -14,7 +14,7 @@
         "./extensions/core/@types/app"
       ],
       "table": [
-        "./extensions/core/assets/builtin/definitions/schema.ts"
+        "./extensions/core/assets/builtin/definitions/table/schema.ts"
       ],
       "builtin/*": [
         "./extensions/core/assets/builtin/*",

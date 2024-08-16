@@ -3,7 +3,7 @@
  */
 import { JsonAsset, warn } from "cc";
 import Singleton from "../../../builtin/structs/abstract/Singleton";
-import { Tables } from "../../../builtin/definitions/schema";
+import { Tables } from "../../../builtin/definitions/table/schema";
 import ResMgr from "../res/ResManager";
 
 type TConfig = TInternalConfig & TGameConfig;

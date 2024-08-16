@@ -1,4 +1,6 @@
-import { runCommand } from "./utils";
+import path from "path";
+import { deleteUnusedMetaFiles } from "./utils/clean";
+import { runCommand } from "./utils/command";
 
 /**
  * @en Registration method for the main process of Extension
@@ -6,15 +8,9 @@ import { runCommand } from "./utils";
  */
 export const methods: { [key: string]: (...any: any) => any } = {
   /**
-   * @en A method that can be triggered by message
-   * @zh 通过 message 触发的方法
+   * @en Generate config
+   * @zh 生成配置
    */
-  cleanUnusedMetaFile() {
-    console.log("清理多余的 meta 文件");
-  },
-  buildAndUpload() {
-    console.log("构建并上传");
-  },
   async generateConfig() {
     console.log("开始生成配置");
     const scriptDir =
@@ -35,6 +31,22 @@ export const methods: { [key: string]: (...any: any) => any } = {
         buttons: [Editor.I18n.t("assistant.close")],
       });
     }
+  },
+  publishToWeChat() {
+    console.log("构建并上传");
+  },
+  publishToByteDance() {
+    console.log("构建并上传");
+  },
+  cleanUnusedMetaFiles() {
+    console.log("开始清理未使用的 meta 文件");
+    deleteUnusedMetaFiles(path.join(Editor.Project.path, "assets"));
+    deleteUnusedMetaFiles(
+      path.join(Editor.Project.path, "extensions/core/assets")
+    );
+    Editor.Dialog.info("清理完毕", {
+      buttons: [Editor.I18n.t("assistant.ok")],
+    });
   },
 };
 

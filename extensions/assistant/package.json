@@ -27,33 +27,38 @@
       {
         "path": "i18n:assistant.name/i18n:assistant.publish",
         "label": "i18n:assistant.publishToWeChat",
-        "message": "build-and-upload"
+        "message": "publish-to-wechat"
       },
       {
         "path": "i18n:assistant.name/i18n:assistant.publish",
         "label": "i18n:assistant.publishToByteDance",
-        "message": "build-and-upload"
+        "message": "publish-to-bytedance"
       },
       {
         "path": "i18n:assistant.name/i18n:assistant.clean",
-        "label": "i18n:assistant.cleanUnusedMetaFile",
-        "message": "clean-unused-meta-file"
+        "label": "i18n:assistant.cleanUnusedMetaFiles",
+        "message": "clean-unused-meta-files"
       }
     ],
     "messages": {
-      "clean-unused-meta-file": {
-        "methods": [
-          "cleanUnusedMetaFile"
-        ]
-      },
       "generate-config": {
         "methods": [
           "generateConfig"
         ]
       },
-      "build-and-upload": {
+      "publish-to-wechat": {
         "methods": [
-          "buildAndUpload"
+          "publishToWeChat"
+        ]
+      },
+      "publish-to-bytedance": {
+        "methods": [
+          "publishToByteDance"
+        ]
+      },
+      "clean-unused-meta-files": {
+        "methods": [
+          "cleanUnusedMetaFiles"
         ]
       }
     }

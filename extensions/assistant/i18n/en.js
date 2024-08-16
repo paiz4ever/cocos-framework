@@ -18,5 +18,5 @@ module.exports = {
   publishToByteDance: "Publish To ByteDance",
   // 清理
   clean: "Clean",
-  cleanUnusedMetaFile: "Clean Unused Meta File",
+  cleanUnusedMetaFiles: "Clean Unused Meta Files",
 };

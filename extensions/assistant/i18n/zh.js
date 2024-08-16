@@ -18,5 +18,5 @@ module.exports = {
   publishToByteDance: "发布到字节小游戏",
   // 清理
   clean: "清理",
-  cleanUnusedMetaFile: "清理未使用的meta文件",
+  cleanUnusedMetaFiles: "清理未使用的meta文件",
 };

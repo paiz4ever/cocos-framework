@@ -25,6 +25,11 @@
         "message": "generate-config"
       },
       {
+        "path": "i18n:assistant.name/i18n:assistant.project",
+        "label": "i18n:assistant.compressPictures",
+        "message": "compress-pictures"
+      },
+      {
         "path": "i18n:assistant.name/i18n:assistant.publish",
         "label": "i18n:assistant.publishToWeChat",
         "message": "publish-to-wechat"
@@ -44,6 +49,11 @@
       "generate-config": {
         "methods": [
           "generateConfig"
+        ]
+      },
+      "compress-pictures": {
+        "methods": [
+          "compressPictures"
         ]
       },
       "publish-to-wechat": {

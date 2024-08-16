@@ -10,6 +10,7 @@ module.exports = {
   // 项目
   project: "Project",
   generateConfig: "Generate Config",
+  compressPictures: "Compress Pictures",
   // 包管理
   packages: "Packages",
   // 发布

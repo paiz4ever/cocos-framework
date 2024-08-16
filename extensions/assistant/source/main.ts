@@ -1,6 +1,7 @@
 import path from "path";
 import { deleteUnusedMetaFiles } from "./utils/clean";
 import { runCommand } from "./utils/command";
+import tinyPng from "./utils/tiny-png";
 
 /**
  * @en Registration method for the main process of Extension
@@ -32,12 +33,27 @@ export const methods: { [key: string]: (...any: any) => any } = {
       });
     }
   },
+  /**
+   * @en Compress pictures
+   * @zh 压缩图片
+   */
+  async compressPictures() {
+    console.log("开始压缩图片");
+    tinyPng(path.join(Editor.Project.path, "assets"));
+    Editor.Dialog.info("图片压缩完毕", {
+      buttons: [Editor.I18n.t("assistant.ok")],
+    });
+  },
   publishToWeChat() {
-    console.log("构建并上传");
+    console.log("发布到微信小游戏");
   },
   publishToByteDance() {
-    console.log("构建并上传");
+    console.log("发布到字节小游戏");
   },
+  /**
+   * @en Clean unused meta files
+   * @zh 清理未使用的 meta 文件
+   */
   cleanUnusedMetaFiles() {
     console.log("开始清理未使用的 meta 文件");
     deleteUnusedMetaFiles(path.join(Editor.Project.path, "assets"));

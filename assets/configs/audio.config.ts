@@ -6,9 +6,10 @@ export enum AudioID {
 }
 
 /**
- * 音频映射
+ * 定义音频映射
+ * @notice 配置方式参考 `ui.config.ts`
  */
-ConfigUtil.injectAudio({
+ConfigUtil.defineAudio({
   config: {
     [AudioID.BGM]: "talk",
     [AudioID.Click]: "pop-up",

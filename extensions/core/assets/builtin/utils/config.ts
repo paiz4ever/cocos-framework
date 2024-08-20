@@ -2,25 +2,11 @@ import { DEBUG } from "cc/env";
 import { UIMgr, AudioMgr } from "../../internal/managers";
 
 export namespace ConfigUtil {
-  export function coverDefaultUI(config: IUIDefaultConfig) {
+  export function defineDefaultUI(config: IUIDefaultConfig) {
     UIMgr.defaultConfig = config;
   }
 
-  /**
-   * 注入UI配置
-   * 推荐使用UIID进行页面管理
-   * @example
-   * injectUI(
-   *   { [UIID.Main]: { path: "", layer: "GameView", bundleName: "bundleA" } },
-   *   {
-   *     config: {
-   *       [UIID.BundleA1]: { path: "bundleA/test", layer: "GameView" },
-   *     },
-   *     bundle: "bundleA" | { name: "bundleB", version: "f1234" },
-   *   }
-   * )
-   */
-  export function injectUI(
+  export function defineUI(
     ...arg: (
       | {
           config: { [x: number]: RemoveOptional<IUIResource> };
@@ -51,7 +37,7 @@ export namespace ConfigUtil {
     UIMgr.config = cnf;
   }
 
-  export function injectAudio(
+  export function defineAudio(
     ...arg: (
       | {
           config: { [x: number]: string };

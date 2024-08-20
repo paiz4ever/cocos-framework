@@ -15,6 +15,18 @@ type ToTuple<T> = {
 };
 
 /**
+ * 将目标属性设置为required
+ * @example
+ * type Original = {
+ *     name?: string;
+ *     age?: number;
+ * };
+ * // 表示 { name: string; age: number; }
+ * type Filtered = MakeRequired<Original, "name" | "age">;
+ */
+type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
+/**
  * 剔除掉所有值类型为 U 的属性
  * @example
  * type Original = {

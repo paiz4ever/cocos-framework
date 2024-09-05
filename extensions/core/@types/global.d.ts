@@ -2,7 +2,7 @@ declare global {
   interface Array<T> {
     /**
      * 打乱数组
-     * @notice 不影响原数组
+     * @notice 影响原数组
      */
     shuffle(): Array<T>;
     /**

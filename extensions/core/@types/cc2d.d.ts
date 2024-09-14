@@ -10,20 +10,14 @@ declare module "cc" {
      * @param component 组件类
      * @param handler 组件处理函数
      */
-    setComponent<T extends Component>(
-      component: new () => T,
-      handler?: (c: T) => void
-    ): T;
+    setComponent<T extends Component>(component: new () => T, handler?: (c: T) => void): T;
     /**
      * 修改组件
      * @param component 组件类
      * @param handler 组件处理函数
      * @returns 是否修改成功
      */
-    modifyComponent<T extends Component>(
-      component: new () => T,
-      handler?: (c: T) => void
-    ): boolean;
+    modifyComponent<T extends Component>(component: new () => T, handler?: (c: T) => void): boolean;
     /**
      * 设置临时属性
      * @description 该属性在节点销毁时会被清除
@@ -44,18 +38,12 @@ declare module "cc" {
      * // TODO
      * 过滤组件满足条件的保留
      */
-    filterComponents<T extends Component>(
-      component: new () => T,
-      filter: (c: T) => boolean
-    ): T[];
+    filterComponents<T extends Component>(component: new () => T, filter: (c: T) => boolean): T[];
     /**
      * // TODO
      * 过滤组件满足条件的直接退出递归
      */
-    filterComponent<T extends Component>(
-      component: new () => T,
-      filter: (c: T) => boolean
-    ): T;
+    filterComponent<T extends Component>(component: new () => T, filter: (c: T) => boolean): T;
   }
   interface Component {
     /**
@@ -63,20 +51,14 @@ declare module "cc" {
      * @param component 组件类
      * @param handler 组件处理函数
      */
-    setComponent<T extends Component>(
-      component: new () => T,
-      handler?: (c: T) => void
-    ): T;
+    setComponent<T extends Component>(component: new () => T, handler?: (c: T) => void): T;
     /**
      * 修改组件
      * @param component 组件类
      * @param handler 组件处理函数
      * @returns 是否修改成功
      */
-    modifyComponent<T extends Component>(
-      component: new () => T,
-      handler?: (c: T) => void
-    ): boolean;
+    modifyComponent<T extends Component>(component: new () => T, handler?: (c: T) => void): boolean;
   }
   namespace math {
     interface Vec3 {
@@ -101,11 +83,7 @@ declare module "cc" {
      * @param timeInSecond 滚动时间（s）。 如果超时，内容将立即跳到底部边界。
      * @param attenuated 滚动加速是否衰减，默认为 true。
      */
-    scrollToItem(
-      index: number,
-      timeInSecond?: number,
-      attenuated?: boolean
-    ): void;
+    scrollToItem(index: number, timeInSecond?: number, attenuated?: boolean): void;
   }
   interface UITransform {
     /**
@@ -122,11 +100,7 @@ declare module "cc" {
      * @param cp 圆心坐标
      * @param cr 圆半径
      */
-    function pointInCircle(
-      point: Readonly<math.Vec2>,
-      cp: Readonly<math.Vec2>,
-      cr: number
-    ): boolean;
+    function pointInCircle(point: Readonly<math.Vec2>, cp: Readonly<math.Vec2>, cr: number): boolean;
     /**
      * 点是否在矩形内
      * @param point 点坐标
@@ -167,5 +141,16 @@ declare module "cc" {
     hitColor(evt: EventTouch): Color | null;
     hitColor(localPosition: Vec3): Color | null;
     hitColor(worldPosition: Vec3, isWorld: true): Color | null;
+  }
+  interface Texture2D {
+    /**
+     * 读取图片像素
+     * @param x 起始点x
+     * @param y 起始点y
+     * @param width 像素宽
+     * @param height 像素高
+     * @param buffer 像素缓存
+     */
+    readPixels(x?: number, y?: number, width?: number, height?: number, buffer?: Uint8Array): Uint8Array | null;
   }
 }

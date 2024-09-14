@@ -1,10 +1,9 @@
 import {
   Color,
-  Component,
   EventMouse,
   EventTouch,
-  RenderTexture,
   Sprite,
+  Texture2D,
   UITransform,
   Vec3,
 } from "cc";
@@ -18,7 +17,7 @@ if (!EDITOR) {
 
   Sprite.prototype.hitColor = function (arg1: any, arg2?: true) {
     const self = this as Sprite;
-    const texture = self.spriteFrame!.original!._texture!;
+    const texture = self.spriteFrame?.texture as Texture2D;
     if (!texture) {
       return null;
     }
@@ -35,19 +34,17 @@ if (!EDITOR) {
     } else {
       localPosition = arg1.clone();
     }
-    localPosition.x /= uiTransform.width / texture.width;
-    localPosition.y /= uiTransform.height / texture.height;
-    const x = (localPosition.x + texture.width * uiTransform.anchorX) | 0;
+    const rect = self.spriteFrame.rect;
+    // 找到相对于图片本身左上角的位置
+    localPosition.x /= uiTransform.width / rect.width;
+    localPosition.y /= uiTransform.height / rect.height;
+    // 找到相对图集（有的话，没有rect的x、y为0）中的位置
+    const x =
+      (rect.x + (localPosition.x + rect.width * uiTransform.anchorX)) | 0;
     const y =
-      (texture.height * (1 - uiTransform.anchorY) - localPosition.y) | 0;
-    // 左上角为原点
-    const buffer = RenderTexture.prototype.readPixels.call(
-      texture,
-      x,
-      y,
-      1,
-      1
-    )!;
+      (rect.y + (rect.height * (1 - uiTransform.anchorY) - localPosition.y)) |
+      0;
+    const buffer = texture.readPixels(x, y, 1, 1)!;
     return new Color(buffer[0], buffer[1], buffer[2], buffer[3]);
   };
 }

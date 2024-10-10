@@ -20,7 +20,7 @@ export class BaseLaunch extends BaseView {
   get progress() {
     return this._progress;
   }
-  set progress(p: number) {
+  private set progress(p: number) {
     if (p === 0) {
       this._progress = 0;
     } else {

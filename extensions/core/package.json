@@ -21,7 +21,7 @@
     "asset-db": {
       "mount": {
         "path": "./assets",
-        "readonly": false
+        "readonly": true
       }
     }
   }

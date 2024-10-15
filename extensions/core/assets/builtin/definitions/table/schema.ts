@@ -8,23 +8,6 @@
 //------------------------------------------------------------------------------
 
 
-export namespace guide { 
-export enum EOperation {
-    /**
-     * 点击引导
-     */
-    CLICK = 1,
-    /**
-     * 滑动引导
-     */
-    SLIDE = 2,
-    /**
-     * 链接引导
-     */
-    CONTACT = 3,
-}
-
-} 
 
 
 
@@ -37,13 +20,12 @@ export class GuideItem {
         this.id = _json_.id
         if (_json_.desc === undefined) { throw new Error() }
         this.desc = _json_.desc
-        if (_json_.redirect === undefined) { throw new Error() }
-        this.redirect = _json_.redirect
+        if (_json_.condition === undefined) { throw new Error() }
+        this.condition = _json_.condition
         if (_json_.next === undefined) { throw new Error() }
         this.next = _json_.next
-        if (_json_.operation === undefined) { throw new Error() }
-        this.operation = _json_.operation
-        if(_json_.target != undefined) { this.target = _json_.target } else { this.target = undefined }
+        if (_json_.redirect === undefined) { throw new Error() }
+        this.redirect = _json_.redirect
     }
 
     /**
@@ -55,25 +37,20 @@ export class GuideItem {
      */
     readonly desc: string
     /**
-     * 中断重定向
+     * 引导触发条件
      */
-    readonly redirect: number
+    readonly condition: string
     /**
      * 下一步引导
      */
     readonly next: number
     /**
-     * 引导操作
+     * 中断重定向
      */
-    readonly operation: guide.EOperation
-    /**
-     * 引导目标（当同时存在多个目标时必填）
-     */
-    readonly target: string|undefined
+    readonly redirect: number
 
     resolve(tables:Tables)
     {
-        
         
         
         

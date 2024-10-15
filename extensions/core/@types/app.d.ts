@@ -20,11 +20,11 @@ declare module app {
      *    }
      *
      *    protected onInitEnd() {
-     *      return app.ui.show({ id: UIID.Main });
+     *      return app.ui.show({ id: UIID.Home });
      *    }
      * }
      */
-    export abstract class Root extends Component {
+    export abstract class Root {
       /**
        * 应用配置
        * @description
@@ -47,10 +47,15 @@ declare module app {
        * @description 加载出现问题，你可以在此重启或者上报
        */
       protected onInitError(error: any): Promise<any>;
+      private onLoad?(): void;
+      private onEnable?(): void;
+      private onDisable?(): void;
+      private onDestroy?(): void;
+      private start?(): void;
     }
     /**
      * 可回收节点组件
-     * @notice 请使用 `app.utils.pool` 进行节点回收
+     * @notice 请使用 `app.util.pool` 进行节点回收
      */
     export abstract class Recyclable extends Component {
       /**
@@ -64,6 +69,10 @@ declare module app {
    * 根组件实例
    */
   export const root: {
+    /**
+     * 是否已经初始化
+     */
+    readonly initialized: boolean;
     /**
      * 2D主相机
      */
@@ -325,18 +334,18 @@ declare module app {
      * @description 当异步操作结束或者失败后会自动隐藏loading
      * @example
      * app.loading(async () => {
-     *   // 模拟异步操作
+     *   // 异步操作
      * })
      */
     loading<T = void>(process: Promise<T> | (() => Promise<T>)): Promise<T>;
     /**
      * 屏蔽触摸
-     * @returns uuid 关闭loading的唯一标识
+     * @returns uuid 取消屏蔽的唯一标识
      */
     block(): string;
     /**
      * 解除屏蔽触摸
-     * @param uuid 关闭loading的唯一标识（可选，不指定则关闭所有）
+     * @param uuid 取消屏蔽的唯一标识（可选，不指定则解除所有）
      */
     unblock(uuid?: string): void;
     /**
@@ -605,7 +614,7 @@ declare module app {
     playMusic(options: { id: number; repeat?: number; volume?: number; cover?: boolean }): Promise<void>;
     /**
      * 停止播放音乐
-     * @notice 通过音乐停止后会被回收，无法恢复播放
+     * @notice 音乐停止后会被回收，无法恢复播放
      */
     stopMusic(): void;
     /**
@@ -627,7 +636,7 @@ declare module app {
     /**
      * 停止播放音效
      * @param uuid 音效uuid（可选，不指定则停止所有）
-     * @notice 通过音效停止后会被回收，无法恢复播放
+     * @notice 音效停止后会被回收，无法恢复播放
      */
     stopEffect(uuid?: string): void;
     /**
@@ -687,14 +696,10 @@ declare module app {
    */
   export const timer: any;
 
-  export function log(): void;
-  export function warn(): void;
-  export function error(): void;
-
   /**
    * 工具集
    */
-  export const utils: {
+  export const util: {
     /**
      * 获取节点池
      * @param key 节点池key
@@ -703,18 +708,130 @@ declare module app {
   };
 
   /**
-   * 扩展集
+   * 系统集
    */
-  export namespace exts {
+  export namespace sys {
+    type RedDotNode = {
+      key: string;
+      path: string;
+      redNum: number;
+      children: Map<string, RedDotNode>;
+    };
     /**
-     * 红点管理
+     * 红点系统
+     * 采用树形结构统一管理红点，仅需关心叶子节点（主动节点）的红点状态即可，它的父节点（被动节点）由系统维护
+     *
+     * 一、使用说明：
+     * 1、路径使用"|"隔开
+     * 2、可以搭配红点组件使用 builtin/components/sys/RedDot（挂载到红点上即可），也可 app.sys.redDot.on(path) 来监听红点状态
+     * 3、建议使用枚举来统一管理所有的红点路径
+     *
+     * 二、用例：
+     *    | - A1 - A11
+     * A -| - A2
+     *    | - A3
+     * 分别通过 app.sys.redDot.add("A|A1|A11")、app.sys.redDot.add("A|A2")、app.sys.redDot.add("A|A3")添加红点，此时A的红点数自动变为3，它是被动节点系统自动处理的
+     *
+     * 三、注意：
+     * 1、无法重复添加同一个节点，会被跳过
+     * 2、无法删除被动节点（当存在子节点时）
+     * 3、如果使用 app.sys.redDot.on(path) 监听，记得使用 app.sys.redDot.off 或者 app.sys.redDot.offTarget 处理注销监听(用法同EventTarget)
+     * 4、当手动添加被动节点 app.sys.redDot.add("A") 时，它是被允许的，此时它被当作主动节点。但是当它的子节点（真正的主动节点）被添加时它会被自动纠正成被动节点
      */
-    export const redDot: any;
+    export const redDot: {
+      /**
+       * 添加红点
+       * @param path 红点路径
+       * @returns 是否添加成功
+       */
+      add(path: string): boolean;
+      /**
+       * 查找红点
+       * @param path 红点路径
+       * @returns 红点节点
+       */
+      find(path: string): RedDotNode | null;
+      /**
+       * 删除红点
+       * @param path 红点路径
+       * @returns 是否删除成功
+       */
+      del(path: string): boolean;
+      /**
+       * 清空红点
+       */
+      clear(): void;
+      /**
+       * 监听红点变化
+       * @param path 红点路径
+       * @param listener 监听回调
+       * @param thisArg 监听回调this指向（可选）
+       */
+      on(path: string, listener: EventCallback<number>, thisArg?: any): void;
+      /**
+       * 监听红点变化一次
+       * @param path 红点路径
+       * @param listener 监听回调
+       * @param thisArg 监听回调this指向（可选）
+       */
+      once(path: string, listener: EventCallback<number>, thisArg?: any): void;
+      /**
+       * 取消监听
+       * @param path 红点路径
+       * @param listener 监听回调（可选，不传则取消该key的所有监听）
+       * @param thisArg 监听回调this指向（可选）
+       */
+      off(path: string, listener?: EventCallback<number>, thisArg?: any): void;
+      /**
+       * 取消目标所有监听
+       * @param thisArg 监听回调this指向
+       */
+      offTarget(thisArg: any): void;
+    };
+
+    type TGuideBody = {
+      /** 起始引导步骤ID */
+      startStepID: number;
+      /** 上一次引导步骤ID */
+      stepID?: number;
+    };
     /**
-     * 引导管理
+     * 引导系统
      */
-    export const guide: any;
+    export const guide: {
+      /**
+       * 当前引导步骤ID
+       */
+      readonly stepID: number;
+      /**
+       * 注册条件函数
+       */
+      register(condition: string, fn: () => Promise<boolean>): void;
+      /**
+       * 初始化引导系统
+       * @param options.reader 引导进度读取函数
+       * @param options.writer 引导进度写入函数
+       * @param options.reporter 引导报错上报函数（可选）
+       */
+      init(options: { reader: () => Promise<TGuideBody>; writer: (body: TGuideBody) => Promise<void>; reporter?: (error: string) => Promise<void> }): void;
+      /**
+       * 主动触发引导
+       */
+      trigger(): Promise<void>;
+      /**
+       * 重置引导
+       */
+      reset(): void;
+      /**
+       * 禁止引导
+       */
+      disable(): void;
+      /**
+       * 恢复引导
+       */
+      enable(): void;
+    };
   }
 }
-
 export default app;
+export type App = typeof app;

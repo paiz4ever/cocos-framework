@@ -19,23 +19,24 @@ export class GuideScene extends app.comp.Root {
   private declare layer: number;
 
   protected onInitEnd() {
-    GuideSys.init({
-      reader: () => {
-        return new Promise((resolve) => {
-          resolve({
-            defaultStepID: 10000,
-            lastStepID: undefined,
-          });
-        });
-      },
-      writer: async (stepID: number) => {
-        console.log("writer", stepID);
-      },
-      prefabs: {
-        finger: () => Promise.resolve(this.fingerPrefab),
-      },
-    });
-    this.init();
+    // GuideSys.init({
+    //   reader: () => {
+    //     return new Promise((resolve) => {
+    //       resolve({
+    //         defaultStepID: 10000,
+    //         lastStepID: undefined,
+    //       });
+    //     });
+    //   },
+    //   writer: async (stepID: number) => {
+    //     console.log("writer", stepID);
+    //   },
+    //   prefabs: {
+    //     finger: () => Promise.resolve(this.fingerPrefab),
+    //   },
+    // });
+    // this.init();
+    // app.sys.guide.init({});
     return Promise.resolve();
   }
 

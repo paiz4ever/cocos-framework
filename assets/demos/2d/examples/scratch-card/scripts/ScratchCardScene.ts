@@ -16,6 +16,8 @@ const { ccclass, property } = _decorator;
 
 @ccclass("ScratchCardScene")
 export class ScratchCardScene extends Component {
+  protected appConfig: IAppConfig = {};
+
   @property({ type: Graphics, tooltip: "画笔" })
   declare graphics: Graphics;
   @property({ type: Node, tooltip: "绘制的区域节点" })

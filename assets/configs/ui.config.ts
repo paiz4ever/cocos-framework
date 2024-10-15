@@ -1,10 +1,8 @@
 import { ConfigUtil } from "builtin/utils/config";
 
 export enum UIID {
-  UIGame,
-  UITest,
-  UITest2,
-  UITest3,
+  Home,
+  Demo,
 }
 
 /**

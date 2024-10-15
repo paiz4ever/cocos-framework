@@ -18,6 +18,22 @@ import app from "../../module";
 const { ccclass, property } = _decorator;
 
 export default abstract class Root extends Component {
+  private declare _canvas: Canvas;
+  private declare _camera: Camera;
+  private declare _initialized: boolean;
+
+  get canvas(): Canvas {
+    return this._canvas;
+  }
+
+  get camera(): Camera {
+    return this._camera;
+  }
+
+  get initialized(): boolean {
+    return this._initialized;
+  }
+
   protected abstract appConfig: IAppConfig;
 
   protected onInitStart(tracker: ILaunchTracker) {
@@ -32,20 +48,14 @@ export default abstract class Root extends Component {
     return Promise.reject(error);
   }
 
-  protected onLoad(): void {
-    this.init();
-  }
-
-  declare canvas: Canvas;
-  declare camera: Camera;
-
-  private async init() {
+  protected async onLoad() {
     try {
       // ===================常规初始化===================
       if (DEBUG) profiler.showStats();
       (app as any).root = this;
-      this.canvas = this.getComponent(Canvas);
-      this.camera = this.canvas.cameraComponent;
+      this._initialized = false;
+      this._canvas = this.getComponent(Canvas);
+      this._camera = this.canvas.cameraComponent;
       director.addPersistRootNode(this.node);
       this.registerEvent();
       // ===================常规初始化完成===================
@@ -66,6 +76,7 @@ export default abstract class Root extends Component {
         // 初始化平台并登录
         PlatformMgr.init().then(PlatformMgr.login),
       ]);
+      this._initialized = true;
       await this.onInitEnd(tracker);
       tracker.end();
       // ===================流程启动完成===================

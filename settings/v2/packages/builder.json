@@ -3,7 +3,7 @@
   "bundleConfig": {
     "custom": {
       "bcFBF1tatOEZuxTX7nWMeb": {
-        "displayName": "res",
+        "displayName": "资源",
         "configs": {
           "native": {
             "preferredOptions": {
@@ -30,7 +30,7 @@
         }
       },
       "38zhEBRU1EzZ0qKN1KEgGi": {
-        "displayName": "native",
+        "displayName": "脚本",
         "configs": {
           "native": {
             "preferredOptions": {

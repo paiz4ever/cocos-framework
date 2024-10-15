@@ -1,10 +1,10 @@
-/**
- * 平台可见性控制器
- */
 import { _decorator, CCBoolean, Component, Enum, Node } from "cc";
 import { EPlatform, getPlatformName } from "../../utils/platform";
 const { ccclass, property, menu } = _decorator;
 
+/**
+ * 平台可见性控制器
+ */
 @ccclass("PlatformController")
 @menu("platform/PlatformController")
 export class PlatformController extends Component {

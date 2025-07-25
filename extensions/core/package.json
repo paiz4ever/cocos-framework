@@ -21,8 +21,11 @@
     "asset-db": {
       "mount": {
         "path": "./assets",
-        "readonly": true
+        "readonly": false
       }
     }
+  },
+  "dependencies": {
+    "dayjs": "^1.11.13"
   }
 }

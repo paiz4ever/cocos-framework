@@ -6,8 +6,5 @@
   },
   "scripts": {
     "update": "npx @paiz4ever/cocos-cli@latest update ."
-  },
-  "dependencies": {
-    "dayjs": "^1.11.11"
   }
 }
